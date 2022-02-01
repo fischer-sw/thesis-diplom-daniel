@@ -1,0 +1,126 @@
+\usepackage[utf8]{inputenc}
+\usepackage{selinput} % sets the correct input encoding
+\SelectInputMappings{
+   adieresis={ä},
+   germandbls={ß},
+}
+\usepackage[ngerman]{babel} % enables automatic	german hyphenation
+\usepackage[T1]{fontenc}    % extends the font encoding
+\usepackage{lmodern}        % as European Computer Modern (EC) doesn't look as
+                            % good, use Latin Modern as standard font
+
+\usepackage{tabularx}
+\usepackage{amsmath}    % mathematic library
+\usepackage{amssymb}    % additional mathematic symbols
+\usepackage{upgreek}    % upright greek symbols in math mode
+
+\usepackage{pdfpages}   % if you want to include e.g. a description of the task
+                        % in form of a PDF-document
+
+\usepackage{blindtext}      % a package to generate blindtext to see how a
+                            % filled document looks like
+\RedeclareSectionCommand[beforeskip=0pt,afterskip=1cm]{chapter}
+                    % reduces the whitespace before and after chapter headlines
+
+\setlength{\parindent}{0.0cm} % sets the indentation on every new paranthesis
+                              % to zero (uncomment or change length when one
+                              % needs an indentation)
+
+\usepackage[section]{placeins} %flush objects if necessary
+\usepackage{graphicx} % needed to integrate pictures in a latex document
+\graphicspath{{figs/}}
+
+% chemical compounds
+\usepackage{chemfig}
+\usepackage[version=4]{mhchem}
+
+% change the values of pdftitle, pdfsubject, pdfauthor and pdfkeywords here to
+% personalize the metadata of the pdf
+\usepackage[pdftex,colorlinks=true, linkcolor=black, urlcolor=black,
+            citecolor=black, pdftoolbar=false, pdfmenubar=false,
+            pdftitle={Projektarbeit}, pdfsubject={wissenschaftliche Arbeit},
+            pdfauthor={Max Mustermann},
+            pdfkeywords={Arbeit,LaTeX,Universität}]{hyperref}
+            % makes refering inside the pdf possible and changes its metadata
+
+%\usepackage{csquotes}
+%\usepackage[backend=biber]{biblatex}
+%\addbibresource{References.bib}
+%\DefineBibliographyStrings{ngerman}{
+%   andothers = {{et\,al\adddot}},
+%}
+%\DeclareNameAlias{author}{last-first}
+
+% uncomment the following 3 lines if you want that equations, figures and tables
+% are numbered w.r.t. their subsections (3.1.1 instead of 3.1)
+% \numberwithin{equation}{subsection}  % ... for equations
+% \numberwithin{figure}{subsection}    % ... for figures
+% \numberwithin{table}{subsection}     % ... for tables
+
+% changes the distance between numbers and the dot and comma for the correct
+% german numbering-layout
+\usepackage{ziffer}
+
+\usepackage{epstopdf}
+\epstopdfsetup{update} % only updates the pdf that are created when converting
+                       % an eps-image when the image has changed
+
+\usepackage{pgf}       % enables the use of images in the pgf format
+
+\usepackage{listings}  % allows the use of lstlisting environment for code snippets
+\usepackage{scrhack}   % listings is officially deprecated by KOMA, to supress
+                       % this warning we load scrhack. If you don't need the
+                       % listings package you also don't have to load scrhack
+
+\usepackage[onehalfspacing]{setspace}
+                       
+% Literaturverzeichnis
+\usepackage{cite}
+
+%\usepackage{linehighlight}
+\usepackage{color}
+
+\usepackage{xcolor}
+\makeatletter
+\let\old@lstKV@SwitchCases\lstKV@SwitchCases
+\def\lstKV@SwitchCases#1#2#3{}
+\makeatother
+\usepackage{lstlinebgrd}
+\makeatletter
+\let\lstKV@SwitchCases\old@lstKV@SwitchCases
+
+\lst@Key{numbers}{none}{%
+    \def\lst@PlaceNumber{\lst@linebgrd}%
+    \lstKV@SwitchCases{#1}%
+    {none:\\%
+     left:\def\lst@PlaceNumber{\llap{\normalfont
+                \lst@numberstyle{\thelstnumber}\kern\lst@numbersep}\lst@linebgrd}\\%
+     right:\def\lst@PlaceNumber{\rlap{\normalfont
+                \kern\linewidth \kern\lst@numbersep
+                \lst@numberstyle{\thelstnumber}}\lst@linebgrd}%
+    }{\PackageError{Listings}{Numbers #1 unknown}\@ehc}}
+\makeatother
+
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\lstset{frame=tb,
+  language=Python,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+\usepackage{subfiles}
+\setlength{\belowcaptionskip}{\baselineskip}
+\usepackage{lstlinebgrd}
