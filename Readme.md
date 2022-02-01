@@ -1,3 +1,3 @@
 # thesis-diplom-daniel
 
-diplom thesis on Numerical simulation of a Reaction-Diffusion-Advection fronts
+diplom thesis on numerical simulation of reaction-diffusion-advection fronts
