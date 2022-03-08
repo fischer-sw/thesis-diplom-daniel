@@ -20,7 +20,7 @@
 !Latex/code/*.json
 *backup.zip
 Daten/*.txt
-Software/site/*
+Software/openfoam/*
 TREND 4.0/*
 *.ps
 *dvi

@@ -1,13 +1,15 @@
 \documentclass[../thesis.tex]{subfiles}
 \begin{document}
 
-\chapter{Einleitung}
-\label{chp:Motivation}
-Thermodynamische Modelle und insbesondere Zustandsgleichungen haben in den vergangen Jahren und Jahrzehnten stark an Bedeutung gewonnen \cite{ahlers2002development, stacey2000k}. Sie dienen der Bestimmung von Flüssigkeitseigenschaften wie beispielsweise der Dichte oder der Zusammensetzung. Durch die kontinuierliche Weiterentwicklungen und Verbesserungen können energetische Größen, wie z.B. Enthalpien und Wärmekapazitäten mit immer höherer Genauigkeit berechnet werden \cite{chen2002modification}. Diese Berechnungen sind sowohl für Reinstoffe als auch für Gemische durchführbar.
-Zustandsgleichungen bilden das Herzstück einer jeden Software zum Design und zur Optimierung von verfahrenstechnischen Anwendungen und Prozessen. Durch das Lösen von Massen- und Energiebilanzen können Prozessgrößen bestimmt und verschieden Verfahrensansätze miteinander verglichen werden. Eine möglichst realistische Beschreibung der Stoffeigenschaften ist dafür besonders wichtig. Um dies zu gewährleisten, ist eine Validierung der verwendeten Modelle mit verschiedenen experimentell ermittelten Stoffdaten notwendig. Um das über einen großen Anwendungsbereich aus verschiedenen Drücken und Temperaturen zu ermöglichen, ist eine einfach zu verwendende Zusammenstellung von experimentellen Stoffdaten notwendig.
+\chapter{Introduction}
+\label{chp:introduction}
 
-Basierend auf dieser Forderung wurden von der Forschergruppe Jaubert et al. \cite{jaubert2020benchmark} experimentelle Daten zu verschieden Stoffen gesammelt. Diese Stoffe sind von den beteiligten Wissenschaftlern in verschiedene Stoffklassen unterteilt worden. Zusätzlich zu der Sammlung der Daten wurde von der Gruppe ein Bewertungssystem für ein zu testendes thermodynamisches Modell entwickelt, sodass Modelle miteinander verglichen werden können.
+Reaction-Diffusion-Advection fronts are playing a significant role in a broad variety of technical and natural systems. Fields these systems are applied in are  for example disease spreading \cite{kuto2017concentration}, population dynamics \cite{chen2018hopf, wang2019persistence} or biological applications \cite{zhao2011operator} to name a few. A common technical use case is the description of species distribution \cite{nakagaki1999reaction, von2013measurement} which is a part of chemical engineering. The chemical reaction $ A+B \rightarrow C$, which is also looked at in this work, is the most prominent case in reaction-diffusion-advection research. This reaction is an important subset of reaction-diffusion-advection fronts.
 
-In dieser Arbeit soll es um die Implementation der entwickelten Methode und deren Anwendung mit der Stoffdatensoftware \texttt{TREND} gehen.
+Until recently, the dynamics of fronts, following the just given reaction, where studied for one-dimensional (1D) geometries \cite{PhysRevA.38.3151}. The developed approaches were then later expanded and applied to cylindrical systems by Comolli, De Wit and Brau \cite{comolli2021dynamics}.
+
+Within this work a model for the reaction-diffusion-advection of $ A+B \rightarrow C$ is created for a cylindrical geometry. Within this model the two initially separated species A and B are transported through advection and diffusion. B is injected radially into A from the cylinder's centreline. At the points where A and B meet they react to form the product C. Special interest is in the species distribution within early stages of the developing reaction front. Experiments under $ 0g$ conditions have shown that some interesting patterns occur. To gain further knowledge on how these pattern are build and how they develop over time the theoretical model is needed. The model should describe the front dynamics from a cross-section point of view. As known from previous research the fronts curvature is dependent on the system's geometry. To validate the model the model's results are compared to experimental data. The influence of system geometry, mostly radius and height are of interest, can then be looked at. 
+
+In the end the created model can be generally applied and expanded to other geometries or more complex reactions to gain a deeper understanding of reaction-diffusion-advection fronts. 
 
 \end{document}

@@ -18,7 +18,9 @@
 % - 2018.0.0.2: Fixed some small typos; overhaul of the titlepage, some stuff
 %               for the inclusion of a pdf file
 % -----------------------------------------------------------------------------
+
 \documentclass[12pt,a4paper,toc=chapterentrywithdots]{scrreprt}
+
 \usepackage{tex/style} % imports the style-file which loads all the packages
 \graphicspath{ {./figs/} }
 \begin{document}
@@ -60,8 +62,8 @@
 \pagenumbering{arabic} % page numbering is done with arabic numbers from now on
 % -----------------------------------------------------------------------------
 
-%\subfile{text/00-abstract}
-%\subfile{tex/01-motivation}
+%\subfile{tex/00-abstract}
+\subfile{tex/01-motivation}
 
 %\appendix
 %\subfile{tex/appendix}
