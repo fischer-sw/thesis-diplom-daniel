@@ -11,6 +11,7 @@
 *.pdf
 *.png
 *.pyc
+*.bkp
 *.stats
 !Latex/figs/*.pdf
 !Latex/figs/*.png
@@ -23,7 +24,7 @@ Daten/*.txt
 Software/openfoam/*
 TREND 4.0/*
 *.ps
-*dvi
+*.dvi
 *.out.ps
 *.lof
 *.lot
