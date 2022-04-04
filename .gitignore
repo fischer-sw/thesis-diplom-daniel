@@ -15,7 +15,7 @@
 *.stats
 !Latex/figs/*.pdf
 !Latex/figs/*.png
-!Notes/*.png
+!Notes/img/*.png
 !Latex/pdfs/*.pdf
 !Literatur/*.pdf
 !Daten/mappings.json

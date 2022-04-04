@@ -1,5 +1,11 @@
 # Notes
 
+## Ansys Configuration
+
+* Change UI language
+    - go to ansys installation location
+    - open (Ansys Inc -> Ansys Student -> v221(version number) -> ProductConfig.exe)
+    - chagne language to desired one
 ## Ansys Fluent
 
 User Interface Basics (DesignModeler + Mesher)
@@ -9,8 +15,17 @@ User Interface Basics (DesignModeler + Mesher)
 
 ### Workflow
 
+0. First time opening
+    - Drop **Fluent Flow(Fluent)** Workflow to Project
+    - Doubleclick on Geometry
+    - Close Window
+
 1. Create Geometry in DesignModeler
-    - click on XY-Plane
+    - rightclick Geometry -> New DesignModeler Geometry...
+    - click on XY-Plane (Z arrow)
+        - Axisymetric Problems
+            - **radial direction**: y
+            - **axial direction**: x (axis of rotation)
     - change form Modelling to Sketching
         - create sketch with drawing and constraints
         - add dimensions with dimensions
@@ -19,15 +34,18 @@ User Interface Basics (DesignModeler + Mesher)
     - Check for errors in Model tree
 
 2. Open mesher
-    - name Edges (give usefull names e.g. inlet, outlet, wall_1, wall_2, ...)
+    - name Edges (give usefull names e.g. inlet, outlet, wall_1, wall_2, ...) (shortkey N)
         - select edge -> rightclick -> create named selection
     - create divisions (generate mesh near faces)
         - rightclick Mesh -> Insert -> Sizing
             - select edges -> Click Apply in Geometry tab
             - select type (e.g. Number of Devisions)
     - create inflation (create higher resolution near walls)
+
         - rightclick Mesh -> Insert -> Inflation
-            - leave default settings
+            - select Face -> click Apply under Geometry
+            - select edges -> click Apply under Boundary
+            - leave rest as default settings
     - create method (create inner mesh)
         - rightclick Mesh -> Insert -> Method
             - highlight body -> Click Apply
@@ -38,9 +56,9 @@ User Interface Basics (DesignModeler + Mesher)
 
 3. Setup
     - General
-        - ![general.png](general.png)
+        - ![Image not found](img/general.png)
     - Models 
-        - ![model.png](models.png)
+        - ![model.png](img/models.png)
     - Materials
         - Add fluids
             - RightClick Fluids -> New

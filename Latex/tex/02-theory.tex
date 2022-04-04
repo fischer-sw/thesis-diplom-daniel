@@ -99,6 +99,7 @@ For an incompressible fluid \autoref{eq:FE_mb_short} can be further shortened be
 \end{equation}
 
 \subsection{momentum conservation}
+\label{sec:moment_conv}
 
 When looking at the rate of momentum change of a fluid element the sum of all forces on the fluid particle has to be taken into account due to Newton's second law \cite{versteeg2007introduction}. Two different type of forces working on a fluid particle can be distinguished. On one hand there are surface forces which contain pressure forces, viscous forces and gravity force. On the other hand there are body forces which contain centrifugal forces, Coriolis force, and electromagnetic force. Both type of forces will be presented by different terms within the momentum equation.
 
@@ -173,13 +174,32 @@ With the same approach the forces per unit volume in $ y $ and $ z $ direction c
 The resulting momentum equations are:
 
 \begin{eqnarray}
-	\rho \dfrac{Du}{Dt} & \dfrac{\partial (-p + \tau_{xx})}{\partial x} + \dfrac{\tau_{yx}}{\partial y} + \dfrac{\partial \tau_{zx}}{\partial z} + S_{M_x} \\
-	\rho \dfrac{Dv}{Dt} & \dfrac{\tau_{xy}}{\partial x} + \dfrac{\partial (-p + \tau_{yy})}{\partial y} + \dfrac{\partial \tau_{zy}}{\partial z} +  S_{M_y} \\
-	\rho \dfrac{Dw}{Dt} & \dfrac{\tau_{xz}}{\partial x} + \dfrac{\partial \tau_{yz}}{\partial y} + \dfrac{\partial (-p + \tau_{zz})}{\partial z} +
+	\rho \dfrac{Du}{Dt} = & \dfrac{\partial (-p + \tau_{xx})}{\partial x} + \dfrac{\tau_{yx}}{\partial y} + \dfrac{\partial \tau_{zx}}{\partial z} + S_{M_x} \\
+	\rho \dfrac{Dv}{Dt} = & \dfrac{\tau_{xy}}{\partial x} + \dfrac{\partial (-p + \tau_{yy})}{\partial y} + \dfrac{\partial \tau_{zy}}{\partial z} +  S_{M_y} \\
+	\rho \dfrac{Dw}{Dt} = & \dfrac{\tau_{xz}}{\partial x} + \dfrac{\partial \tau_{yz}}{\partial y} + \dfrac{\partial (-p + \tau_{zz})}{\partial z} +
 	S_{M_z}
 \end{eqnarray}
 
 The terms $S_{M_x}, S_{M_y}, S_{M_z}$ are source terms which represent the body forces. In case of gravity the source term in $z$ direction would be equal to $ -\rho g$.
+
+\section{Navier-Stokes equations}
+
+Within the momentum equations there are the viscous stress components $ \tau_{ij}$. For these unknown variables a calculation method is needed. In most fluids the viscous stress is directly linked to the rate of local deformation $ s $. There are nine different local deformation components, from which six are independent for isotropic fluids. These nine components can be seen in \autoref{fig:fluidelement_stress}, because they occur in the same direction as the viscous stresses. The six independent components can be divided into three elongating deformations $ s_{ii} $, as shown in Equations \ref{eq:stress_x_elong} to \ref{eq:stress_z_elong}, and six shearing linear deformations $ s_{iy} $, shown in Equations \ref{eq:stress_xy_lin} to \ref{eq:stress_yz_lin}. The indexing convention is the same as in \autoref{sec:moment_conv}.
+
+\begin{eqnarray}
+	s_{xx} = & \dfrac{\partial u}{\partial x} \label{eq:stress_x_elong} \\[6pt]
+	s_{yy} = & \dfrac{\partial v}{\partial y} \label{eq:stress_y_elong}  \\[6pt] 
+	s_{zz} = & \dfrac{\partial w}{\partial z} \label{eq:stress_z_elong}
+\end{eqnarray}
+
+\begin{eqnarray}
+	s_{xy} = & s_{yx} = & \dfrac{1}{2} \cdot \left( \dfrac{\partial u}{\partial y} + \dfrac{\partial v}{\partial x} \right) \label{eq:stress_xy_lin} \\[6pt] 
+	s_{xz} = & s_{zx} = & \dfrac{1}{2} \cdot \left( \dfrac{\partial u}{\partial z} + \dfrac{\partial w}{\partial x} \right) \label{eq:stress_xz_lin} \\[6pt] 
+	s_{yz} = & s_{zy} = & \dfrac{1}{2} \cdot \left( \dfrac{\partial v}{\partial z} + \dfrac{\partial w}{\partial y} \right)	\label{eq:stress_yz_lin}
+\end{eqnarray}
+
+For a Newtonian fluid the viscous stresses are proportional to the local deformation rates.
+
 
 
 \section{finite volume method}
