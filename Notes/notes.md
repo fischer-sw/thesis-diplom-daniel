@@ -70,4 +70,18 @@ User Interface Basics (DesignModeler + Mesher)
 
     - Boundry Conditions
         - inlet
-            - 
+            - ![Image not found](img/inlet_yorgos.png)
+        - outlet
+            - ![Image not found](img/outlet_yorgos.png)
+
+    - Methods
+        - ![Image not found](img/methods_yorgos.png)
+
+    - Contorls
+        - ![Image not found](img/controls_yorgos.png)
+
+    - Initialization
+        - ![Image not found](img/init_yorgos.png)
+
+    - Run calculation
+        - ![Image not found](img/calc_yorgos.png)
