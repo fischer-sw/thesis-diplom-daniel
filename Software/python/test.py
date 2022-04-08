@@ -189,7 +189,7 @@ if __name__ == "__main__":
 
     example = {
         
-        "flowrate" : 10,
+        "flowrate" : 1000,
         
         "z_res" : {
             "length" : 1,
@@ -197,7 +197,7 @@ if __name__ == "__main__":
         },
 
         "r_res" : {
-            "length" : 5,
+            "length" : 1,
             "devisions" : 80
         }
     }

@@ -84,3 +84,32 @@ User Interface Basics (DesignModeler + Mesher)
 
     - Run calculation
         - ![Image not found](img/calc_yorgos.png)
+
+4. Solution
+    - get a first impression of results
+        - expand **Results** tab within model tree
+        - expand **Graphics** tab
+        - ++rightclick++ **Contours** -> **New**
+        - select variable of interest from dropdown menus
+        - click **Save/Display**
+        - close settings window with **Close**
+
+5. Results
+
+    - export results 
+        - create plane
+            - highlight **Insert** in menu bar -> **Location** -> Plane
+            - default settings are ok for this case
+            - click **Apply**
+            - plane should be visible within viewport
+        - add results to plane
+            - hihghlight **Insert** in menu bar -> **Contour**
+            - select the just created plane at Locations
+            - select the desired variable within Variable
+            - click **Apply**
+        - export data
+            - highlight **File** in menu bar -> **Export** -> **Export...**
+            - select just created plane at Locations
+            - highlight variables that need to be exported (geometry information is already there due to ticked **Export Geometry Information**)
+            - select export file location at **File**
+            - click **save**
