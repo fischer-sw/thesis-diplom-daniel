@@ -6,6 +6,7 @@ import sys
 import pandas as pd
 import matplotlib.pyplot as plt
 
+from ansys_utils import *
 
 class flowfield:
     def __init__(self, pars):
@@ -19,9 +20,9 @@ class flowfield:
         Function that checks that all parameters needed to calculate flowfield are set
 
         example = {
-            
+
             "flowrate" : 3,
-            
+
             "z_res" : {
                 "length" : 1,
                 "devisions" : 10
@@ -54,7 +55,7 @@ class flowfield:
         #     error = True
         #     print("Height length and devisions don't match")
 
-        if error == False:    
+        if error == False:
             return pars
         else:
             exit()
@@ -63,7 +64,7 @@ class flowfield:
         """
         Function that creates flowfield array
         """
-        
+
         r_elements = int(self.pars["r_res"]["devisions"])
 
         z_elements = int(self.pars["z_res"]["devisions"])
@@ -80,10 +81,10 @@ class flowfield:
 
                 r_len = self.pars["r_res"]["length"]
                 z_len = self.pars["z_res"]["length"]
-                
+
                 r_divs = self.pars["r_res"]["devisions"]
                 z_divs = self.pars["z_res"]["devisions"]
-                
+
                 r_div_len = r_len/r_divs
                 z_div_len = z_len/z_divs
 
@@ -99,28 +100,25 @@ class flowfield:
                     "v" : v_r
                 }
 
-                v_field[i,j] = v_r 
+                v_field[i,j] = v_r
 
                 line.append(tmp)
-            
+
             field.append(line)
 
         # v_field = np.delete(v_field, [0] , 0)
 
         return field, v_field
 
-    def show_field(self):
+    def show_field(self, x, y, data):
         """
         Function that shows calculation results as image
         """
 
-        data = self.flowfield
-        # data = np.rot90(np.fliplr(data))
-        
-        fig = plt.figure()
+        fig = plt.figure(figsize=(4,10))
         ax = fig.add_subplot(111)
-        cax = ax.matshow(data, interpolation='nearest', cmap=plt.cm.get_cmap('jet', 10))
-        
+        cax = ax.pcolormesh(x, y, data, shading='nearest', cmap=plt.cm.get_cmap('jet'))
+
 
         # set correct x_ticks labels
         x_ticks = ax.get_xticks()
@@ -135,7 +133,7 @@ class flowfield:
 
         for x in range(len(x_ticks)):
             new_x_ticks.append(x * x_div_len)
-        
+
         # ax.set_xticklabels(new_x_ticks)
 
         y_ticks = ax.get_yticks()
@@ -155,7 +153,7 @@ class flowfield:
 
         # add colorbar
 
-        
+
         cbar = fig.colorbar(cax)
         cbar.set_label('velocity [m/s]', rotation=90)
 
@@ -176,7 +174,7 @@ class flowfield:
         """
         Function that calculates velocity v dependent on positon (r = radius, z = height, pars = parameters)
         """
-        
+
         Q_rate = pars["flowrate"]
         h = pars["z_res"]["length"]
 
@@ -188,9 +186,9 @@ class flowfield:
 if __name__ == "__main__":
 
     example = {
-        
+
         "flowrate" : 1000,
-        
+
         "z_res" : {
             "length" : 1,
             "devisions" : 60
@@ -203,7 +201,37 @@ if __name__ == "__main__":
     }
 
     test = flowfield(example)
-    test.show_field()
+
+    raw_data = read_csv('export.csv')
+    X = sorted(set(raw_data['X [ m ]']))
+    Y = sorted(set(raw_data['Y [ m ]']))
+    V = np.zeros((len(Y), len(X)))
+
+    for i in range(len(raw_data['Velocity [ m s^-1 ]'])):
+        x = raw_data['X [ m ]'][i]
+        y = raw_data['Y [ m ]'][i]
+        v = raw_data['Velocity [ m s^-1 ]'][i]
+        ix = X.index(x)
+        iy = Y.index(y)
+        V[iy,ix] = v
+
+    #test.show_field(X, Y, V)
+
+    Vr = np.zeros((len(Y), len(X)))
+    for i in range(len(raw_data['Velocity [ m s^-1 ]'])):
+        x = raw_data['X [ m ]'][i]
+        y = raw_data['Y [ m ]'][i]
+        r = y
+        z = x - (X[-1] - X[0]) / 2
+        vr = test.calc_v(r, z, test.pars)
+        ix = X.index(x)
+        iy = Y.index(y)
+        Vr[iy,ix] = vr
+    
+    #test.show_field(X, Y, Vr)
+
+    d = V - Vr
+    test.show_field(X, Y, d)
+
     #shape = np.shape(test.flowfield)
     #print(test.flowfield[round(shape[1]/2)])
-
