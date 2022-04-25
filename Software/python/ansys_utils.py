@@ -2,15 +2,15 @@ import os
 import re
 import sys
 
-import numpy as np
-
 def read_csv(file_name):
     """
     Read Ansys CSV export file.
     """
 
+    path = os.path.join(sys.path[0], ".." , "ansys" , "exports", file_name)
+
     result = {}
-    with open(file_name) as f:
+    with open(path) as f:
         for line in f.readlines():
             line = line.strip()
             if not line:

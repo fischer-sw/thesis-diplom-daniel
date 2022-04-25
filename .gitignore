@@ -5,7 +5,6 @@
 *.blg
 *.bbl
 *.gz
-*.csv
 *.fld
 *.toc
 *.pdf
@@ -13,20 +12,14 @@
 *.pyc
 *.bkp
 *.stats
-!Latex/figs/*.pdf
-!Latex/figs/*.png
-!Notes/img/*.png
-!Latex/pdfs/*.pdf
-!Literatur/*.pdf
-!Daten/mappings.json
-!Latex/code/*.json
-*backup.zip
-Daten/*.txt
-Software/openfoam/*
-TREND 4.0/*
 *.ps
 *.dvi
 *.out.ps
 *.lof
 *.lot
 *.json
+!Latex/figs/*.pdf
+!Latex/figs/*.png
+!Notes/img/*.png
+!Latex/pdfs/*.pdf
+!Literatur/*.pdf
