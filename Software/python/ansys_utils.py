@@ -1,6 +1,7 @@
 import os
 import re
 import sys
+import pandas as pd
 
 def read_steady_data(file_name):
     """
@@ -31,38 +32,26 @@ def read_steady_data(file_name):
 
     return result
 
-def read_transient_data():
-    pass
+def read_transient_data(case_dir):
+    """
+    Read Ansys transient export data
+    """
 
-def show_field(self, x, y, data, conf):
-        """
-        Function that shows calculation results as image
-        """
+    path = os.path.join(sys.path[0], "../..", "Daten", "transient", case_dir)
+    
+    files = os.listdir(path)
 
-        # mirror across diagonal
-        x_tmp = y
-        y_tmp = x
-        data = np.rot90(np.fliplr(data))
+    data = {}
 
-        fig = plt.figure(figsize=(10,6))
-        ax = fig.add_subplot(111)
-        cax = ax.pcolormesh(x_tmp, y_tmp, data, shading='nearest', cmap=plt.cm.get_cmap('jet'))
+    for file in files:
+        
+        m = re.findall(r'^.*\-(.*)\.', file)
 
-        # add axis description
-        ax.set_xlabel("radius r [m]")
-        ax.set_ylabel("height z [m]")
+        if m:
+            timestamp =m[0]
 
-        # add colorbar
-        cbar = fig.colorbar(cax)
-        cbar.set_label(conf["c_bar"], rotation=90, labelpad=7)
+        tmp_data = pd.read_csv(os.path.join(path,file))
 
-        path = sys.path[0]
-        path = os.path.join(path, "Images")
+        data[timestamp] = tmp_data
 
-        if os.path.exists(path) == False:
-            os.mkdir(path)
-
-        image_name = conf["name"] + ".png"
-        image_path = os.path.join(path, image_name)
-
-        plt.savefig(image_path)
+    return data
