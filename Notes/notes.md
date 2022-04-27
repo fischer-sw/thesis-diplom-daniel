@@ -113,3 +113,28 @@ User Interface Basics (DesignModeler + Mesher)
             - highlight variables that need to be exported (geometry information is already there due to ticked **Export Geometry Information**)
             - select export file location at **File**
             - click **save**
+
+
+# Animations
+
+## Create Animations
+- click **Solution** tab --> Activities --> Create --> Solution Animations
+    - ![Image not found](img/animation_setup.png)
+    - Storage Type (PNG or JPEG for easier use later)
+- run calculation (Initialize & Calculate)
+
+## Remove Animation creation
+- expand **Calculation Activities** within model tree
+- expand **Solution Animations**
+- delete Animation objects
+
+# Data Export
+
+## Create data export at every timestep (Transient Simulation)
+- click **Solution** tab --> Activities --> Manage --> Create (under automatic Export)
+    - ![Image not found](img/data_export.png)
+    - File Type ASCII to be able to read data
+    - File Name (including path) can have **.csv** extension for easier post processing but doesn't have to
+
+# Intialize with species
+- under **Initialize** menu --> Patch... --> set values --> click ++Patch++

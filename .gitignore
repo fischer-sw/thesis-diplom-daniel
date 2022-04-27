@@ -18,6 +18,7 @@
 *.lof
 *.lot
 *.json
+Daten/*
 !Latex/figs/*.pdf
 !Latex/figs/*.png
 !Notes/img/*.png
