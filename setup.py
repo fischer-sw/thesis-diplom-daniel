@@ -2,13 +2,25 @@
 
 import os
 import sys
+import shutil
+import logging
+import zipfile
+
+# setup logging
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(filename)s - %(levelname)s - %(funcName)s - %(message)s")
 
 def setup():
+    logging.info("Starting Latex clean")
     path = os.path.join(sys.path[0], "Latex", "clean.py")
     data_path = os.path.join(sys.path[0], "Daten")
     os.system("python3 " + path)
     if os.path.exists(data_path):
-        os.system("rm -rf ./Daten")
-    os.system("unzip ./Daten")
+        logging.info("Removing old Daten folder")
+        shutil.rmtree("./Daten")
+    logging.info("Adding new Daten folder")
+    with zipfile.ZipFile("./Daten.zip", 'r') as zip_ref:
+        zip_ref.extractall("./")
+    
 
-setup()
+if __name__ == "__main__":
+    setup()

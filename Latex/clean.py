@@ -2,7 +2,10 @@
 
 import os
 import sys
+import logging
 
+# setup logging
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(filename)s - %(levelname)s - %(funcName)s - %(message)s")
 
 def clean():
     """
@@ -17,9 +20,15 @@ def clean():
     delete(data, path)
 
 def delete(data, path):
+    deleted = 0
     for line in data:
         ending = line.split(".")[-1]
         if ending in ["aux", "bbl", "log", "out", "gz", "blg", "toc", "pdf", "lof", "lot"]:
-            os.remove(os.path.join(path, line))
+            file = os.path.join(path, line)
+            os.remove(file)
+            logging.debug("Deleted {}".format(file))
+            deleted += 1
+    logging.info("Deleted {} files in folder {}".format(deleted, path))
 
-clean()
+if __name__ == "__main__":
+    clean()
