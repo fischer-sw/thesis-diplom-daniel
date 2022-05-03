@@ -51,9 +51,56 @@ class flowfield:
         else:
             exit()
 
+    def multi_field(self, x, y, ansys_data, calc_data, conf):
+        """
+        Function that shows calculated and ansys flowfield within one image
+        """
+        # mirror across diagonal
+        x_tmp = y
+        y_tmp = x
+        ansys_data = np.rot90(np.fliplr(ansys_data))
+        calc_data = np.rot90(np.fliplr(calc_data))
+
+        fig, axs = plt.subplots(2, 1, sharex=True, sharey=True, figsize=(8,6))
+        
+        # plot 1
+        cax = axs[0].pcolormesh(x_tmp, y_tmp, ansys_data, shading='nearest', cmap=plt.cm.get_cmap('jet'))
+        # add axis description
+        # axs[0].set_xlabel("radius r [m]")
+        axs[0].set_ylabel("height z [m]")
+        axs[0].set_title("ansys calculation")
+        # add colorbar
+        cbar = fig.colorbar(cax, ax=axs[0])
+        cbar.set_label(conf["c_bar"], rotation=90, labelpad=7)
+
+        # plot 2
+        # ax = fig.add_subplot(112)
+        cax = axs[1].pcolormesh(x_tmp, y_tmp, calc_data, shading='nearest', cmap=plt.cm.get_cmap('jet'))
+        # add axis description
+        axs[1].set_xlabel("radius r [m]")
+        axs[1].set_ylabel("height z [m]")
+        axs[1].set_title("field calculation")
+        # add colorbar
+        cbar = fig.colorbar(cax, ax=axs[1])
+        cbar.set_label(conf["c_bar"], rotation=90, labelpad=7)
+
+        path = sys.path[0]
+        path = os.path.join(path, "Images")
+        sub_path = os.path.join(path, "Images", "steady")
+
+        if os.path.exists(path) == False:
+            os.mkdir(path)
+        if os.path.exists(sub_path) == False:
+            os.mkdir(sub_path)
+
+        image_name = conf["name"] + ".png"
+        image_path = os.path.join(path, image_name)
+
+        plt.savefig(image_path)
+
     def show_field(self, x, y, data, conf):
         """
-        Function that shows calculation results as image
+        Function that shows field as image
         """
 
         # mirror across diagonal
@@ -75,12 +122,16 @@ class flowfield:
 
         path = sys.path[0]
         path = os.path.join(path, "Images")
+        sub_path = os.path.join(path, "Images", "steady")
 
         if os.path.exists(path) == False:
             os.mkdir(path)
+        if os.path.exists(sub_path) == False:
+            os.mkdir(sub_path)
+            
 
         image_name = conf["name"] + ".png"
-        image_path = os.path.join(path, image_name)
+        image_path = os.path.join(sub_path, image_name)
 
         plt.savefig(image_path)
 
@@ -166,3 +217,9 @@ if __name__ == "__main__":
     }
 
     test.show_field(X, Y, d, config)
+
+    config = {
+        "name" : "two_fields",
+        "c_bar" : "Velocity [m/s]"
+    }
+    test.multi_field(X,Y,V,Vr,config)

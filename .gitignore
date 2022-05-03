@@ -19,6 +19,7 @@
 *.lot
 *.json
 Daten/*
+Software/openfoam
 !Latex/figs/*.pdf
 !Latex/figs/*.png
 !Notes/img/*.png

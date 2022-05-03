@@ -1,5 +1,3 @@
-#!/usr/bin/python3
-
 import os
 import sys
 import shutil
@@ -11,9 +9,9 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(filename)s - %(l
 
 def setup():
     logging.info("Starting Latex clean")
-    path = os.path.join(sys.path[0], "Latex", "clean.py")
+    # path = os.path.join(sys.path[0], "Latex", "clean.py")
     data_path = os.path.join(sys.path[0], "Daten")
-    os.system("python3 " + path)
+    # os.system("python3 " + path)
     if os.path.exists(data_path):
         logging.info("Removing old Daten folder")
         shutil.rmtree("./Daten")
