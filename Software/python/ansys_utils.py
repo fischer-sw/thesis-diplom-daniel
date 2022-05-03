@@ -32,7 +32,15 @@ def read_steady_data(file_name):
 
     return result
 
-def read_transient_data(case_dir):
+def get_case_nums(case_dir):
+    path = os.path.join(sys.path[0], "../..", "Daten", "transient", case_dir)
+    
+    files = os.listdir(path)
+
+    return len(files)
+    
+
+def read_transient_data(case_dir, times):
     """
     Read Ansys transient export data
     """
@@ -48,10 +56,12 @@ def read_transient_data(case_dir):
         m = re.findall(r'^.*\-(.*)\.', file)
 
         if m:
-            timestamp =m[0]
+            timestamp =int(m[0])
 
-        tmp_data = pd.read_csv(os.path.join(path,file))
-
-        data[timestamp] = tmp_data
+        if timestamp in times:
+            tmp_data = pd.read_csv(os.path.join(path,file))
+            tmp_data.drop(tmp_data.columns[0], axis=1, inplace=True)
+            tmp_data.columns = [x.strip() for x in tmp_data.columns]
+            data[timestamp] = tmp_data
 
     return data
