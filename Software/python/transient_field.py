@@ -17,6 +17,7 @@ class flowfield:
     def __init__(self, case, var, plots=[]):
         self.case = case
         self.var = var
+        self.check_data_format()
         
         if plots == []:
             logging.info("Plots are not set. Creating default ones ...")
@@ -33,6 +34,29 @@ class flowfield:
             logging.info("Declared var {} not within data. Please use one of {}".format(var, cols))
             exit()
         
+    def check_data_format(self):
+
+        base_path = sys.path[0]
+        path = os.path.join(base_path, "../..", "Daten")
+        modes = os.listdir(path)
+        logging.debug("Modi = {}".format(modes))
+
+        for mode in modes:
+            cases = os.listdir(os.path.join(path, mode))
+            logging.debug("Found {} for mode {}".format(cases, mode))
+
+            for case in cases:
+                timestamps = os.listdir(os.path.join(path, mode, case))
+                logging.debug("Found {} files for case {} in mode {}".format(len(timestamps), case, mode))
+                renamed = 0
+                for file in timestamps:
+                    if re.findall(r'.csv', file) == []:
+                        old_path = os.path.join(path, mode, case, file)
+                        new_path = os.path.join(path, mode, case, file + ".csv")
+                        logging.debug(f"Rename {file} to {file + '.csv'}")
+                        renamed += 1
+                        os.rename(old_path, new_path)
+                logging.info("Renamed {} files in case {} in mode {}".format(renamed, case, mode))
 
     def convert2field(self, data):
 
@@ -56,7 +80,7 @@ class flowfield:
         """
         
         
-        fig, axs = plt.subplots(len(self.plots), 1, sharex=True, sharey=True, figsize=(6,2*len(self.plots)+5))
+        fig, axs = plt.subplots(len(self.plots), 1, sharex=True, sharey=True, figsize=(6.5,2.4*len(self.plots)))
         
 
         for idx, ele in enumerate(self.plots):
@@ -66,21 +90,33 @@ class flowfield:
             logging.debug("Size X = {}, Size Y = {}, Size Vals = {}".format(len(X), len(Y), Vals.shape))
 
             # mirror across diagonal
-            x_tmp = X
-            y_tmp = Y
-            # Vals = np.rot90(np.fliplr(Vals))
+            x_tmp = Y
+            y_tmp = X
+            Vals = np.rot90(np.fliplr(Vals))
             
             # plot n
-            cax = axs[idx].pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'))
-            # add axis description
-            if idx == len(self.plots)-1 :
-                axs[idx].set_xlabel("radius r [m]")
-            axs[idx].set_ylabel("height z [m]")
-            axs[idx].set_title("t = {}".format(ele))
-            # add colorbar
-            cbar = fig.colorbar(cax, ax=axs[idx])
-            cbar.set_label(conf["c_bar"], rotation=90, labelpad=7)
 
+            if len(self.plots) != 1:
+                cax = axs[idx].pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'))
+                # add axis description
+                if idx == len(self.plots)-1 :
+                    axs[idx].set_xlabel("radius r [m]")
+                axs[idx].set_ylabel("height z [m]")
+                axs[idx].set_title("t = {}".format(ele))
+                # add colorbar
+                cbar = fig.colorbar(cax, ax=axs[idx])
+                cbar.set_label(conf["c_bar"], rotation=90, labelpad=7)
+
+            else:
+                cax = axs.pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'))
+
+                axs.set_xlabel("radius r [m]")
+                axs.set_ylabel("height z [m]")
+                axs.set_title("t = {}".format(ele))
+                # add colorbar
+                cbar = fig.colorbar(cax, ax=axs)
+                cbar.set_label(conf["c_bar"], rotation=90, labelpad=7)
+            
         path = sys.path[0]
         path = os.path.join(path, "Images")
         sub_path = os.path.join(path, "transient")
@@ -96,7 +132,7 @@ class flowfield:
 
 if __name__ == "__main__":
 
-    test = flowfield("test", "velocity-magnitude", plots=list(range(1,2)))
+    test = flowfield("tmp", "velocity-magnitude", plots=[])
 
     config = {
         "name" : "test_fields",
