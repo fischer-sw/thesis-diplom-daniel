@@ -20,6 +20,7 @@
 *.json
 Daten/*
 Software/openfoam
+!Software/python/conf_example.json
 !Latex/figs/*.pdf
 !Latex/figs/*.png
 !Notes/img/*.png

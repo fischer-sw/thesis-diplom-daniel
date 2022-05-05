@@ -1,4 +1,4 @@
-import math
+import json
 import numpy as np
 import os
 import sys
@@ -14,24 +14,25 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(filename)s - %(l
 
 class flowfield:
 
-    def __init__(self, case, var, plots=[]):
-        self.case = case
-        self.var = var
+    def __init__(self, config):
+
+        self.config = config
+        self.case = config["case"]
+        self.var = config["var"]
+        self.plots = config["plots"]
         self.check_data_format()
         
-        if plots == []:
+        if self.plots == []:
             logging.info("Plots are not set. Creating default ones ...")
-            case_ns = get_case_nums(case)
+            case_ns = get_case_nums(self.case)
             self.plots = [1, round(case_ns/2), case_ns]
-        else:
-            self.plots = plots
         logging.info("Plots are set to {}".format(self.plots))
 
-        self.data = read_transient_data(case, self.plots)
+        self.data = read_transient_data(self.case, self.plots)
 
         cols = list(self.data[list(self.data.keys())[0]].columns)
-        if not var in cols:
-            logging.info("Declared var {} not within data. Please use one of {}".format(var, cols))
+        if not self.var in cols:
+            logging.info("Declared var {} not within data. Please use one of {}".format(self.var, cols))
             exit()
         
     def check_data_format(self):
@@ -74,7 +75,7 @@ class flowfield:
 
         return X, Y, Vals
     
-    def multi_field(self, conf={}):
+    def multi_field(self):
         """
         Function that shows calculated and ansys flowfield within one image
         """
@@ -105,7 +106,7 @@ class flowfield:
                 axs[idx].set_title("t = {}".format(ele))
                 # add colorbar
                 cbar = fig.colorbar(cax, ax=axs[idx])
-                cbar.set_label(conf["c_bar"], rotation=90, labelpad=7)
+                cbar.set_label(self.config["c_bar"], rotation=90, labelpad=7)
 
             else:
                 cax = axs.pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'))
@@ -115,7 +116,7 @@ class flowfield:
                 axs.set_title("t = {}".format(ele))
                 # add colorbar
                 cbar = fig.colorbar(cax, ax=axs)
-                cbar.set_label(conf["c_bar"], rotation=90, labelpad=7)
+                cbar.set_label(self.config["c_bar"], rotation=90, labelpad=7)
             
         path = sys.path[0]
         path = os.path.join(path, "Images")
@@ -125,18 +126,17 @@ class flowfield:
         if os.path.exists(sub_path) == False:
             os.mkdir(sub_path)
 
-        image_name = conf["name"] + ".png"
+        image_name = self.config["file_name"] + ".png"
         image_path = os.path.join(sub_path, image_name)
 
         plt.savefig(image_path)
 
 if __name__ == "__main__":
 
-    test = flowfield("tmp", "velocity-magnitude", plots=[])
+    cfg_path = os.path.join(sys.path[0], "conf.json")
 
-    config = {
-        "name" : "test_fields",
-        "c_bar" : "Velocity [m/s]"
-    }
+    with open(cfg_path) as f:
+        config = json.load(f)
 
-    test.multi_field(conf=config) 
+    test = flowfield(config)
+    test.multi_field() 
