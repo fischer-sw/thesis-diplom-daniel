@@ -7,9 +7,14 @@ import matplotlib.pyplot as plt
 
 from ansys_utils import *
 
+# setup logging
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(filename)s - %(levelname)s - %(funcName)s - %(message)s")
+
+
 class flowfield:
     def __init__(self, pars):
         self.pars = self.check_pars( pars)
+        check_data_format()
 
     def check_pars(self, pars):
 
@@ -51,6 +56,19 @@ class flowfield:
         else:
             exit()
 
+    def check_folder(self):
+
+        path = sys.path[0]
+        path = os.path.join(path, "Images")
+        sub_path = os.path.join(path, "steady")
+        if os.path.exists(path) == False:
+            os.mkdir(path)
+        if os.path.exists(sub_path) == False:
+            os.mkdir(sub_path)
+
+        return sub_path
+
+
     def multi_field(self, x, y, ansys_data, calc_data, conf):
         """
         Function that shows calculated and ansys flowfield within one image
@@ -84,17 +102,10 @@ class flowfield:
         cbar = fig.colorbar(cax, ax=axs[1])
         cbar.set_label(conf["c_bar"], rotation=90, labelpad=7)
 
-        path = sys.path[0]
-        path = os.path.join(path, "Images")
-        sub_path = os.path.join(path, "Images", "steady")
-
-        if os.path.exists(path) == False:
-            os.mkdir(path)
-        if os.path.exists(sub_path) == False:
-            os.mkdir(sub_path)
+        img_folder = self.check_folder()
 
         image_name = conf["name"] + ".png"
-        image_path = os.path.join(path, image_name)
+        image_path = os.path.join(img_folder, image_name)
 
         plt.savefig(image_path)
 
@@ -119,19 +130,10 @@ class flowfield:
         # add colorbar
         cbar = fig.colorbar(cax)
         cbar.set_label(conf["c_bar"], rotation=90, labelpad=7)
-
-        path = sys.path[0]
-        path = os.path.join(path, "Images")
-        sub_path = os.path.join(path, "Images", "steady")
-
-        if os.path.exists(path) == False:
-            os.mkdir(path)
-        if os.path.exists(sub_path) == False:
-            os.mkdir(sub_path)
-            
+        img_folder = self.check_folder()
 
         image_name = conf["name"] + ".png"
-        image_path = os.path.join(sub_path, image_name)
+        image_path = os.path.join(img_folder, image_name)
 
         plt.savefig(image_path)
 

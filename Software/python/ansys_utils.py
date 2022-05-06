@@ -1,6 +1,7 @@
 import os
 import re
 import sys
+import logging
 from numpy import NaN
 import pandas as pd
 
@@ -41,7 +42,7 @@ def get_case_nums(case_dir):
     return len(files)
     
 
-def read_transient_data(case_dir, times):
+def read_transient_data(cases_dir_path ,case_dir, times):
     """
     Read Ansys transient export data
 
@@ -83,3 +84,31 @@ def read_transient_data(case_dir, times):
                 data[timestamp] = tmp_data
 
     return data
+
+def check_data_format():
+
+        base_path = sys.path[0]
+        path = os.path.join(base_path, "../..", "Daten")
+        modes = os.listdir(path)
+        logging.debug("Modi = {}".format(modes))
+
+        for mode in modes:
+            cases = os.listdir(os.path.join(path, mode))
+            logging.debug("Found {} for mode {}".format(cases, mode))
+
+            for case in cases:
+
+                if re.findall(r".csv", case) != []:
+                    continue
+
+                timestamps = os.listdir(os.path.join(path, mode, case))
+                logging.debug("Found {} files for case {} in mode {}".format(len(timestamps), case, mode))
+                renamed = 0
+                for file in timestamps:
+                    if re.findall(r'.csv', file) == []:
+                        old_path = os.path.join(path, mode, case, file)
+                        new_path = os.path.join(path, mode, case, file + ".csv")
+                        logging.debug(f"Rename {file} to {file + '.csv'}")
+                        renamed += 1
+                        os.rename(old_path, new_path)
+                logging.info("Renamed {} files in case {} in mode {}".format(renamed, case, mode))

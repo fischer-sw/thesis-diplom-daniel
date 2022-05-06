@@ -138,3 +138,9 @@ User Interface Basics (DesignModeler + Mesher)
 
 # Intialize with species
 - under **Initialize** menu --> Patch... --> set values --> click ++Patch++
+
+
+# Parabolic velocity at inlet
+
+- under **inlet** setup click on dropdown menu --> select **expression** --> click on **f(x)** button and enter expression
+- expression: 
