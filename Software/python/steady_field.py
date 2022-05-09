@@ -44,7 +44,7 @@ class flowfield:
         error = False
 
         for key in pars.keys():
-            if not key in ["input_vel", "geometry"]:
+            if not key in ["input_vel", "geometry" , "case"]:
                 missing.append(key)
 
         if missing != []:
@@ -155,6 +155,8 @@ if __name__ == "__main__":
 
     example = {
 
+        "case" : "tmp",
+
         "input_vel" : 0.1,
 
         "geometry" : {
@@ -172,7 +174,7 @@ if __name__ == "__main__":
 
     test = flowfield(example)
 
-    raw_data = read_steady_data('export.csv')
+    raw_data = read_steady_data(example["case"], 'export.csv')
     X = sorted(set(raw_data['X [ m ]']))
     Y = sorted(set(raw_data['Y [ m ]']))
     V = np.zeros((len(Y), len(X)))

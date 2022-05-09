@@ -4,13 +4,14 @@ import sys
 import logging
 from numpy import NaN
 import pandas as pd
+import json
 
-def read_steady_data(file_name):
+def read_steady_data(case, file_name):
     """
     Read Ansys CSV export file.
     """
 
-    path = os.path.join(sys.path[0], ".." , ".." , "Daten", "steady", file_name)
+    path = os.path.join(sys.path[0], ".." , ".." , "Daten", "steady", case, file_name)
 
     result = {}
     with open(path) as f:
@@ -34,12 +35,35 @@ def read_steady_data(file_name):
 
     return result
 
-def get_case_nums(case_dir):
-    path = os.path.join(sys.path[0], "../..", "Daten", "transient", case_dir)
-    
-    files = os.listdir(path)
+def get_case_info(cases_dir_path, case):
+    path = os.path.join(sys.path[0], *cases_dir_path, "cases.json")
+    with open(path) as f:
+        cfg = json.load(f)
 
-    return len(files)
+    if case in list(cfg.keys()):
+
+        return cfg[case]
+    else:
+        logging.warning("No config for case {} found in config.json. Please add the case to the config file".format(case))
+
+def get_default_cases(cases_dir_path, case_dir):
+    path = os.path.join(sys.path[0], *cases_dir_path, case_dir)
+    
+    # default indices
+    files = os.listdir(path)
+    cases = []
+
+    for id, file in enumerate(files):
+        m = re.findall(r'\d+', file)
+        if m:
+            cases.append(float(m[0]))
+    
+    default_cases = [min(cases), round((max(cases)- min(cases))/2,0), max(cases)]
+        
+
+    return default_cases
+
+
     
 
 def read_transient_data(cases_dir_path ,case_dir, times):
@@ -49,7 +73,7 @@ def read_transient_data(cases_dir_path ,case_dir, times):
     ansys_filename: C:/Users/TPG247/Documents/Daniel Fischer/thesis-diplom-daniel/Daten/transient/tmp/FFF.1-Setup-Output
     """
 
-    path = os.path.join(sys.path[0], "../..", "Daten", "transient", case_dir)
+    path = os.path.join(sys.path[0], *cases_dir_path, case_dir)
     
     files = os.listdir(path)
 
@@ -94,6 +118,8 @@ def check_data_format():
 
         for mode in modes:
             cases = os.listdir(os.path.join(path, mode))
+            if "cases.json" in cases:
+                cases.remove("cases.json")
             logging.debug("Found {} for mode {}".format(cases, mode))
 
             for case in cases:

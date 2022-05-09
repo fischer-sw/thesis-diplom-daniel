@@ -1,4 +1,5 @@
 import json
+from matplotlib import style
 import numpy as np
 import os
 import sys
@@ -20,17 +21,19 @@ class flowfield:
         self.case = config["case"]
         self.field_var = config["field_var"]
         self.plots = config["plots"]
+        self.one_plot = config["one_plot"]
         self.plot_vars = config["plot_vars"]
         self.do_plots = config["create_plot"]
         self.do_image = config["create_image"]
+
+        self.case_conf = get_case_info(self.config["cases_dir_path"], self.case)
 
 
         check_data_format()
         
         if self.plots == []:
             logging.info("Plots are not set. Creating default ones ...")
-            case_ns = get_case_nums(self.case)
-            self.plots = [1, round(case_ns/2), case_ns]
+            self.plots = get_default_cases(self.config["cases_dir_path"], self.case)
         logging.info("Plots are set to {}".format(self.plots))
 
         self.data = read_transient_data(self.config["cases_dir_path"], self.case, self.plots)
@@ -64,53 +67,123 @@ class flowfield:
             res[var] = Vals
         return X, Y, res
 
+    def check_plot_cfg(self, conf):
+        if len(self.config["plot_vars"]) != len(conf["linestyles"]):
+            logging.info("Plot vars and colordefinitions don't match. Please check if all plotted variables have a respective color defined")
+            exit()
+
+        if len(self.plots) != len(conf["linestyles"]):
+            logging.info("Please define a linestyle for all times that are plotted under linestyles")
+            exit()
+
     def multi_plot(self):
         """
-        Function that plots one variable over the radius for multiple timesteps
+        Function that plots variables over the radius for multiple timesteps
         """
-        fig, axs = plt.subplots(len(self.plots), 1, sharex=True, sharey=True, figsize=(6.5,2.4*len(self.plots)))
-        
 
-        for idx, ele in enumerate(self.plots):
+        plot_cfg = self.config["plot_conf"]
 
-            X, Y, res = self.convert2field(self.data[ele], self.plot_vars)
-            data_tmp = {}
+        self.check_plot_cfg(plot_cfg)
 
-            for var in self.plot_vars:
+        if self.one_plot == False:
+
+            fig, axs = plt.subplots(len(self.plots), 1, sharex=True, sharey=True, figsize=(6.5,2.4*len(self.plots)))
+            
+
+            for idx, ele in enumerate(self.plots):
+
+                X, Y, res = self.convert2field(self.data[ele], self.plot_vars)
+                data_tmp = {}
+
+                for var in self.plot_vars:
+                    
+                    # mirror across diagonal
+                    x_tmp = Y
+                    y_tmp = X
+                    Vals = res[var]
+                    logging.debug("Size X = {}, Size Y = {}, Size Vals = {}".format(len(X), len(Y), Vals.shape))
+                    Vals = np.rot90(np.fliplr(Vals))
+
+                    tmp = np.array([])
+                    for i in range(Vals.shape[1]):
+                        tmp = np.append(tmp, np.mean(Vals[:,i]))
+                    data_tmp[var] = tmp 
+
+                # plot n
+
+                if len(self.plots) != 1:
+
+                    for tmp_var in data_tmp.keys():
+                        col = plot_cfg["colors"][tmp_var]
+                        cax = axs[idx].plot(x_tmp, data_tmp[tmp_var], color=col)
+                        # add axis description
+                    if idx == len(self.plots)-1 :
+                        axs[idx].set_xlabel("radius r [m]")
+                    axs[idx].set_ylabel("height z [m]")
+                    axs[idx].set_title("t = {}s".format(ele * self.case_conf["timestep"]))
+                    
+
+                else:
+                    for tmp_var in data_tmp.keys():
+                        cax = axs.plot(x_tmp, data_tmp[tmp_var], color=col)
+                        # add axis description
+
+                    axs.set_xlabel("radius r [m]")
+                    axs.set_ylabel("height z [m]")
+                    axs.set_title("t = {}s".format(ele* self.case_conf["timestep"]))
+
+        else:
+            
+            fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6.5,2.4*len(self.plots)))
+            
+            l_conf = []
+            for idx, ele in enumerate(self.plots):
+
+                X, Y, res = self.convert2field(self.data[ele], self.plot_vars)
+                data_tmp = {}
                 
-                # mirror across diagonal
-                x_tmp = Y
-                y_tmp = X
-                Vals = res[var]
-                logging.debug("Size X = {}, Size Y = {}, Size Vals = {}".format(len(X), len(Y), Vals.shape))
-                Vals = np.rot90(np.fliplr(Vals))
+                for var in self.plot_vars:
+                    
+                    # mirror across diagonal
+                    x_tmp = Y
+                    y_tmp = X
+                    Vals = res[var]
+                    logging.debug("Size X = {}, Size Y = {}, Size Vals = {}".format(len(X), len(Y), Vals.shape))
+                    Vals = np.rot90(np.fliplr(Vals))
 
-                tmp = np.array([])
-                for i in range(Vals.shape[1]):
-                    tmp = np.append(tmp, np.mean(Vals[:,i]))
-                data_tmp[var] = tmp 
+                    tmp = np.array([])
+                    for i in range(Vals.shape[1]):
+                        tmp = np.append(tmp, np.mean(Vals[:,i]))
+                    data_tmp[var] = tmp 
 
-            # plot n
-
-            if len(self.plots) != 1:
-
-                for tmp_var in data_tmp.keys():
-                    cax = axs[idx].plot(x_tmp, data_tmp[tmp_var])
-                    # add axis description
-                if idx == len(self.plots)-1 :
-                    axs[idx].set_xlabel("radius r [m]")
-                axs[idx].set_ylabel("height z [m]")
-                axs[idx].set_title("t = {}".format(ele))
+                # plot n
                 
+                if len(self.plots) != 1:
+                    
+                    for tmp_var in data_tmp.keys():
+                        l_style = plot_cfg["linestyles"]["t" + str(idx + 1)]
+                        col = plot_cfg["colors"][tmp_var]
+                        cax = axs.plot(x_tmp, data_tmp[tmp_var], linestyle=l_style, color=col)
+                        l_conf.append(plot_cfg["legend"][tmp_var] + ", t={}s".format(ele * self.case_conf["timestep"]))
+                        
+                        # add axis description
+                    if idx == len(self.plots)-1 :
+                        axs.set_xlabel("radius r [m]")
+                    axs.set_ylabel("height z [m]")
+                    # axs.set_title("t = {}".format(ele))
+                    axs.legend(l_conf)
 
-            else:
-                for tmp_var in data_tmp.keys():
-                    cax = axs.plot(x_tmp, data_tmp[tmp_var])
-                    # add axis description
+                else:
+                    for tmp_var in data_tmp.keys():
+                        col = plot_cfg["colors"][tmp_var]
+                        cax = axs.plot(x_tmp, data_tmp[tmp_var], color=col)
+                        l_conf.append(plot_cfg["legend"][tmp_var])
+                        # add axis description
 
-                axs.set_xlabel("radius r [m]")
-                axs.set_ylabel("height z [m]")
-                axs.set_title("t = {}".format(ele))
+                    axs.set_xlabel("radius r [m]")
+                    axs.set_ylabel("height z [m]")
+                    axs.legend(l_conf)
+                    # axs.set_title("t = {}".format(ele))
             
         path = sys.path[0]
         path = os.path.join(path, "Images")
@@ -137,9 +210,6 @@ class flowfield:
         for idx, ele in enumerate(self.plots):
 
             X, Y, res = self.convert2field(self.data[ele], self.field_var)
-
-            
-
             # mirror across diagonal
             x_tmp = Y
             y_tmp = X
@@ -154,7 +224,7 @@ class flowfield:
                 if idx == len(self.plots)-1 :
                     axs[idx].set_xlabel("radius r [m]")
                 axs[idx].set_ylabel("height z [m]")
-                axs[idx].set_title("t = {}".format(ele))
+                axs[idx].set_title("t = {}s".format(ele * self.case_conf["timestep"]))
                 # add colorbar
                 cbar = fig.colorbar(cax, ax=axs[idx])
                 cbar.set_label(self.config["c_bar"], rotation=90, labelpad=7)
