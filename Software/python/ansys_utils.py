@@ -46,7 +46,14 @@ def get_case_info(cases_dir_path, case):
     else:
         logging.warning("No config for case {} found in config.json. Please add the case to the config file".format(case))
 
-def get_default_cases(cases_dir_path, case_dir):
+def get_colsest_plots(plots, cases_dir_path, case_dir):
+    cases = get_cases(cases_dir_path, case_dir)
+    for id, ele in enumerate(plots):
+        case = min(cases, key=lambda x:abs(x-ele))
+        plots[id] = case
+    return plots
+
+def get_cases(cases_dir_path, case_dir):
     path = os.path.join(sys.path[0], *cases_dir_path, case_dir)
     
     # default indices
@@ -57,8 +64,17 @@ def get_default_cases(cases_dir_path, case_dir):
         m = re.findall(r'\d+', file)
         if m:
             cases.append(float(m[0]))
+    return cases
+
+def get_default_cases(cases_dir_path, case_dir):
+
+    cases = get_cases(cases_dir_path, case_dir)
     
-    default_cases = [min(cases), round((max(cases)- min(cases))/2,0), max(cases)]
+    middle = round((max(cases)- min(cases))/2,0)
+    if not middle in cases:
+        middle = min(cases, key=lambda x:abs(x-middle))
+
+    default_cases = [min(cases), middle , max(cases)]
         
 
     return default_cases

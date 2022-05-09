@@ -34,6 +34,8 @@ class flowfield:
         if self.plots == []:
             logging.info("Plots are not set. Creating default ones ...")
             self.plots = get_default_cases(self.config["cases_dir_path"], self.case)
+        else:
+            self.plots = get_colsest_plots(np.array(self.plots)/self.case_conf["timestep"], self.config["cases_dir_path"], self.case)
         logging.info("Plots are set to {}".format(self.plots))
 
         self.data = read_transient_data(self.config["cases_dir_path"], self.case, self.plots)

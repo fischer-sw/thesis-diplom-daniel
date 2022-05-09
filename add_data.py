@@ -1,9 +1,12 @@
 #!/usr/bin/python3
 
 import os
+import shutil
 import sys
 import re
 import logging
+import json
+import datetime
 
 # setup logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(filename)s - %(levelname)s - %(funcName)s - %(message)s")
@@ -20,14 +23,15 @@ def zip_data():
         
         logging.debug("Folder Daten exsists")
         
-        if os.path.exists(zip_path):
-            logging.info("Removing Daten.zip")    
-            os.remove("Daten.zip")
-        else:
-            logging.info("Daten.zip already removed")
+        # if os.path.exists(zip_path):
+        #     logging.info("Removing Daten.zip")    
+        #     os.remove("Daten.zip")
+        # else:
+        #     logging.info("Daten.zip already removed")
 
+        name = "Daten_{}.zip".format(datetime.date.today().strftime("%d-%m-%Y"))
         logging.info("Adding Daten to Daten.zip")
-        os.system("zip -r Daten.zip ./Daten")
+        os.system("zip -r {} ./Daten".format(name))
 
     else:
         logging.warning("Folder Daten doesn't exsist. Please run setup.py")
@@ -41,6 +45,8 @@ def check_data_format():
     for mode in modes:
         cases = os.listdir(os.path.join(path, mode))
         logging.debug("Found {} for mode {}".format(cases, mode))
+        if "cases.json" in cases:
+            cases.remove("cases.json")
 
         for case in cases:
             timestamps = os.listdir(os.path.join(path, mode, case))
@@ -53,10 +59,66 @@ def check_data_format():
                     logging.debug(f"Rename {file} to {file + '.csv'}")
                     renamed += 1
                     os.rename(old_path, new_path)
-            logging.info("Renamed {} files in case {} in mode {}".format(renamed, case, mode))
+            if renamed != 0:
+                logging.info("Renamed {} files in case {} in mode {}".format(renamed, case, mode))
+
+def add_case(original, new_case):
+    """
+    Function that moves new results from tmp to new case directory
+    """
+    
+    old_path = os.path.join(path, "transient", original)
+    new_path = os.path.join(path, "transient", new_case)
+    files = os.listdir(old_path)    
+    # check for new directory
+
+    deleted = 0
+    moved = 0
+    non_csv = []
+    for file in files:
+        if not ".csv" in file:
+            non_csv.append(file)
+
+    if os.path.exists(new_path) == False:
+        os.mkdir(new_path)
+        logging.info("Created directory for case {}".format(new_case))
+    else:
+        if non_csv != []:
+            old_files = os.listdir(new_path)
+            for ele in old_files:
+                os.remove(os.path.join(new_path, ele))
+                deleted += 1
+            logging.info("Deleted {} files in case {}".format(deleted, new_case))
+
+            for file in files:
+                if not ".csv" in file:
+                    old = os.path.join(old_path, file)
+                    new = os.path.join(new_path, file + ".csv")
+                    shutil.move(old, new)
+                    moved += 1
+
+            logging.info("Moved {} files from {} to {}".format(moved, original, new_case))
+        else:
+            logging.info("No files to add from dir {} to case {}".format(original, new_case))
+
+    
+
+    with open(os.path.join(path, "transient", "cases.json")) as f:
+        case_cfg = json.load(f)
+
+    if new_case in list(case_cfg.keys()):
+        logging.info("Case {} already part of config.".format(new_case))
+    else:
+        case_cfg[new_case] = {}
+        logging.info("Adding case {} to case.json. Please input all relevant parameters there before further processing".format(new_case))
+        with open(os.path.join(path, "transient", "cases.json"), "w") as f:
+            f.write(json.dumps(case_cfg, indent=4))
 
 
 if __name__ == "__main__":
+
+    add_case("tmp", "reaction_1")
+
     check_data_format()
-    zip_data()
+    # zip_data()
     
