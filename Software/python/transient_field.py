@@ -25,6 +25,7 @@ class flowfield:
         self.plot_vars = config["plot_vars"]
         self.do_plots = config["create_plot"]
         self.do_image = config["create_image"]
+        self.image_conf = config["image_conf"]
 
         self.case_conf = get_case_info(self.config["cases_dir_path"], self.case)
 
@@ -35,7 +36,7 @@ class flowfield:
             logging.info("Plots are not set. Creating default ones ...")
             self.plots = get_default_cases(self.config["cases_dir_path"], self.case)
         else:
-            self.plots = get_colsest_plots(np.array(self.plots)/self.case_conf["timestep"], self.config["cases_dir_path"], self.case)
+            self.plots = get_colsest_plots(np.array(self.plots)/self.case_conf["timestep"], self.case_conf["timestep"] ,self.config["cases_dir_path"], self.case)
         logging.info("Plots are set to {}".format(self.plots))
 
         self.data = read_transient_data(self.config["cases_dir_path"], self.case, self.plots)
@@ -53,7 +54,9 @@ class flowfield:
                 exit()
         
     def convert2field(self, data, vars):
-
+        """
+        Function that converts list of x,y,<var> to matrix of dimensions x,y with <var> as values inside
+        """
         X = sorted(set(data['x-coordinate']))
         Y = sorted(set(data['y-coordinate']))
         res = {}
@@ -70,6 +73,11 @@ class flowfield:
         return X, Y, res
 
     def check_plot_cfg(self, conf):
+
+        """
+        Function that checks plot configuration for defined vars
+        """
+
         if len(self.config["plot_vars"]) != len(conf["linestyles"]):
             logging.info("Plot vars and colordefinitions don't match. Please check if all plotted variables have a respective color defined")
             exit()
@@ -221,7 +229,10 @@ class flowfield:
             # plot n
 
             if len(self.plots) != 1:
-                cax = axs[idx].pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'))
+                if self.image_conf["set_custom_range"]:
+                    cax = axs[idx].pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'), vmin=self.image_conf["min"], vmax=self.image_conf["max"])
+                else:
+                    cax = axs[idx].pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'))
                 # add axis description
                 if idx == len(self.plots)-1 :
                     axs[idx].set_xlabel("radius r [m]")
@@ -232,11 +243,14 @@ class flowfield:
                 cbar.set_label(self.config["c_bar"], rotation=90, labelpad=7)
 
             else:
-                cax = axs.pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'))
+                if self.image_conf["set_custom_range"]:
+                    cax = axs.pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'), vmin=self.image_conf["min"], vmax=self.image_conf["max"])
+                else:
+                    cax = axs.pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'))
 
                 axs.set_xlabel("radius r [m]")
                 axs.set_ylabel("height z [m]")
-                axs.set_title("t = {}".format(ele))
+                axs.set_title("t = {}s".format(ele * self.case_conf["timestep"]))
                 # add colorbar
                 cbar = fig.colorbar(cax, ax=axs)
                 cbar.set_label(self.config["c_bar"], rotation=90, labelpad=7)
@@ -268,4 +282,6 @@ if __name__ == "__main__":
     
     if config["create_plot"]:
         field.multi_plot()
+
+    
     

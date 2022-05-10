@@ -19,6 +19,7 @@
 *.lot
 *.json
 *.zip
+*.txt
 Daten/*
 Software/openfoam
 !Software/python/conf_example.json

@@ -46,10 +46,17 @@ def get_case_info(cases_dir_path, case):
     else:
         logging.warning("No config for case {} found in config.json. Please add the case to the config file".format(case))
 
-def get_colsest_plots(plots, cases_dir_path, case_dir):
+def get_colsest_plots(plots, timestep, cases_dir_path, case_dir):
     cases = get_cases(cases_dir_path, case_dir)
+    cases.sort()
+    logging.debug("Cases = {}".format(cases))
     for id, ele in enumerate(plots):
-        case = min(cases, key=lambda x:abs(x-ele))
+
+        if ele < 0:
+            case_id = int(ele * timestep)
+            case = cases[case_id]
+        else:
+            case = min(cases, key=lambda x:abs(x-ele))
         plots[id] = case
     return plots
 
@@ -57,6 +64,11 @@ def get_cases(cases_dir_path, case_dir):
     path = os.path.join(sys.path[0], *cases_dir_path, case_dir)
     
     # default indices
+
+    if os.path.exists(path) == False:
+        logging.warning("Case {} doesn't exsist. Please add it by running add_data.py".format(case_dir))
+        exit()
+
     files = os.listdir(path)
     cases = []
 
@@ -69,6 +81,10 @@ def get_cases(cases_dir_path, case_dir):
 def get_default_cases(cases_dir_path, case_dir):
 
     cases = get_cases(cases_dir_path, case_dir)
+
+    if cases == []:
+        logging.error("No data to process for case {}".format(case_dir))
+        exit()
     
     middle = round((max(cases)- min(cases))/2,0)
     if not middle in cases:
@@ -93,6 +109,9 @@ def read_transient_data(cases_dir_path ,case_dir, times):
     
     files = os.listdir(path)
 
+    if files == []:
+        logging.error("No data to process for case {}".format(case_dir))
+        exit()
     data = {}
 
     for file in files:
@@ -153,4 +172,5 @@ def check_data_format():
                         logging.debug(f"Rename {file} to {file + '.csv'}")
                         renamed += 1
                         os.rename(old_path, new_path)
-                logging.info("Renamed {} files in case {} in mode {}".format(renamed, case, mode))
+                if renamed != 0:
+                    logging.info("Renamed {} files in case {} in mode {}".format(renamed, case, mode))
