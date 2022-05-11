@@ -196,7 +196,7 @@ class flowfield:
                     # axs.set_title("t = {}".format(ele))
             
         path = sys.path[0]
-        path = os.path.join(path, "Images")
+        path = os.path.join(path, "assets")
         sub_path = os.path.join(path, "transient")
         if os.path.exists(path) == False:
             os.mkdir(path)
@@ -256,7 +256,7 @@ class flowfield:
                 cbar.set_label(self.config["c_bar"], rotation=90, labelpad=7)
             
         path = sys.path[0]
-        path = os.path.join(path, "Images")
+        path = os.path.join(path, "assets")
         sub_path = os.path.join(path, "transient")
         if os.path.exists(path) == False:
             os.mkdir(path)

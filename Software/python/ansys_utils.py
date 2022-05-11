@@ -95,7 +95,17 @@ def get_default_cases(cases_dir_path, case_dir):
 
     return default_cases
 
+def get_case_vars(cases_dir_path, case_dir):
+    """
+    Function that gets all resulting variables for a case
+    """
+    cases = get_cases(cases_dir_path, case_dir)
 
+    data = read_transient_data(cases_dir_path, case_dir, [cases[0]])
+
+    vars = list(data[cases[0]].columns)
+
+    return vars
     
 
 def read_transient_data(cases_dir_path ,case_dir, times):
