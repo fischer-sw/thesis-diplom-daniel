@@ -21,6 +21,7 @@
 *.zip
 *.txt
 Daten/*
+!Daten/*.json
 Software/openfoam
 !Software/python/*watcher_conf.json
 !Latex/figs/*.pdf

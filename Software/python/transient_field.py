@@ -93,11 +93,14 @@ class flowfield:
 
         plot_cfg = self.config["plot_conf"]
 
-        self.check_plot_cfg(plot_cfg)
-
         if self.one_plot == False:
 
             fig, axs = plt.subplots(len(self.plots), 1, sharex=True, sharey=True, figsize=(6.5,2.4*len(self.plots)))
+
+            legend = []
+
+            for var in list(plot_cfg["legend"]):
+                legend.append(plot_cfg["legend"][var])
             
 
             for idx, ele in enumerate(self.plots):
@@ -130,6 +133,7 @@ class flowfield:
                     if idx == len(self.plots)-1 :
                         axs[idx].set_xlabel("radius r [m]")
                     axs[idx].set_ylabel("height z [m]")
+                    axs[idx].legend(legend)
                     axs[idx].set_title("t = {}s".format(ele * self.case_conf["timestep"]))
                     
 
@@ -140,10 +144,13 @@ class flowfield:
 
                     axs.set_xlabel("radius r [m]")
                     axs.set_ylabel("height z [m]")
+                    axs.legend(legend)
                     axs.set_title("t = {}s".format(ele* self.case_conf["timestep"]))
 
         else:
             
+            self.check_plot_cfg(plot_cfg)
+
             fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6.5,2.4*len(self.plots)))
             
             l_conf = []

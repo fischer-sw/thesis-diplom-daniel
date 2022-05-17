@@ -64,6 +64,14 @@ User Interface Basics (DesignModeler + Mesher)
             - Highlight all needed fluids from Database -> Click **Copy**
         - Delete all fluids not used
             - RightClick Fluid -> Click **Delete**
+        - Create Mixture
+            - under models --> **Species** --> activate **Species Transport**
+            - under materials --> **Mixture** --> ++rightclick++ --> mixture-template --> **Edit**
+            - under **Mixture Species** --> Edit
+                - add all created fluids to mixture
+                - remove non used species from mixture
+                - delete non used materials under materials tab
+
     - Cell Zone Conditions
         - RightClick surface_body -> **Edit** -> Material Name: "fluid to use"
 
@@ -144,3 +152,20 @@ User Interface Basics (DesignModeler + Mesher)
 
 - under **inlet** setup click on dropdown menu --> select **expression** --> click on **f(x)** button and enter expression
 - expression: 
+
+# Add Reaction
+
+## general
+- think about reaction e.g. $ 1A + 1B \rightarrow 2C$
+- think about reation rate e.g. $r = k \cdot c_A^{n_{c_A}}$
+    - $ k = k_{\infty} \cdot e^{\frac{-E_A}{R \cdot T}}$
+
+## ansys configuration
+- under Models --> Species --> ++rightclick++ --> edit
+- under Reactions --> tick Volumetric
+- under Mixture Properties --> click ++Edit++
+- under Reaction (finite rate) --> click ++Edit++
+    - ![Image not found](img/reaction.png)
+    - Rate Exponent e.g. fluid a: $n_{c_A}$
+    - Pre-Exponential Factor: $k_\infty$
+    - Activation Energy: $E_A$

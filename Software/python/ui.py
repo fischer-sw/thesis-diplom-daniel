@@ -2,6 +2,7 @@ import sys
 import os
 import json
 import flask
+import base64
 
 import numpy as np
 
@@ -59,12 +60,11 @@ download_row = html.Div(hidden=True, children=
         ),
     ]
 )
-image_name = ""
+image_name = "test_fields"
 
 image_row = html.Div(
     [
-        
-        dash.html.Img(src="assets/" + image_name,id="img", alt="no image yet created")
+        dash.html.Img(src="/assets/transient/" + image_name + ".png",id="img", alt="no image yet created"),
     ]
 )
 
@@ -387,8 +387,9 @@ def update_vars(case):
     
     return options
 
-@callback(
+@app.callback(
     Output("img", "src"),
+    # Output("carousel", "active_index"),
     Input("create-field", "n_clicks"),
     State("dd-time-option", "value"),
     State("time-slider", "value"),
@@ -407,7 +408,6 @@ def create_image(clicks, time_option, slider_values, slider_min, slider_max, tim
     if time_option == "range":
         
         values = range(slider_min/(slider_max-slider_min), slider_max/(slider_max-slider_min))
-        pass
 
     cfg_path = os.path.join(sys.path[0], "conf.json")
 
@@ -422,7 +422,13 @@ def create_image(clicks, time_option, slider_values, slider_min, slider_max, tim
     if config["create_plot"]:
         field.multi_plot()
 
-    return flask.send_from_directory("/assets/transient", image_name)
+    image_path = os.path.join(sys.path[0], "assets", "transient", image_name + ".png")
+
+    encoded_image = base64.b64encode(open(image_path, 'rb').read())
+
+    return app.get_asset_url('transient/test.png')
+    
+
 if __name__ == "__main__":
     app.run_server(debug=False)
     # app.run_server(host='127.0.0.1', port=8050, debug=True, use_debugger=True, use_reloader=True)
