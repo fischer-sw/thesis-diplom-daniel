@@ -6,6 +6,7 @@ import sys
 import re
 import logging
 import json
+import glob
 import datetime
 
 # setup logging
@@ -62,22 +63,27 @@ def check_data_format():
             if renamed != 0:
                 logging.info("Renamed {} files in case {} in mode {}".format(renamed, case, mode))
 
-def add_case(original, new_case):
+def add_case(original, new_case, move_csv):
     """
     Function that moves new results from tmp to new case directory
     """
     
     old_path = os.path.join(path, "transient", original)
     new_path = os.path.join(path, "transient", new_case)
-    files = os.listdir(old_path)    
+    # files = os.listdir(old_path)    
     # check for new directory
 
     deleted = 0
     moved = 0
-    non_csv = []
-    for file in files:
-        if not ".csv" in file:
-            non_csv.append(file)
+    csv = glob.glob('*.csv', root_dir=old_path)
+    non_csv = glob.glob('*', root_dir=old_path)
+    [non_csv.remove(x) for x in csv]
+
+    if move_csv == True:
+        files = csv
+    else:
+        files = non_csv
+
 
     if os.path.exists(new_path) == False and files != []:
         os.mkdir(new_path)
@@ -91,6 +97,10 @@ def add_case(original, new_case):
             logging.info("Deleted {} files in case {}".format(deleted, new_case))
         else:
             logging.info("No files to add from dir {} to case {}".format(original, new_case))
+            exit()
+
+        
+    
     for file in files:
         if not ".csv" in file:
             old = os.path.join(old_path, file)
@@ -125,8 +135,14 @@ if __name__ == "__main__":
         
         case_name = input("Please enter case_name: ")
 
+        csv = input("Do you want to move csv or non_csv files?(csv/n_csv)")
+        if csv == "csv":
+            move_csv = True
+        else:
+            move_csv = False
+
         if case_name != "":
-            add_case("tmp", case_name)
+            add_case("tmp", case_name, move_csv)
 
     do_zip = input("Do you want to zip the Data? (y/n) (default n)")
 

@@ -1,5 +1,16 @@
 # Notes
 
+# Running a new case
+
+1. Make shure the directory the auto export writes files to is empty
+    - if not run add_data.py
+
+2. Make shure the case is setup within cases.json (you can put all relevant parameters here. helps if you need to look them up later ;-) )
+
+3. Run the case
+
+4. Take a look at the latest results with running watcher.py (Config is done in watcher.json)
+
 ## Ansys Configuration
 
 * Change UI language

@@ -4,7 +4,10 @@ import numpy as np
 import os
 import sys
 import logging
+import glob
+import cv2
 
+from PIL import Image
 import matplotlib.pyplot as plt
 
 from ansys_utils import *
@@ -26,6 +29,8 @@ class flowfield:
         self.do_plots = config["create_plot"]
         self.do_image = config["create_image"]
         self.image_conf = config["image_conf"]
+        self.gif_conf = config["gif_conf"]
+
 
         self.case_conf = get_case_info(self.config["cases_dir_path"], self.case)
 
@@ -91,7 +96,14 @@ class flowfield:
         Function that plots variables over the radius for multiple timesteps
         """
 
+
         plot_cfg = self.config["plot_conf"]
+        self.plots = self.config["plots"]
+        self.plots = get_colsest_plots(np.array(self.plots)/self.case_conf["timestep"], self.case_conf["timestep"] ,self.config["cases_dir_path"], self.case)
+        self.data = read_transient_data(self.config["cases_dir_path"], self.case, self.plots)
+    
+        logging.info(f"Creating {self.field_var} field {self.plots} for case {self.case}")
+
 
         if self.one_plot == False:
 
@@ -139,6 +151,7 @@ class flowfield:
 
                 else:
                     for tmp_var in data_tmp.keys():
+                        col = plot_cfg["colors"][tmp_var]
                         cax = axs.plot(x_tmp, data_tmp[tmp_var], color=col)
                         # add axis description
 
@@ -214,13 +227,19 @@ class flowfield:
         image_path = os.path.join(sub_path, image_name)
 
         plt.savefig(image_path)
+        plt.close(fig)
     
     def multi_field(self):
         """
         Function that shows ansys fields for multiple timesteps within one image
         """
+        self.plots = self.config["plots"]
+        self.plots = get_colsest_plots(np.array(self.plots)/self.case_conf["timestep"], self.case_conf["timestep"] ,self.config["cases_dir_path"], self.case)
+        self.data = read_transient_data(self.config["cases_dir_path"], self.case, self.plots)
         
-        
+
+        logging.info(f"Creating {self.plot_vars} field {self.plots} for case {self.case}")
+
         fig, axs = plt.subplots(len(self.plots), 1, sharex=True, sharey=True, figsize=(6.5,2.4*len(self.plots)))
         
 
@@ -273,8 +292,134 @@ class flowfield:
         image_name = self.config["image_file_name"] + "." + self.config["image_file_type"]
         image_path = os.path.join(sub_path, image_name)
 
+        
         plt.savefig(image_path)
+        plt.close(fig)
 
+    def create_gif(self):
+        """
+        Function that creates missing Images if necessary and then creates .gif out of all obtained images
+        """
+
+        path = sys.path[0]
+        img_path = os.path.join(path, "assets", "transient")
+
+        gifs = glob.glob('*_gif*', root_dir=img_path)
+
+        if gifs == []:
+            logging.info("No gif Images to delete")
+        else:
+            if self.gif_conf["new"]:
+                for ele in gifs:
+                    os.remove(os.path.join(img_path, ele))
+                logging.info(f"Deleted {len(gifs)} image files")
+
+        logging.info("Creating images for .gif ...")
+
+        path = os.path.join(path, "gifs")
+        if os.path.exists(path) == False:
+            os.mkdir(path)
+
+        # create plots
+
+        cases = get_cases(self.config["cases_dir_path"], self.case)
+        digits = len(str(int(max(cases))))
+
+        for cas in cases:
+            self.config["plots"] = [cas]
+            plot_name = "_".join(["plot_gif", self.case, f"{int(cas):0{digits}d}"])
+            self.config["plot_file_name"] = plot_name
+            field_name = "_".join(["img_gif", self.case, f"{int(cas):0{digits}d}"])
+            self.config["image_file_name"] = field_name
+            if self.gif_conf["gif_plot"]:
+                if os.path.exists(os.path.join(img_path, plot_name + ".png")) == False:
+                    self.multi_plot()
+                else:
+                     logging.debug(f"Image {plot_name} already exsists")
+
+            if self.gif_conf["gif_image"]:
+                if os.path.exists(os.path.join(img_path, field_name + ".png")) == False:
+                    self.multi_field()
+                else:
+                    logging.debug(f"Image {field_name} already exsists")
+
+        # create Images
+        if self.gif_conf["gif_plot"]:
+            
+            gif_name = "_".join([self.gif_conf["name"], "plot"]) + ".gif"
+            gif_path = os.path.join(path, gif_name)
+
+            video_name = "_".join([self.gif_conf["name"], "plot"]) + ".avi"
+            video_path = os.path.join(path, video_name)
+
+            if os.path.exists(gif_path):
+                logging.info(f"Deleting existing gif {gif_name}")
+            if os.path.exists(video_path):
+                logging.info(f"Deleting existing video {video_name}")
+           
+            imgs = (Image.open(os.path.join(img_path,f)) for f in sorted(glob.glob('*plot_gif_*png', root_dir=img_path)))
+            img = next(imgs)  # extract first image from iterator
+            img.save(gif_path, format="GIF", append_images=imgs,
+                    save_all=True, duration=self.gif_conf["frame_duration"], loop=self.gif_conf["loop"])
+
+            if self.gif_conf["videos"]:
+
+                logging.info(f"Creating plot video for case {self.case}")
+                
+                images = sorted(glob.glob('plot_gif_*png', root_dir=img_path))
+
+                frame = cv2.imread(os.path.join(img_path, images[0]))
+
+                height, width, layers = frame.shape
+                fps = 1000/self.gif_conf["frame_duration"]
+                out = cv2.VideoWriter(video_path, cv2.VideoWriter_fourcc(*'DIVX'), fps, (width, height))
+                
+
+                for image in images:
+                    img = cv2.imread(os.path.join(img_path, image))
+                    out.write(img)
+
+                cv2.destroyAllWindows()
+                out.release()       
+
+        if self.gif_conf["gif_image"]:
+
+            logging.info(f"Creating field video for case {self.case}")
+            
+            gif_name = "_".join([self.gif_conf["name"], "image"]) + ".gif"
+            video_name = "_".join([self.gif_conf["name"], "image"]) + ".avi"
+            
+            gif_path = os.path.join(path, gif_name)
+            video_path = os.path.join(path, video_name)
+
+            if os.path.exists(gif_path):
+                logging.info(f"Deleting existing gif {gif_name}")
+            if os.path.exists(video_path):
+                logging.info(f"Deleting existing video {video_name}")
+
+            imgs = (Image.open(os.path.join(img_path,f)) for f in sorted(glob.glob('*img_gif_*png', root_dir=img_path)))
+            img = next(imgs)  # extract first image from iterator
+            img.save(gif_path, format="GIF", append_images=imgs,
+                    save_all=True, duration=self.gif_conf["frame_duration"], loop=self.gif_conf["loop"])
+
+            if self.gif_conf["videos"]:
+                
+                images = sorted(glob.glob('img_gif_*png', root_dir=img_path))
+
+                frame = cv2.imread(os.path.join(img_path, images[0]))
+
+                height, width, layers = frame.shape
+                fps = 1000/self.gif_conf["frame_duration"]
+                out = cv2.VideoWriter(video_path, cv2.VideoWriter_fourcc(*'DIVX'), fps, (width, height))
+                
+
+                for image in images:
+                    img = cv2.imread(os.path.join(img_path, image))
+                    out.write(img)
+
+                cv2.destroyAllWindows()
+                out.release()       
+        
 if __name__ == "__main__":
 
     cfg_path = os.path.join(sys.path[0], "conf.json")
@@ -289,6 +434,9 @@ if __name__ == "__main__":
     
     if config["create_plot"]:
         field.multi_plot()
+
+    if config["create_gif"]:
+        field.create_gif()
 
     
     

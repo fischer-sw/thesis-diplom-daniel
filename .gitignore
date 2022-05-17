@@ -1,6 +1,7 @@
 *.dll
 *.out
 *.aux
+*.avi
 *.log
 *.blg
 *.bbl
@@ -13,6 +14,7 @@
 *.bkp
 *.stats
 *.ps
+*.gif
 *.dvi
 *.out.ps
 *.lof

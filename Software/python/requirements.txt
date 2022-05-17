@@ -6,3 +6,4 @@ dash-bootstrap-components
 dash-auth
 dash_daq
 dash-core-components
+opencv-python
