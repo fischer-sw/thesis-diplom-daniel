@@ -304,6 +304,10 @@ class flowfield:
 
     def delete_gif_imgs(self):
 
+        """
+        Function that deletes all images used to create the gifs and videos
+        """
+
         path = sys.path[0]
         img_path = os.path.join(path, "assets", "transient")
 
@@ -318,6 +322,7 @@ class flowfield:
             logging.info(f"Deleted {len(gifs)} image files")
 
     def create_gif(self):
+        
         """
         Function that creates missing Images if necessary and then creates .gif out of all obtained images
         """
