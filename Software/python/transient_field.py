@@ -21,43 +21,8 @@ class flowfield:
     def __init__(self, config):
 
         self.config = config
-        self.case = config["case"]
-        self.field_var = config["field_var"]
-        self.plots = config["plots"]
-        self.one_plot = config["one_plot"]
-        self.plot_vars = config["plot_vars"]
-        self.do_plots = config["create_plot"]
-        self.do_image = config["create_image"]
-        self.image_conf = config["image_conf"]
-        self.gif_conf = config["gif_conf"]
-
-
-        self.case_conf = get_case_info(self.config["cases_dir_path"], self.case)
-
-
         check_data_format()
-        
-        if self.plots == []:
-            logging.info("Plots are not set. Creating default ones ...")
-            self.plots = get_default_cases(self.config["cases_dir_path"], self.case)
-        else:
-            self.plots = get_colsest_plots(np.array(self.plots)/self.case_conf["timestep"], self.case_conf["timestep"] ,self.config["cases_dir_path"], self.case)
-        logging.info("Plots are set to {}".format(self.plots))
 
-        self.data = read_transient_data(self.config["cases_dir_path"], self.case, self.plots)
-
-        cols = list(self.data[list(self.data.keys())[0]].columns)
-        if self.do_plots == True:
-            for var in self.config["plot_vars"]:
-                if not var in cols:
-                    logging.info("Declared var {} not within data. Please use one of {}".format(var, cols))
-                    exit()
-                
-        if self.do_image == True:
-            if not self.field_var[0] in cols:
-                logging.info("Declared var {} not within data. Please use one of {}".format(self.field_var, cols))
-                exit()
-        
     def convert2field(self, data, vars):
         """
         Function that converts list of x,y,<var> to matrix of dimensions x,y with <var> as values inside
@@ -91,18 +56,59 @@ class flowfield:
             logging.info("Please define a linestyle for all times that are plotted under linestyles")
             exit()
 
+    def update_plot_cfg(self):
+
+        """
+        Function that updates plot config and returns plot configuration (return value is used for checking cfg in one_plot case)
+        """
+
+        plot_cfg = self.config["plot_conf"]
+        self.plots = self.config["plots"]
+
+        self.case = self.config["case"]
+        self.field_var = self.config["field_var"]
+        self.plots = self.config["plots"]
+        self.one_plot = self.config["one_plot"]
+        self.plot_vars = self.config["plot_vars"]
+        self.do_plots = self.config["create_plot"]
+        self.do_image = self.config["create_image"]
+        self.image_conf = self.config["image_conf"]
+        self.gif_conf = self.config["gif_conf"]
+
+        self.case_conf = get_case_info(self.config["cases_dir_path"], self.case)
+        
+        if self.plots == []:
+            logging.info("Plots are not set. Creating default ones ...")
+            self.plots = get_default_cases(self.config["cases_dir_path"], self.case)
+
+        else:
+            self.plots = get_colsest_plots(np.array(self.plots)/self.case_conf["timestep"], self.case_conf["timestep"] ,self.config["cases_dir_path"], self.case)
+        
+        self.data = read_transient_data(self.config["cases_dir_path"], self.case, self.plots)
+
+        cols = list(self.data[list(self.data.keys())[0]].columns)
+        if self.do_plots == True:
+            for var in self.config["plot_vars"]:
+                if not var in cols:
+                    logging.warning("Declared var {} not within data. Please use one of {}".format(var, cols))
+                    exit()
+                
+        if self.do_image == True:
+            if not self.field_var[0] in cols:
+                logging.warning("Declared var {} not within data. Please use one of {}".format(self.field_var, cols))
+                exit()
+
+        return plot_cfg
+
     def multi_plot(self):
         """
         Function that plots variables over the radius for multiple timesteps
         """
 
 
-        plot_cfg = self.config["plot_conf"]
-        self.plots = self.config["plots"]
-        self.plots = get_colsest_plots(np.array(self.plots)/self.case_conf["timestep"], self.case_conf["timestep"] ,self.config["cases_dir_path"], self.case)
-        self.data = read_transient_data(self.config["cases_dir_path"], self.case, self.plots)
+        plot_cfg = self.update_plot_cfg()
     
-        logging.info(f"Creating {self.field_var} field {self.plots} for case {self.case}")
+        logging.info(f"Creating {self.plot_vars} field {self.plots} for case {self.case}")
 
 
         if self.one_plot == False:
@@ -146,7 +152,7 @@ class flowfield:
                         axs[idx].set_xlabel("radius r [m]")
                     axs[idx].set_ylabel("height z [m]")
                     axs[idx].legend(legend)
-                    axs[idx].set_title("t = {}s".format(ele * self.case_conf["timestep"]))
+                    axs[idx].set_title("t = {}s".format(round(ele * self.case_conf["timestep"],1)))
                     
 
                 else:
@@ -194,7 +200,7 @@ class flowfield:
                         l_style = plot_cfg["linestyles"]["t" + str(idx + 1)]
                         col = plot_cfg["colors"][tmp_var]
                         cax = axs.plot(x_tmp, data_tmp[tmp_var], linestyle=l_style, color=col)
-                        l_conf.append(plot_cfg["legend"][tmp_var] + ", t={}s".format(ele * self.case_conf["timestep"]))
+                        l_conf.append(plot_cfg["legend"][tmp_var] + ", t={}s".format(round(ele * self.case_conf["timestep"],1)))
                         
                         # add axis description
                     if idx == len(self.plots)-1 :
@@ -233,12 +239,11 @@ class flowfield:
         """
         Function that shows ansys fields for multiple timesteps within one image
         """
-        self.plots = self.config["plots"]
-        self.plots = get_colsest_plots(np.array(self.plots)/self.case_conf["timestep"], self.case_conf["timestep"] ,self.config["cases_dir_path"], self.case)
-        self.data = read_transient_data(self.config["cases_dir_path"], self.case, self.plots)
+        
+        self.update_plot_cfg()
         
 
-        logging.info(f"Creating {self.plot_vars} field {self.plots} for case {self.case}")
+        logging.info(f"Creating {self.field_var} field {self.plots} for case {self.case}")
 
         fig, axs = plt.subplots(len(self.plots), 1, sharex=True, sharey=True, figsize=(6.5,2.4*len(self.plots)))
         
@@ -263,7 +268,7 @@ class flowfield:
                 if idx == len(self.plots)-1 :
                     axs[idx].set_xlabel("radius r [m]")
                 axs[idx].set_ylabel("height z [m]")
-                axs[idx].set_title("t = {}s".format(ele * self.case_conf["timestep"]))
+                axs[idx].set_title("t = {}s".format(round(ele * self.case_conf["timestep"], 1)))
                 # add colorbar
                 cbar = fig.colorbar(cax, ax=axs[idx])
                 cbar.set_label(self.config["c_bar"], rotation=90, labelpad=7)
@@ -276,7 +281,7 @@ class flowfield:
 
                 axs.set_xlabel("radius r [m]")
                 axs.set_ylabel("height z [m]")
-                axs.set_title("t = {}s".format(ele * self.case_conf["timestep"]))
+                axs.set_title("t = {}s".format(round(ele * self.case_conf["timestep"], 1)))
                 # add colorbar
                 cbar = fig.colorbar(cax, ax=axs)
                 cbar.set_label(self.config["c_bar"], rotation=90, labelpad=7)
@@ -296,10 +301,8 @@ class flowfield:
         plt.savefig(image_path)
         plt.close(fig)
 
-    def create_gif(self):
-        """
-        Function that creates missing Images if necessary and then creates .gif out of all obtained images
-        """
+
+    def delete_gif_imgs(self):
 
         path = sys.path[0]
         img_path = os.path.join(path, "assets", "transient")
@@ -309,10 +312,21 @@ class flowfield:
         if gifs == []:
             logging.info("No gif Images to delete")
         else:
-            if self.gif_conf["new"]:
-                for ele in gifs:
-                    os.remove(os.path.join(img_path, ele))
-                logging.info(f"Deleted {len(gifs)} image files")
+            
+            for ele in gifs:
+                os.remove(os.path.join(img_path, ele))
+            logging.info(f"Deleted {len(gifs)} image files")
+
+    def create_gif(self):
+        """
+        Function that creates missing Images if necessary and then creates .gif out of all obtained images
+        """
+
+        path = sys.path[0]
+        img_path = os.path.join(path, "assets", "transient")
+
+        if self.gif_conf["new"]:
+            self.delete_gif_imgs()
 
         logging.info("Creating images for .gif ...")
 
@@ -326,7 +340,7 @@ class flowfield:
         digits = len(str(int(max(cases))))
 
         for cas in cases:
-            self.config["plots"] = [cas]
+            self.config["plots"] = [cas * self.case_conf["timestep"]]
             plot_name = "_".join(["plot_gif", self.case, f"{int(cas):0{digits}d}"])
             self.config["plot_file_name"] = plot_name
             field_name = "_".join(["img_gif", self.case, f"{int(cas):0{digits}d}"])
@@ -380,7 +394,7 @@ class flowfield:
                     out.write(img)
 
                 cv2.destroyAllWindows()
-                out.release()       
+                out.release()    
 
         if self.gif_conf["gif_image"]:
 
@@ -418,7 +432,10 @@ class flowfield:
                     out.write(img)
 
                 cv2.destroyAllWindows()
-                out.release()       
+                out.release()
+
+        if self.gif_conf["keep_images"] == False:
+            self.delete_gif_imgs()    
         
 if __name__ == "__main__":
 
