@@ -1,0 +1,55 @@
+/file/set-tui-version "22.1"
+(cx-gui-do cx-activate-item "MenuBar*ImportSubMenu*Case...")
+(cx-gui-do cx-activate-item "Question*OK")
+
+; Read Case from file
+(cx-gui-do cx-set-file-dialog-entries "Select File" '( "C:/Users/TPG247/Documents/Daniel Fischer/Ansys/cases/cylind_r0,1_h0,01.cas.gz") "All Files (*)")
+
+(cx-gui-do cx-set-list-tree-selections "NavigationPane*Frame2*Table1*List_Tree2" (list "Setup|Boundary Conditions|Inlet|inlet (velocity-inlet, id=5)"))
+(cx-gui-do cx-set-list-tree-selections "NavigationPane*Frame2*Table1*List_Tree2" (list "Setup|Boundary Conditions|Inlet|inlet (velocity-inlet, id=5)"))
+
+(cx-gui-do cx-list-tree-right-click "NavigationPane*Frame2*Table1*List_Tree2" )
+(cx-gui-do cx-activate-item "MenuBar*PopupMenuTree-inlet (velocity-inlet, id=5)*Edit...")
+(cx-gui-do cx-enable-apply-button "Velocity Inlet")
+
+; Set inlet velocity
+(cx-gui-do cx-set-expression-entry "Velocity Inlet*Frame2*Frame2*Frame1(Momentum)*Table1*Table8*ExpressionEntry1(Velocity Magnitude)" '("0.1" . 0))
+(cx-gui-do cx-activate-tab-index "Velocity Inlet*Frame2*Frame2" 3)
+
+; Set inlet molefraction of fluid_a
+(cx-gui-do cx-set-expression-entry "Velocity Inlet*Frame2*Frame2*Frame4(Species)*Table1*Table2(Species Mass Fractions)*Table1*ExpressionEntry1(fluid_a)" '("1.0" . 0))
+(cx-gui-do cx-activate-item "Velocity Inlet*PanelButtons*PushButton1(OK)")
+(cx-gui-do cx-activate-item "Velocity Inlet*PanelButtons*PushButton2(Cancel)")
+(cx-gui-do cx-set-list-tree-selections "NavigationPane*Frame2*Table1*List_Tree2" (list "Solution|Run Calculation"))
+(cx-gui-do cx-activate-item "NavigationPane*Frame2*Table1*List_Tree2")
+(cx-gui-do cx-set-list-tree-selections "NavigationPane*Frame2*Table1*List_Tree2" (list "Solution|Run Calculation"))
+
+; Set number of timesteps
+(cx-gui-do cx-set-integer-entry "Run Calculation*Table1*Table7(Time Advancement)*Table3(Parameters)*Table1*Table1*IntegerEntry1(Number of Time Steps)" 100)
+(cx-gui-do cx-activate-item "Run Calculation*Table1*Table7(Time Advancement)*Table3(Parameters)*Table1*Table1*IntegerEntry1(Number of Time Steps)")
+
+; Set Time Step Size
+(cx-gui-do cx-set-expression-entry "Run Calculation*Table1*Table7(Time Advancement)*Table3(Parameters)*Table1*Table3*ExpressionEntry1(Time Step Size)" '("0.01" . 0))
+(cx-gui-do cx-activate-item "Run Calculation*Table1*Table7(Time Advancement)*Table3(Parameters)*Table1*Table3*ExpressionEntry1(Time Step Size)")
+
+; Set Maximum Iterations per Timestep
+(cx-gui-do cx-set-integer-entry "Run Calculation*Table1*Table7(Time Advancement)*Table3(Parameters)*Table5*Table1*Table1*IntegerEntry1(Max Iterations/Time Step)" 30)
+(cx-gui-do cx-activate-item "Run Calculation*Table1*Table7(Time Advancement)*Table3(Parameters)*Table5*Table1*Table1*IntegerEntry1(Max Iterations/Time Step)")
+(cx-gui-do cx-activate-item "Ribbon*Frame1*Frame5(Solution)*Table1*Table3(Activities)*PushButton3(Manage)")
+(cx-gui-do cx-activate-item "Calculation Activities*ButtonBox4*PushButton2(Edit)")
+
+; Set Data Export timesteps
+(cx-gui-do cx-set-integer-entry "Automatic Export*Table1*Table2*Frame6*IntegerEntry1(Export Data Every)" 10)
+(cx-gui-do cx-activate-item "Automatic Export*Table1*Table2*Frame6*IntegerEntry1(Export Data Every)")
+
+; Set data export path
+(cx-gui-do cx-set-text-entry "Automatic Export*Table1*Table2*Table7*Table1*TextEntry1(File Name)" "C:/Users/TPG247/Documents/Daniel Fischer/thesis-diplom-daniel/Daten/transient/tmp/FFF.1-Setup-Output")
+(cx-gui-do cx-activate-item "Automatic Export*PanelButtons*PushButton1(OK)")
+(cx-gui-do cx-set-list-tree-selections "NavigationPane*Frame2*Table1*List_Tree2" (list "Solution|Run Calculation"))
+(cx-gui-do cx-list-tree-right-click "NavigationPane*Frame2*Table1*List_Tree2" )
+
+
+; Run calculation
+(cx-gui-do cx-activate-item "MenuBar*PopupMenuTree-Run Calculation*Initialize & Calculate")
+;Exit Fluent
+/exit ok

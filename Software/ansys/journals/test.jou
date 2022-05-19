@@ -1,0 +1,14 @@
+;Reading in the case file
+/rc fullcase.cas.gz
+;
+; initialising the system
+/solve/init/init
+;
+;Setting the number of iterations and solving
+/solve/iter 2000
+;
+;Writing the final data file (overwriting if required)
+/wd fullcase.dat.gz
+;
+;Exit Fluent
+/exit ok

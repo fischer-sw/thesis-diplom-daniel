@@ -164,7 +164,7 @@ class flowfield:
                     axs.set_xlabel("radius r [m]")
                     axs.set_ylabel("height z [m]")
                     axs.legend(legend)
-                    axs.set_title("t = {}s".format(ele* self.case_conf["timestep"]))
+                    axs.set_title("t = {}s".format(round(ele* self.case_conf["timestep"],1)))
 
         else:
             

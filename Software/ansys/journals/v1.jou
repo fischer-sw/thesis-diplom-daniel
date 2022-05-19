@@ -1,0 +1,4 @@
+;Reading in the case file
+/rc ../cases/cylind_r0,1_h0,01.cas.gz
+; initialising the system
+/solve/init/init

@@ -180,3 +180,25 @@ User Interface Basics (DesignModeler + Mesher)
     - Rate Exponent e.g. fluid a: $n_{c_A}$
     - Pre-Exponential Factor: $k_\infty$
     - Activation Energy: $E_A$
+
+
+
+
+
+
+## Automation
+
+### Commandline (holy grail)
+
+#### Run fluent from cmdline
+
+- cmd: `fluent 3ddp -tX -i <journal>.jou -g`
+    - X: number of processors
+
+### GUI Application
+
+- tasks
+    1. Create case in ansys workbench and open setup
+    2. click **Write** --> **Journal** to record your steps
+    3. do things
+    4. finish with **Write** --> **Stop Journal**
