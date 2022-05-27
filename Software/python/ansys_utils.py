@@ -124,7 +124,7 @@ def get_case_vars(cases_dir_path, case_dir):
     return vars
 
 
-def build_journal(cases_dir_path):
+def build_journal(cases_dir_path, exit=False):
     """
     Function that builds a journal file to run multiple cases in series
     """
@@ -133,8 +133,8 @@ def build_journal(cases_dir_path):
     with open(path) as f:
         cfg = json.load(f)
 
-    
-    
+    cfg.pop("tmp")
+
     template_path = os.path.join(sys.path[0], "..", "ansys", "journals", "gui_template.jou")
     logging.debug(f"Template path: {template_path}")
     with open(template_path) as f:
@@ -151,29 +151,33 @@ def build_journal(cases_dir_path):
         export_path = os.path.join(sys.path[0], *cases_dir_path, key, "FFF.1-Setup-Output")
         val["export_path"] = export_path
 
-        cases = get_cases(cases_dir_path, key)
+        cases = get_cases(cases_dir_path, key, True)
 
         if cases == []:
+
+            case_str = ";--------------Next Case = {}--------------------".format(key)
+            tmp_file = tmp_file + ['\n', '\n', case_str,'\n', '\n']
+
             for line in template:
                 m = re.findall(r'\%(.*)\%', line)
                 if m != []:
                     ele = m[0]
                     if ele in val:
                         line = line.replace(f"%{ele}%", str(val[ele]))
-                        logging.info(f"line = {line}")
+                        logging.debug(f"line = {line}")
                     else:
                         logging.error(f"Element {ele} not defined in cases.json for element {key}.")
                         exit()
                 
                 tmp_file.append(line)
             
-            tmp_file = tmp_file + ['\n', '\n', ";--------------Next Case--------------------",'\n', '\n']
 
         else:
             logging.info(f"Already calculated data for case {key}")
             continue
     
-    tmp_file = tmp_file + [";Exiting Fluent \n", "/exit ok \n"]
+    if exit:
+        tmp_file = tmp_file + [";Exiting Fluent \n", "/exit ok \n"]
 
     journal_path = os.path.join(sys.path[0], "..", "ansys", "journals", "journal.jou")
     with open(journal_path, "w") as f:

@@ -234,6 +234,7 @@ class flowfield:
 
         plt.savefig(image_path)
         plt.close(fig)
+        logging.info(f"saved image {image_name}.")
     
     def multi_field(self):
         """
@@ -300,12 +301,13 @@ class flowfield:
         
         plt.savefig(image_path)
         plt.close(fig)
+        logging.info(f"saved image {image_name}.")
 
-    def setup_journal(self):
+    def setup_journal(self, exit=False):
         """
         Function that creates journal file
         """
-        build_journal(self.config["cases_dir_path"])
+        build_journal(self.config["cases_dir_path"], False)
 
 
     def delete_gif_imgs(self):
@@ -352,13 +354,12 @@ class flowfield:
         cases = get_cases(self.config["cases_dir_path"], self.case)
 
 
-        raw_cases = self.gif_conf["cases"]
+        raw_cases = list(range(self.gif_conf["cases"]["start"],self.gif_conf["cases"]["end"] + 1, self.gif_conf["cases"]["step"]))
 
         if raw_cases != []:
             start_end = get_colsest_plots(np.array(raw_cases)/self.case_conf["timestep"], self.case_conf["timestep"] ,self.config["cases_dir_path"], self.case)
-            start = np.where(cases == start_end[0])[0][0]
-            end = np.where(cases == start_end[1])[0][0] + 1
-            cases = cases[start:end]
+            cases = list(set(start_end))
+            cases.sort()
 
         digits = len(str(int(max(cases))))
 

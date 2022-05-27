@@ -1,9 +1,9 @@
 /file/set-tui-version "22.1"
-(cx-gui-do cx-activate-item "MenuBar*ImportSubMenu*Case...")
-(cx-gui-do cx-activate-item "Question*OK")
+;(cx-gui-do cx-activate-item "MenuBar*ImportSubMenu*Case...")
+;(cx-gui-do cx-activate-item "Question*OK")
 
 ; Read Case from file
-(cx-gui-do cx-set-file-dialog-entries "Select File" '("%case_path%") "All Files (*)")
+;(cx-gui-do cx-set-file-dialog-entries "Select File" '("%case_path%") "All Files (*)")
 
 (cx-gui-do cx-set-list-tree-selections "NavigationPane*Frame2*Table1*List_Tree2" (list "Setup|Boundary Conditions|Inlet|inlet (velocity-inlet, id=5)"))
 (cx-gui-do cx-set-list-tree-selections "NavigationPane*Frame2*Table1*List_Tree2" (list "Setup|Boundary Conditions|Inlet|inlet (velocity-inlet, id=5)"))

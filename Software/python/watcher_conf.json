@@ -9,7 +9,7 @@
     "image_file_name" : "test_fields",
     "image_file_type" : "png",
     "image_conf" : {
-        "set_custom_range" : true,
+        "set_custom_range" : false,
         "min" : 0.0,
         "max" : 1.0   
     },

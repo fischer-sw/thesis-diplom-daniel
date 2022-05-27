@@ -6,6 +6,9 @@ from watchdog.events import FileSystemEventHandler
 from transient_field import *
 from add_data import *
 
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(filename)s - %(levelname)s - %(funcName)s - %(message)s")
+
+
 class Watcher:
     DIRECTORY_TO_WATCH = os.path.join(sys.path[0], "../../Daten")
 
@@ -17,12 +20,13 @@ class Watcher:
         self.observer.schedule(event_handler, self.DIRECTORY_TO_WATCH, recursive=True)
         self.observer.start()
         try:
+            logging.info("Started watcher...")
             while True:
                 time.sleep(5)
         except:
             self.observer.stop()
             os.remove("tmp.txt")
-            print("Error")
+            logging.info("Closed watcher.")
 
         self.observer.join()
 
@@ -31,6 +35,8 @@ class Handler(FileSystemEventHandler):
 
     @staticmethod
     def on_any_event(event):
+
+        
 
         if os.path.exists("tmp.txt") == False:
             with open("tmp.txt", "w") as f:
@@ -60,6 +66,8 @@ class Handler(FileSystemEventHandler):
 
                 with open(cfg_path) as f:
                     config = json.load(f)
+
+                time.sleep(1)
 
                 field = flowfield(config)
                 

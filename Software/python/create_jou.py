@@ -7,4 +7,4 @@ with open(cfg_path) as f:
 
 field = flowfield(config)
 
-field.setup_journal()
+field.setup_journal(exit=False)
