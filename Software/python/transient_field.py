@@ -301,6 +301,12 @@ class flowfield:
         plt.savefig(image_path)
         plt.close(fig)
 
+    def setup_journal(self):
+        """
+        Function that creates journal file
+        """
+        build_journal(self.config["cases_dir_path"])
+
 
     def delete_gif_imgs(self):
 
@@ -327,6 +333,8 @@ class flowfield:
         Function that creates missing Images if necessary and then creates .gif out of all obtained images
         """
 
+        self.update_plot_cfg()
+
         path = sys.path[0]
         img_path = os.path.join(path, "assets", "transient")
 
@@ -342,6 +350,16 @@ class flowfield:
         # create plots
 
         cases = get_cases(self.config["cases_dir_path"], self.case)
+
+
+        raw_cases = self.gif_conf["cases"]
+
+        if raw_cases != []:
+            start_end = get_colsest_plots(np.array(raw_cases)/self.case_conf["timestep"], self.case_conf["timestep"] ,self.config["cases_dir_path"], self.case)
+            start = np.where(cases == start_end[0])[0][0]
+            end = np.where(cases == start_end[1])[0][0] + 1
+            cases = cases[start:end]
+
         digits = len(str(int(max(cases))))
 
         for cas in cases:

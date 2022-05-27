@@ -44,9 +44,13 @@ def get_case_info(cases_dir_path, case):
 
         return cfg[case]
     else:
-        logging.warning("No config for case {} found in config.json. Please add the case to the config file".format(case))
+        logging.error("No config for case {} found in config.json. Please add the case to the config file".format(case))
+        exit()
 
 def get_colsest_plots(plots, timestep, cases_dir_path, case_dir):
+    """
+    Funtion that returns the closest dataset to a given timestep
+    """
     cases = get_cases(cases_dir_path, case_dir)
     cases.sort()
     logging.debug("Cases = {}".format(cases))
@@ -60,14 +64,23 @@ def get_colsest_plots(plots, timestep, cases_dir_path, case_dir):
         plots[id] = case
     return plots
 
-def get_cases(cases_dir_path, case_dir):
+def get_cases(cases_dir_path, case_dir, auto_add=False):
+    """
+    Function that returns all cases from a case_dir
+    """
     path = os.path.join(sys.path[0], *cases_dir_path, case_dir)
     
     # default indices
 
     if os.path.exists(path) == False:
-        logging.warning("Case {} doesn't exsist. Please add it by running add_data.py".format(case_dir))
-        exit()
+        if auto_add == False:
+            logging.warning("Case {} doesn't exsist. Please add it by running add_data.py".format(case_dir))
+            exit()
+        else:
+            logging.warning("Case {} doesn't exsist. Adding case ...")
+            os.mkdir(path)
+            logging.info(f"Case {case_dir} added")
+
 
     files = os.listdir(path)
     cases = []
@@ -79,6 +92,9 @@ def get_cases(cases_dir_path, case_dir):
     return cases
 
 def get_default_cases(cases_dir_path, case_dir):
+    """
+    Function that creates default cases to plot if no plots have been set
+    """
 
     cases = get_cases(cases_dir_path, case_dir)
 
@@ -106,7 +122,66 @@ def get_case_vars(cases_dir_path, case_dir):
     vars = list(data[cases[0]].columns)
 
     return vars
+
+
+def build_journal(cases_dir_path):
+    """
+    Function that builds a journal file to run multiple cases in series
+    """
     
+    path = os.path.join(sys.path[0], *cases_dir_path, "cases.json")
+    with open(path) as f:
+        cfg = json.load(f)
+
+    
+    
+    template_path = os.path.join(sys.path[0], "..", "ansys", "journals", "gui_template.jou")
+    logging.debug(f"Template path: {template_path}")
+    with open(template_path) as f:
+        template = f.readlines()
+    logging.debug(f"Template = {template[0:3]}")
+
+    tmp_file = []
+
+    for key, val in cfg.items():
+
+        case_geo_path = os.path.join(sys.path[0], "..", "ansys", "cases", val["case"])
+        val["case_path"] = case_geo_path
+
+        export_path = os.path.join(sys.path[0], *cases_dir_path, key, "FFF.1-Setup-Output")
+        val["export_path"] = export_path
+
+        cases = get_cases(cases_dir_path, key)
+
+        if cases == []:
+            for line in template:
+                m = re.findall(r'\%(.*)\%', line)
+                if m != []:
+                    ele = m[0]
+                    if ele in val:
+                        line = line.replace(f"%{ele}%", str(val[ele]))
+                        logging.info(f"line = {line}")
+                    else:
+                        logging.error(f"Element {ele} not defined in cases.json for element {key}.")
+                        exit()
+                
+                tmp_file.append(line)
+            
+            tmp_file = tmp_file + ['\n', '\n', ";--------------Next Case--------------------",'\n', '\n']
+
+        else:
+            logging.info(f"Already calculated data for case {key}")
+            continue
+    
+    tmp_file = tmp_file + [";Exiting Fluent \n", "/exit ok \n"]
+
+    journal_path = os.path.join(sys.path[0], "..", "ansys", "journals", "journal.jou")
+    with open(journal_path, "w") as f:
+        f.writelines(tmp_file)
+    logging.info(f"Wrote journal to file {journal_path}")
+
+    
+
 
 def read_transient_data(cases_dir_path ,case_dir, times):
     """

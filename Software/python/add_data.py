@@ -63,7 +63,7 @@ def check_data_format():
             if renamed != 0:
                 logging.info("Renamed {} files in case {} in mode {}".format(renamed, case, mode))
 
-def add_case(original, new_case, move_csv):
+def add_case(original, new_case, move_csv, move_all=False):
     """
     Function that moves new results from tmp to new case directory
     """
@@ -79,10 +79,13 @@ def add_case(original, new_case, move_csv):
     non_csv = glob.glob('*', root_dir=old_path)
     [non_csv.remove(x) for x in csv]
 
-    if move_csv == True:
-        files = csv
+    if move_all:
+        files = glob.glob('*', root_dir=old_path)
     else:
-        files = non_csv
+        if move_csv == True:
+            files = csv
+        else:
+            files = non_csv
 
 
     if os.path.exists(new_path) == False and files != []:
@@ -135,14 +138,39 @@ if __name__ == "__main__":
         
         case_name = input("Please enter case_name: ")
 
-        csv = input("Do you want to move csv or non_csv files?(csv/n_csv)")
-        if csv == "csv":
-            move_csv = True
-        else:
-            move_csv = False
+        old_path = os.path.join(path, "transient", "tmp")
+        csv_dat = glob.glob('*.csv', root_dir=old_path)
+        non_csv = glob.glob('*', root_dir=old_path)
+        [non_csv.remove(x) for x in csv_dat]
 
+        # csv = "n_csv"
+
+        if csv_dat != [] and non_csv != []:
+            csv = input("Do you want to move csv or non_csv files?(csv/n_csv/all)")
+        
+        else:
+            if csv_dat != []:
+                csv = "csv"
+            else:
+                csv = "n_csv"
+            
+        match csv:
+
+            case "csv":
+                move_csv = True
+                move_all = False
+
+            case "n_csv":
+                move_csv = False
+                move_all = False
+
+            case "all":
+                move_all = True
+                move_csv = True
+
+            
         if case_name != "":
-            add_case("tmp", case_name, move_csv)
+            add_case("tmp", case_name, move_csv, move_all)
 
     do_zip = input("Do you want to zip the Data? (y/n) (default n)")
 

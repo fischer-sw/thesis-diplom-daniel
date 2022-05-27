@@ -4,8 +4,8 @@
     "case" : "tmp",
     "plots" : [-1],
     "create_image" : true,
-    "field_var" : ["molef-fluid_c"],
-    "c_bar" : "fluid c",
+    "field_var" : ["velocity-magnitude"],
+    "c_bar" : "vel",
     "image_file_name" : "test_fields",
     "image_file_type" : "png",
     "image_conf" : {
