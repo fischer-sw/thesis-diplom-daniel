@@ -187,7 +187,67 @@ def build_journal(cases_dir_path, exit=False):
         f.writelines(tmp_file)
     logging.info(f"Wrote journal to file {journal_path}")
 
+def parse_logs(path2logfile):
+    """
+    Function that extracts residuals from terminal log
+    """
+    tmp = {}
+
+    filterd = []
+    raw_data = {}
+
+    with open(path2logfile) as f:
+        lines = f.readlines()
     
+    case = ""
+    case_lines = []
+
+    # find cases and remember lines
+
+    for idx, line in enumerate(lines):
+        line = line.strip()
+        new_case = re.findall(r'cx-set-text-entry', line)
+        if new_case != []:
+            case = re.findall(r'transient\\(.*)\\FFF', line)[0]
+            tmp[case] = {}
+            case_lines.append(idx)
+
+    logging.info(f"cases = {list(tmp.keys())}")
+
+    cases = list(tmp.keys())
+
+    # split raw data for each case
+
+    for idx, ele in enumerate(case_lines):
+        if idx != len(case_lines)-1:
+            raw_data[cases[idx]] = lines[ele:case_lines[idx+1]]
+        else:
+            raw_data[cases[idx]] = lines[ele:-1]
+
+    for key, val in raw_data.items():
+        for line in val:
+            line = line.strip()
+            find_resid_header = re.findall(r'iter', line)
+            if find_resid_header != []:
+                resid_header = re.sub(r"\s+", " ", line)
+                resid_header = resid_header.split(" ")
+
+            residuals = re.findall(r'\d+\.\d*', line)
+            if residuals != [] and len(residuals) > 4:
+                raw_nums = re.sub(r'\s+', " ", line)
+                nums = raw_nums.split(" ")
+                nums.pop()
+                if len(nums) != len(resid_header):
+                    logging.warning(f"Number of Header vars {len(resid_header)} and number of datapoints {len(nums)} doesn't match for line {line}")
+                else:
+                    for id, ele in enumerate(nums):
+
+                        if (resid_header[id] in list(tmp[key].keys())) == False:
+                            tmp[key][resid_header[id]] = [] 
+                            logging.debug(f"Adding var {resid_header[id]} to case {key}")   
+
+                        tmp[key][resid_header[id]].append(ele)
+    return tmp
 
 
 def read_transient_data(cases_dir_path ,case_dir, times):
@@ -270,3 +330,7 @@ def check_data_format():
                         os.rename(old_path, new_path)
                 if renamed != 0:
                     logging.info("Renamed {} files in case {} in mode {}".format(renamed, case, mode))
+
+
+if __name__ == "__main__":
+    parse_logs("./bla.log")

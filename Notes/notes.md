@@ -181,11 +181,6 @@ User Interface Basics (DesignModeler + Mesher)
     - Pre-Exponential Factor: $k_\infty$
     - Activation Energy: $E_A$
 
-
-
-
-
-
 ## Automation
 
 ### Commandline (holy grail)
@@ -197,8 +192,20 @@ User Interface Basics (DesignModeler + Mesher)
 
 ### GUI Application
 
-- tasks
-    1. Create case in ansys workbench and open setup
-    2. click **Write** --> **Journal** to record your steps
-    3. do things
-    4. finish with **Write** --> **Stop Journal**
+- to automate the gui application these steps need to be done:
+    1. Create case file (e.g. <name>.cas.gz)
+        - ! Make shure [automatic data export](#data-export) is enabled or you will not get any results !
+        - Click **File** in Menubar --> **Export** --> **Case**
+        - Choose **.cas.gz** as filetype
+
+    2. Create journal for case
+        - Start journal (**File** in Menubar --> **Write** --> **Journal** (to record your steps))
+        - do things (Change all parameters you want to change)
+            - changing the data export path is necessary ortherwise fluent will ask for permission to overwrite existing results
+        - Stop recording (**File** in Menubar --> **Write** --> **Stop Journal**)
+    3. Look at your journal (should look somewhat similar to gui_template.jou)
+
+    4. Create journal or append existing one
+
+    5. Run new journal
+        - Click **File** in Menubar --> **Read** --> **Journal** --> Choose your journal
