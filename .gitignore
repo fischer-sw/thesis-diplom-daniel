@@ -26,6 +26,7 @@
 Daten/*
 !Daten/*.json
 Software/openfoam
+!Software/ansys/cases/*.cas.gz
 !Software/python/*watcher_conf.json
 !Latex/figs/*.pdf
 !Latex/figs/*.png

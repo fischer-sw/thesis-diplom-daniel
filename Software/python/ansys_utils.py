@@ -36,6 +36,9 @@ def read_steady_data(case, file_name):
     return result
 
 def get_case_info(cases_dir_path, case):
+    """
+    Function that reads information for one case from cases.json
+    """
     path = os.path.join(sys.path[0], *cases_dir_path, "cases.json")
     with open(path) as f:
         cfg = json.load(f)
@@ -77,7 +80,7 @@ def get_cases(cases_dir_path, case_dir, auto_add=False):
             logging.warning("Case {} doesn't exsist. Please add it by running add_data.py".format(case_dir))
             exit()
         else:
-            logging.warning("Case {} doesn't exsist. Adding case ...")
+            logging.warning("Case {} doesn't exsist. Adding case ...".format(case_dir))
             os.mkdir(path)
             logging.info(f"Case {case_dir} added")
 
@@ -234,6 +237,10 @@ def read_transient_data(cases_dir_path ,case_dir, times):
     return data
 
 def check_data_format():
+
+        """
+        Function that checks that all needed config parameters are set
+        """
 
         base_path = sys.path[0]
         path = os.path.join(base_path, "../..", "Daten")

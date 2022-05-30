@@ -3,11 +3,11 @@
 ;--------------Next Case = v_2e-3--------------------
 
 /file/set-tui-version "22.1"
-;(cx-gui-do cx-activate-item "MenuBar*ImportSubMenu*Case...")
-;(cx-gui-do cx-activate-item "Question*OK")
+(cx-gui-do cx-activate-item "MenuBar*ImportSubMenu*Case...")
+(cx-gui-do cx-activate-item "Question*OK")
 
 ; Read Case from file
-;(cx-gui-do cx-set-file-dialog-entries "Select File" '("C:\Users\TPG247\Documents\Daniel Fischer\thesis-diplom-daniel\Software\python\..\ansys\cases\cylind_r0,1_h0,01.cas.gz") "All Files (*)")
+(cx-gui-do cx-set-file-dialog-entries "Select File" '("C:\Users\TPG247\Documents\Daniel Fischer\thesis-diplom-daniel\Software\python\..\ansys\cases\fine_mesh_r0,1_h0,01.cas.gz") "All Files (*)")
 
 (cx-gui-do cx-set-list-tree-selections "NavigationPane*Frame2*Table1*List_Tree2" (list "Setup|Boundary Conditions|Inlet|inlet (velocity-inlet, id=5)"))
 (cx-gui-do cx-set-list-tree-selections "NavigationPane*Frame2*Table1*List_Tree2" (list "Setup|Boundary Conditions|Inlet|inlet (velocity-inlet, id=5)"))
@@ -59,11 +59,11 @@
 ;--------------Next Case = v_1e-2--------------------
 
 /file/set-tui-version "22.1"
-;(cx-gui-do cx-activate-item "MenuBar*ImportSubMenu*Case...")
-;(cx-gui-do cx-activate-item "Question*OK")
+(cx-gui-do cx-activate-item "MenuBar*ImportSubMenu*Case...")
+(cx-gui-do cx-activate-item "Question*OK")
 
 ; Read Case from file
-;(cx-gui-do cx-set-file-dialog-entries "Select File" '("C:\Users\TPG247\Documents\Daniel Fischer\thesis-diplom-daniel\Software\python\..\ansys\cases\cylind_r0,1_h0,01.cas.gz") "All Files (*)")
+(cx-gui-do cx-set-file-dialog-entries "Select File" '("C:\Users\TPG247\Documents\Daniel Fischer\thesis-diplom-daniel\Software\python\..\ansys\cases\fine_mesh_r0,1_h0,01.cas.gz") "All Files (*)")
 
 (cx-gui-do cx-set-list-tree-selections "NavigationPane*Frame2*Table1*List_Tree2" (list "Setup|Boundary Conditions|Inlet|inlet (velocity-inlet, id=5)"))
 (cx-gui-do cx-set-list-tree-selections "NavigationPane*Frame2*Table1*List_Tree2" (list "Setup|Boundary Conditions|Inlet|inlet (velocity-inlet, id=5)"))
@@ -112,14 +112,14 @@
 ; Run calculation
 (cx-gui-do cx-activate-item "MenuBar*PopupMenuTree-Run Calculation*Initialize & Calculate")
 
-;--------------Next Case = v_2e-2--------------------
+;--------------Next Case = v_3e-2--------------------
 
 /file/set-tui-version "22.1"
-;(cx-gui-do cx-activate-item "MenuBar*ImportSubMenu*Case...")
-;(cx-gui-do cx-activate-item "Question*OK")
+(cx-gui-do cx-activate-item "MenuBar*ImportSubMenu*Case...")
+(cx-gui-do cx-activate-item "Question*OK")
 
 ; Read Case from file
-;(cx-gui-do cx-set-file-dialog-entries "Select File" '("C:\Users\TPG247\Documents\Daniel Fischer\thesis-diplom-daniel\Software\python\..\ansys\cases\cylind_r0,1_h0,01.cas.gz") "All Files (*)")
+(cx-gui-do cx-set-file-dialog-entries "Select File" '("C:\Users\TPG247\Documents\Daniel Fischer\thesis-diplom-daniel\Software\python\..\ansys\cases\fine_mesh_r0,1_h0,01.cas.gz") "All Files (*)")
 
 (cx-gui-do cx-set-list-tree-selections "NavigationPane*Frame2*Table1*List_Tree2" (list "Setup|Boundary Conditions|Inlet|inlet (velocity-inlet, id=5)"))
 (cx-gui-do cx-set-list-tree-selections "NavigationPane*Frame2*Table1*List_Tree2" (list "Setup|Boundary Conditions|Inlet|inlet (velocity-inlet, id=5)"))
@@ -129,7 +129,7 @@
 (cx-gui-do cx-enable-apply-button "Velocity Inlet")
 
 ; Set inlet velocity
-(cx-gui-do cx-set-expression-entry "Velocity Inlet*Frame2*Frame2*Frame1(Momentum)*Table1*Table8*ExpressionEntry1(Velocity Magnitude)" '("0.02" . 0))
+(cx-gui-do cx-set-expression-entry "Velocity Inlet*Frame2*Frame2*Frame1(Momentum)*Table1*Table8*ExpressionEntry1(Velocity Magnitude)" '("0.03" . 0))
 (cx-gui-do cx-activate-tab-index "Velocity Inlet*Frame2*Frame2" 3)
 
 ; Set inlet molefraction of fluid_a
@@ -159,12 +159,11 @@
 (cx-gui-do cx-activate-item "Automatic Export*Table1*Table2*Frame6*IntegerEntry1(Export Data Every)")
 
 ; Set data export path
-(cx-gui-do cx-set-text-entry "Automatic Export*Table1*Table2*Table7*Table1*TextEntry1(File Name)" "C:\Users\TPG247\Documents\Daniel Fischer\thesis-diplom-daniel\Software\python\..\..\Daten\transient\v_2e-2\FFF.1-Setup-Output")
+(cx-gui-do cx-set-text-entry "Automatic Export*Table1*Table2*Table7*Table1*TextEntry1(File Name)" "C:\Users\TPG247\Documents\Daniel Fischer\thesis-diplom-daniel\Software\python\..\..\Daten\transient\v_3e-2\FFF.1-Setup-Output")
 (cx-gui-do cx-activate-item "Automatic Export*PanelButtons*PushButton1(OK)")
 (cx-gui-do cx-set-list-tree-selections "NavigationPane*Frame2*Table1*List_Tree2" (list "Solution|Run Calculation"))
 (cx-gui-do cx-list-tree-right-click "NavigationPane*Frame2*Table1*List_Tree2" )
 
 
 ; Run calculation
-(cx-gui-do cx-activate-item "MenuBar*PopupMenuTree-Run Calculation*Initialize & Calculate");Exiting Fluent 
-/exit ok 
+(cx-gui-do cx-activate-item "MenuBar*PopupMenuTree-Run Calculation*Initialize & Calculate")
