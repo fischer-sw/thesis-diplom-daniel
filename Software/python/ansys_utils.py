@@ -39,7 +39,7 @@ def get_case_info(cases_dir_path, case):
     """
     Function that reads information for one case from cases.json
     """
-    path = os.path.join(sys.path[0], *cases_dir_path, "cases.json")
+    path = os.path.join(sys.path[0], "..", "ansys", "cases.json")
     with open(path) as f:
         cfg = json.load(f)
 
@@ -132,7 +132,7 @@ def build_journal(cases_dir_path, exit=False):
     Function that builds a journal file to run multiple cases in series
     """
     
-    path = os.path.join(sys.path[0], *cases_dir_path, "cases.json")
+    path = os.path.join(sys.path[0], "..", "ansys", "cases.json")
     with open(path) as f:
         cfg = json.load(f)
 

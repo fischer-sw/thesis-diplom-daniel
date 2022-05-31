@@ -18,8 +18,8 @@ def clear_tmp():
             files = glob.glob('*.csv', root_dir=path)
         
         case "n_csv":
-            csv = glob.glob('*.csv', root_dir=old_path)
-            files = glob.glob('*', root_dir=old_path)
+            csv = glob.glob('*.csv', root_dir=path)
+            files = glob.glob('*', root_dir=path)
             [files.remove(x) for x in csv]
         
         case "all":

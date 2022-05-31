@@ -1,0 +1,62 @@
+{
+    "cases_dir_path": [
+        "..",
+        "..",
+        "Daten",
+        "transient"
+    ],
+    "cases": ["v_1e-2"],
+    "plots": [
+        
+    ],
+    "create_image": true,
+    "field_var": ["cell-reynolds-number"],
+    "c_bar": "",
+    "image_file_type": "png",
+    "image_conf": {
+        "set_custom_range": false,
+        "min": 0.0,
+        "max": 1.0
+    },
+    "create_plot": false,
+    "one_plot": false,
+    "plot_vars": [
+        "molef-fluid_a",
+        "molef-fluid_b",
+        "molef-fluid_c"
+    ],
+    "plot_file_type": "png",
+    "plot_conf": {
+        "colors": {
+            "molef-fluid_a": "b",
+            "molef-fluid_b": "g",
+            "molef-fluid_c": "r"
+        },
+        "linestyles": {
+            "t1": "solid",
+            "t2": "dotted",
+            "t3": "dashed"
+        },
+        "legend": {
+            "molef-fluid_a": "fluid a",
+            "molef-fluid_b": "fluid b",
+            "molef-fluid_c": "fluid c"
+        }
+    },
+    "create_gif" : false,
+    "gif_conf" : {
+        "cases" : {
+            "start" : 0,
+            "end" : 100,
+            "step" : 1
+        },
+        "new" : false,
+        "keep_images" : false,
+        "videos" : true,
+        "gif_plot" : false,
+        "gif_image" : true,
+        "name" : "test",
+        "loop" : 0,
+        "frame_duration" : 200
+    }
+}

@@ -20,7 +20,6 @@
 *.lof
 *.trn
 *.lot
-*.json
 *.zip
 *.txt
 Daten/*
