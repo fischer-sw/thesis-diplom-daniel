@@ -1,16 +1,18 @@
 {
     "cases_dir_path": [
-        "..",
-        "..",
-        "Daten",
+        "\\\\gssnas",
+        "bigdata",
+        "fwdt",
+        "DFischer",
+        "Data",
         "transient"
     ],
-    "cases": ["v_1e-2"],
+    "cases": ["tmp"],
     "plots": [
         
     ],
     "create_image": true,
-    "field_var": ["cell-reynolds-number"],
+    "field_var": ["velocity-magnitude"],
     "c_bar": "",
     "image_file_type": "png",
     "image_conf": {

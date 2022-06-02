@@ -35,7 +35,7 @@ def read_steady_data(case, file_name):
 
     return result
 
-def get_case_info(cases_dir_path, case):
+def get_case_info(case):
     """
     Function that reads information for one case from cases.json
     """
@@ -71,13 +71,16 @@ def get_cases(cases_dir_path, case_dir, auto_add=False):
     """
     Function that returns all cases from a case_dir
     """
-    path = os.path.join(sys.path[0], *cases_dir_path, case_dir)
+    path = os.path.join(*cases_dir_path, case_dir)
+
+    cases = os.listdir(os.path.join(*cases_dir_path))
     
     # default indices
 
     if os.path.exists(path) == False:
         if auto_add == False:
             logging.warning("Case {} doesn't exsist. Please add it by running add_data.py".format(case_dir))
+            logging.warning(f"Following cases exsist: {cases}")
             exit()
         else:
             logging.warning("Case {} doesn't exsist. Adding case ...".format(case_dir))
@@ -127,7 +130,7 @@ def get_case_vars(cases_dir_path, case_dir):
     return vars
 
 
-def build_journal(cases_dir_path, exit=False):
+def build_journal(cases_dir_path, split_cases, end_exit=False):
     """
     Function that builds a journal file to run multiple cases in series
     """
@@ -148,10 +151,13 @@ def build_journal(cases_dir_path, exit=False):
 
     for key, val in cfg.items():
 
+        if split_cases:
+            tmp_file = []
+
         case_geo_path = os.path.join(sys.path[0], "..", "ansys", "cases", val["case"])
         val["case_path"] = case_geo_path
 
-        export_path = os.path.join(sys.path[0], *cases_dir_path, key, "FFF.1-Setup-Output")
+        export_path = os.path.join(*cases_dir_path, key, "FFF.1-Setup-Output")
         val["export_path"] = export_path
 
         cases = get_cases(cases_dir_path, key, True)
@@ -173,18 +179,36 @@ def build_journal(cases_dir_path, exit=False):
                         exit()
                 
                 tmp_file.append(line)
+                
             
 
         else:
             logging.info(f"Already calculated data for case {key}")
             continue
-    
-    if exit:
+        
+        if split_cases:
+
+            if end_exit:
+                tmp_file = tmp_file + [";Exiting Fluent \n", "/exit ok \n"]
+
+            journal_cases = os.path.join(sys.path[0], "..", "ansys", "journals", "cases")
+            journal_path = os.path.join(journal_cases, key + ".jou")
+            if os.path.exists(journal_cases) == False:
+                os.mkdir(journal_cases)
+                logging.info(f"Created cases directory for journals {journal_cases}")
+
+            with open(journal_path, "w") as f:
+                f.writelines(tmp_file)
+            logging.info(f"Wrote journal to file {journal_path}")
+
+    if end_exit:
         tmp_file = tmp_file + [";Exiting Fluent \n", "/exit ok \n"]
 
-    journal_path = os.path.join(sys.path[0], "..", "ansys", "journals", "journal.jou")
-    with open(journal_path, "w") as f:
-        f.writelines(tmp_file)
+    if split_cases == False:
+        journal_path = os.path.join(sys.path[0], "..", "ansys", "journals", "all_cases.jou")
+        with open(journal_path, "w") as f:
+            f.writelines(tmp_file)
+
     logging.info(f"Wrote journal to file {journal_path}")
 
 def parse_logs(path2logfile):
@@ -257,7 +281,7 @@ def read_transient_data(cases_dir_path ,case_dir, times):
     ansys_filename: C:/Users/TPG247/Documents/Daniel Fischer/thesis-diplom-daniel/Daten/transient/tmp/FFF.1-Setup-Output
     """
 
-    path = os.path.join(sys.path[0], *cases_dir_path, case_dir)
+    path = os.path.join(*cases_dir_path, case_dir)
     
     files = os.listdir(path)
 
@@ -296,14 +320,13 @@ def read_transient_data(cases_dir_path ,case_dir, times):
 
     return data
 
-def check_data_format():
+def check_data_format(cases_dir_path):
 
         """
         Function that checks that all needed config parameters are set
         """
 
-        base_path = sys.path[0]
-        path = os.path.join(base_path, "../..", "Daten")
+        path = os.path.join(*cases_dir_path, "..")
         modes = os.listdir(path)
         logging.debug("Modi = {}".format(modes))
 

@@ -22,6 +22,8 @@
 *.lot
 *.zip
 *.txt
+*.jou
+!Software/ansys/journals/gui_template.jou
 Daten/*
 !Daten/*.json
 Software/openfoam

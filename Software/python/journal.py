@@ -11,4 +11,4 @@ with open(cfg_path) as f:
 
 field = flowfield(config)
 
-field.setup_journal(exit=False)
+field.setup_journal(exit=False, split_cases=True)

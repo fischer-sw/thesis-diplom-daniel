@@ -21,7 +21,7 @@ class flowfield:
     def __init__(self, config):
 
         self.config = config
-        check_data_format()
+        check_data_format(self.config["cases_dir_path"])
 
     def convert2field(self, data, vars):
         """
@@ -76,7 +76,7 @@ class flowfield:
         self.gif_conf = self.config["gif_conf"]
 
         if case != None:
-            self.case_conf = get_case_info(self.config["cases_dir_path"], self.case)
+            self.case_conf = get_case_info(self.case)
             
             if self.plots == []:
                 logging.info("Plots are not set. Creating default ones ...")
@@ -321,11 +321,11 @@ class flowfield:
             plt.close(fig)
             logging.info(f"saved image {image_name}.")
 
-    def setup_journal(self, exit=False):
+    def setup_journal(self, exit=False, split_cases=False):
         """
         Function that creates journal file
         """
-        build_journal(self.config["cases_dir_path"], False)
+        build_journal(self.config["cases_dir_path"], split_cases, False)
 
 
     def delete_gif_imgs(self):

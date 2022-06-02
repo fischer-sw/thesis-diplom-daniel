@@ -40,6 +40,8 @@
         "input_vel": 0.01,
         "input_c": 1.0,
         "data_export_interval": 10,
+        "timestep_number" : 1000,
+        "iterations" : 30,
         "case": "fine_mesh_r0,1_h0,01.cas.gz"
     },
     "slow_flow": {

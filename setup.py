@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(filename)s - %(l
 def setup():
     logging.info("Starting Latex clean")
     # path = os.path.join(sys.path[0], "Latex", "clean.py")
-    data_path = os.path.join("\\gssnas", "bigdata", "fwdt", "DFischer")
+    data_path = os.path.join("\\\\gssnas", "bigdata", "fwdt", "DFischer")
     
     if os.path.exists(data_path):
         logging.info(os.listdir(data_path))

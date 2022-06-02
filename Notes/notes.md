@@ -187,6 +187,16 @@ User Interface Basics (DesignModeler + Mesher)
 
 #### Run fluent from cmdline
 
+- find flunet installation path (windows installation)
+    - e.g. `C:\Program Files\ANSYS Inc\v221\fluent\ntbin\win64`
+    - add this path to PATH variable (windows 10)
+        - Go to **Settings** --> **System** --> **Info** --> **System Information** --> **Advanced System Settings**
+        - login as root
+        - go to tab **advenced** --> **Environment variables**
+        - Doubleclick **Path** under system variables
+        - click **new** --> paste your path here
+        - click ok
+
 - cmd: `fluent 3ddp -tX -i <journal>.jou -g`
     - X: number of processors
 
