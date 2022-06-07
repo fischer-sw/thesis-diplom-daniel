@@ -1,10 +1,13 @@
 import os
 import re
 import sys
+import glob
+import time
 import logging
 from numpy import NaN
 import pandas as pd
 import json
+import psutil
 
 def read_steady_data(case, file_name):
     """
@@ -71,24 +74,22 @@ def get_cases(cases_dir_path, case_dir, auto_add=False):
     """
     Function that returns all cases from a case_dir
     """
-    path = os.path.join(*cases_dir_path, case_dir)
-
-    cases = os.listdir(os.path.join(*cases_dir_path))
+    case_path = os.path.join(*cases_dir_path, case_dir)
     
     # default indices
 
-    if os.path.exists(path) == False:
+    if os.path.exists(case_path) == False:
         if auto_add == False:
             logging.warning("Case {} doesn't exsist. Please add it by running add_data.py".format(case_dir))
             logging.warning(f"Following cases exsist: {cases}")
             exit()
         else:
             logging.warning("Case {} doesn't exsist. Adding case ...".format(case_dir))
-            os.mkdir(path)
+            os.mkdir(case_path)
             logging.info(f"Case {case_dir} added")
 
 
-    files = os.listdir(path)
+    files = glob.glob(r'*Output.csv', root_dir=case_path)
     cases = []
 
     for id, file in enumerate(files):
@@ -96,6 +97,63 @@ def get_cases(cases_dir_path, case_dir, auto_add=False):
         if m:
             cases.append(float(m[0]))
     return cases
+
+def checkIfProcessRunning(processName):
+    '''
+    Check if there is any running process that contains the given name processName.
+    '''
+    #Iterate over the all the running process
+    for proc in psutil.process_iter():
+        try:
+            # Check if process name contains the given name string.
+            if processName.lower() in proc.name().lower():
+                return True
+        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+            pass
+    return False;
+
+def run_fluent(dims='2ddp', p_num=6, jou_name=""):
+    
+    logs = []
+
+    if jou_name == "":
+        logging.error("No journal name provided")
+        exit()
+
+    if jou_name == "all_cases":
+        jou_path = os.path.join(sys.path[0], "..", "ansys", "journals", jou_name + ".jou")
+    else:
+        jou_path = os.path.join(sys.path[0], "..", "ansys", "journals", "cases", jou_name + ".jou")
+
+
+    if os.path.exists(jou_path) == False:
+        logging.error(f"journal {jou_name} doen't exsist.")
+        exit()
+
+    # cmd = " ".join(['fluent', dims, f'-t{p_num}', f'-i{jou_path}', '> ' + os.path.join(sys.path[0], 'test.log'), '2>&1'])
+    cmd = " ".join(['fluent', dims, f'-t{p_num}', f'-i{jou_path}'])
+    logging.info(f"Running case {jou_name}")
+    os.system(cmd)
+
+
+    # os.remove("test.log")
+    time.sleep(10)
+    files = glob.glob('*.trn', root_dir=os.path.join(sys.path[0], "..", ".."), recursive=False)
+
+    if files == []:
+        logging.warning(f"No log files created for journal {jou_name}")
+        return logs
+
+    log_path = os.path.join(sys.path[0], "..", "..", files[0])
+
+    processing = True
+    while processing:
+        time.sleep(10)
+        processing = checkIfProcessRunning("fluent")
+
+    logs = parse_logs(log_path)
+    logging.info(f"Removing .trn file {log_path}")
+    os.remove(log_path)
 
 def get_default_cases(cases_dir_path, case_dir):
     """
@@ -108,7 +166,7 @@ def get_default_cases(cases_dir_path, case_dir):
         logging.error("No data to process for case {}".format(case_dir))
         exit()
     
-    middle = round((max(cases)- min(cases))/2,0)
+    middle = round((max(cases)- min(cases))/2 + min(cases),0)
     if not middle in cases:
         middle = min(cases, key=lambda x:abs(x-middle))
 
@@ -178,10 +236,7 @@ def build_journal(cases_dir_path, split_cases, end_exit=False):
                         logging.error(f"Element {ele} not defined in cases.json for element {key}.")
                         exit()
                 
-                tmp_file.append(line)
-                
-            
-
+                tmp_file.append(line)              
         else:
             logging.info(f"Already calculated data for case {key}")
             continue
@@ -189,7 +244,7 @@ def build_journal(cases_dir_path, split_cases, end_exit=False):
         if split_cases:
 
             if end_exit:
-                tmp_file = tmp_file + [";Exiting Fluent \n", "/exit ok \n"]
+                tmp_file = tmp_file + ["\n", "\n", ";Exiting Fluent \n", "/exit ok \n"]
 
             journal_cases = os.path.join(sys.path[0], "..", "ansys", "journals", "cases")
             journal_path = os.path.join(journal_cases, key + ".jou")
@@ -202,7 +257,7 @@ def build_journal(cases_dir_path, split_cases, end_exit=False):
             logging.info(f"Wrote journal to file {journal_path}")
 
     if end_exit:
-        tmp_file = tmp_file + [";Exiting Fluent \n", "/exit ok \n"]
+        tmp_file = tmp_file + ["\n", "\n", ";Exiting Fluent \n", "/exit ok \n"]
 
     if split_cases == False:
         journal_path = os.path.join(sys.path[0], "..", "ansys", "journals", "all_cases.jou")
@@ -270,8 +325,25 @@ def parse_logs(path2logfile):
                             tmp[key][resid_header[id]] = [] 
                             logging.debug(f"Adding var {resid_header[id]} to case {key}")   
 
-                        tmp[key][resid_header[id]].append(ele)
+                        tmp[key][resid_header[id]].append(float(ele.split(":")[-1]))
+    save_residuals(tmp)
     return tmp
+
+def save_residuals(resis):
+
+    path = os.path.join(sys.path[0], "conf.json")
+    with open(path) as f:
+        cfg = json.load(f)
+
+    cases = list(resis.keys())
+
+    for ele in cases:
+        resi_path = os.path.join(*cfg["cases_dir_path"], ele, ele + "_residuals.csv")
+        logging.info(f"Saving residuals for case {ele} to {resi_path}")
+        tmp = pd.DataFrame(resis[ele])
+        tmp.drop_duplicates(keep='first', inplace=True, subset=['iter'])
+        tmp.to_csv(resi_path, index=False)
+        
 
 
 def read_transient_data(cases_dir_path ,case_dir, times):
@@ -283,7 +355,7 @@ def read_transient_data(cases_dir_path ,case_dir, times):
 
     path = os.path.join(*cases_dir_path, case_dir)
     
-    files = os.listdir(path)
+    files = glob.glob(r'*Output.csv', root_dir=path)
 
     if files == []:
         logging.error("No data to process for case {}".format(case_dir))
@@ -353,7 +425,3 @@ def check_data_format(cases_dir_path):
                         os.rename(old_path, new_path)
                 if renamed != 0:
                     logging.info("Renamed {} files in case {} in mode {}".format(renamed, case, mode))
-
-
-if __name__ == "__main__":
-    parse_logs("./bla.log")

@@ -1,6 +1,6 @@
 /file/set-tui-version "22.1"
-(cx-gui-do cx-activate-item "MenuBar*ImportSubMenu*Case...")
-(cx-gui-do cx-activate-item "Question*OK")
+(cx-gui-do cx-activate-item "MenuBar*ReadSubMenu*Case...")
+;(cx-gui-do cx-activate-item "Question*OK")
 
 ; Read Case from file
 (cx-gui-do cx-set-file-dialog-entries "Select File" '("%case_path%") "All Files (*)")
@@ -53,5 +53,5 @@
 (cx-gui-do cx-activate-item "MenuBar*PopupMenuTree-Run Calculation*Initialize & Calculate")
 
 ; Accept dialog
-(cx-gui-do cx-activate-item "Question*OK")
-(cx-gui-do cx-activate-item "Information*OK")
+;(cx-gui-do cx-activate-item "Question*OK")
+;(cx-gui-do cx-activate-item "Information*OK")

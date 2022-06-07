@@ -133,6 +133,8 @@ User Interface Basics (DesignModeler + Mesher)
             - select export file location at **File**
             - click **save**
 
+# Log Files
+-  Console output will be saved within `Solution.trn` file
 
 # Animations
 

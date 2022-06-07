@@ -65,6 +65,8 @@ class flowfield:
         plot_cfg = self.config["plot_conf"]
         self.plots = self.config["plots"]
         self.cases = self.config["cases"]
+        self.resid = self.config["create_resi_plot"]
+        self.cases_dir = self.config["cases_dir_path"]
         self.case = case
         self.field_var = self.config["field_var"]
         self.plots = self.config["plots"]
@@ -101,12 +103,60 @@ class flowfield:
 
         return plot_cfg
 
+    def resi_plot(self):
+        """
+        Function that generates residuals plot for a case
+        """
+        self.update_plot_cfg()
+
+        for cas in self.cases:
+            
+                logging.info(f"Creating residuals plot for case {cas}")
+
+                resid_file = glob.glob(r'*residuals.csv', root_dir=os.path.join(*self.cases_dir, cas))
+                data_path = os.path.join(*self.cases_dir, cas,resid_file[0])
+                data = pd.read_csv(data_path)
+
+                plot_vars = list(data.columns)
+                plot_vars.remove("time/iter")
+                plot_vars.remove("iter")
+
+                fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6.5,4))
+
+                l_style = "solid"
+
+                for ele in plot_vars:
+
+                    axs.plot(data['iter'], data[ele], linestyle=l_style)
+                
+                # axs.set_ylim([1e-10, 1e-2])
+                axs.set_yscale('log')
+                axs.set_xlabel("Iterations")
+                axs.set_ylabel("value")
+                axs.legend(plot_vars)
+                axs.set_title(f"Resiudals {cas}")
+                
+                path = sys.path[0]
+                path = os.path.join(path, "assets")
+                sub_path = os.path.join(path, "transient")
+                if os.path.exists(path) == False:
+                    os.mkdir(path)
+                if os.path.exists(sub_path) == False:
+                    os.mkdir(sub_path)
+
+                image_name = "residuals_" + cas + "." + self.config["plot_file_type"]
+                image_path = os.path.join(sub_path, image_name)
+
+                plt.savefig(image_path)
+                plt.close(fig)
+                logging.info(f"saved image {image_name}.")
+            
+
+
     def multi_plot(self):
         """
         Function that plots variables over the radius for multiple timesteps
         """
-
-
         self.update_plot_cfg()
 
         for cas in self.cases:
@@ -321,11 +371,20 @@ class flowfield:
             plt.close(fig)
             logging.info(f"saved image {image_name}.")
 
-    def setup_journal(self, exit=False, split_cases=False):
+    def setup_journal(self, exit=True, split_cases=False):
         """
-        Function that creates journal file
+        Function that creates journal files
         """
-        build_journal(self.config["cases_dir_path"], split_cases, False)
+
+        journal_path = os.path.join(sys.path[0], "..", "ansys", "journals")
+
+        files = glob.glob(r'**/*.jou', root_dir=journal_path, recursive=True)
+        files.remove("gui_template.jou")
+        for file in files:
+            os.remove(os.path.join(journal_path, file))
+        logging.info(f"Removed {len(files)} journals")
+
+        build_journal(self.config["cases_dir_path"], split_cases, exit)
 
 
     def delete_gif_imgs(self):
@@ -500,6 +559,9 @@ if __name__ == "__main__":
 
     if config["create_gif"]:
         field.create_gif()
+
+    if config["create_resi_plot"]:
+        field.resi_plot()
 
     
     
