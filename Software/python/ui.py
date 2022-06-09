@@ -227,8 +227,7 @@ def write_val2cfg(key, val):
     config[key] = val
 
     with open(cfg_path, "w") as f:
-        f.write(json.dumps(config, indent=4))
-
+        json.dump(config, f, ensure_ascii=False, indent=4)
 
 
 @app.callback(

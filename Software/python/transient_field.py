@@ -23,24 +23,83 @@ class flowfield:
         self.config = config
         check_data_format(self.config["cases_dir_path"])
 
-    def convert2field(self, data, vars):
+    def convert2field(self, data, vars, vel_field=False):
         """
         Function that converts list of x,y,<var> to matrix of dimensions x,y with <var> as values inside
         """
-        X = sorted(set(data['x-coordinate']))
-        Y = sorted(set(data['y-coordinate']))
-        res = {}
-        for var in vars:
-            Vals = np.zeros((len(Y), len(X)))
-            for i in range(len(data[self.field_var])):
-                x = data['x-coordinate'][i]
-                y = data['y-coordinate'][i]
-                val = data[var][i]
-                ix = X.index(x)
-                iy = Y.index(y)
-                Vals[iy,ix] = val
-            res[var] = Vals
-        return X, Y, res
+
+        if vel_field == False:
+            X = sorted(set(data['x-coordinate']))
+            Y = sorted(set(data['y-coordinate']))
+            res = {}
+            for var in vars:
+                Vals = np.zeros((len(Y), len(X)))
+                # X_vals = np.zeros((len(Y), len(X)))
+                # Y_vals = np.zeros((len(Y), len(X)))
+                
+                for i in range(len(data[vars[0]])):
+                    x = data['x-coordinate'][i]
+                    y = data['y-coordinate'][i]
+                    val = data[var][i]
+                    ix = X.index(x)
+                    iy = Y.index(y)
+                    Vals[iy,ix] = val
+                    # X_vals[iy,ix] = x
+                    # Y_vals[iy,ix] = y
+                res[var] = Vals
+                # res['x-field'] = X_vals
+                # res['y-field'] = Y_vals
+
+            return X, Y, res
+        else:
+
+            x_diffs = 16
+            y_diffs = 16
+
+            X = sorted(set(data['x-coordinate']))
+            step_x = int(round(len(X)/x_diffs,0))
+            X_tmp = [X[i] for i in range(0, len(X), step_x)]
+            Y = sorted(set(data['y-coordinate']))
+            step_y = int(round(len(Y)/y_diffs,0))
+            Y_tmp = [Y[i] for i in range(0, len(Y), step_y)]
+            
+            res = {}
+            for var in vars:
+                Vals = np.zeros((len(Y), len(X)))
+                X_vals = np.zeros((len(Y), len(X)))
+                Y_vals = np.zeros((len(Y), len(X)))
+                
+                for i in range(len(data[vars[0]])):
+                    x = data['x-coordinate'][i]
+                    y = data['y-coordinate'][i]
+                    val = data[var][i]
+                    ix = X.index(x)
+                    iy = Y.index(y)
+                    Vals[iy,ix] = val
+                    X_vals[iy,ix] = x
+                    Y_vals[iy,ix] = y
+                res[var] = Vals
+                res['x-field'] = X_vals
+                res['y-field'] = Y_vals
+
+                small_field = np.zeros([int(len(Y_tmp)), int(len(X_tmp))])
+                small_x = np.zeros([int(len(Y_tmp)), int(len(X_tmp))])
+                small_y = np.zeros([int(len(Y_tmp)), int(len(X_tmp))])
+
+                for i in range(len(Y_tmp)):
+                    big_y_idx = Y.index(Y_tmp[i])
+                    for j in range(len(X_tmp)):
+                        big_x_idx = X.index(X_tmp[j])
+                        small_field[i,j] = res[var][big_y_idx][big_x_idx]
+                        small_x[i,j] = X_tmp[j]
+                        small_y[i,j] = Y_tmp[i]
+
+                res[var] = small_field
+                res['x-field'] = small_x
+                res['y-field'] = small_y
+                    
+
+            return X_tmp, Y_tmp, res
 
     def check_plot_cfg(self, conf):
 
@@ -90,6 +149,7 @@ class flowfield:
             self.data = read_transient_data(self.config["cases_dir_path"], self.case, self.plots)
 
             cols = list(self.data[list(self.data.keys())[0]].columns)
+            cols.append('velocity-field')
             if self.do_plots == True:
                 for var in self.config["plot_vars"]:
                     if not var in cols:
@@ -103,6 +163,103 @@ class flowfield:
 
         return plot_cfg
 
+    def vel_field(self):
+        """
+        Function that plots velocity filed with directional info
+        """
+        
+        for cas in self.cases:
+
+            self.case = cas
+
+            self.update_plot_cfg(cas)
+            var = "velocity-field"
+
+            path = sys.path[0]
+            path = os.path.join(path, "assets")
+            sub_path = os.path.join(path, var)
+            if os.path.exists(path) == False:
+                os.mkdir(path)
+            if os.path.exists(sub_path) == False:
+                os.mkdir(sub_path)
+
+            image_name = self.case + "_" + var + "." + self.config["image_file_type"]
+            image_path = os.path.join(sub_path, image_name)
+
+            if os.path.exists(image_path):
+                logging.info(f"{var} field for case {self.case} already exsists.")
+                continue
+
+            logging.info(f"Creating {var} field {self.plots} for case {self.case}")
+
+            title = self.case
+
+            fig, axs = plt.subplots(len(self.plots), 1, sharex=True, sharey=True, figsize=(6.5,2.4*len(self.plots)))
+            fig.suptitle(title, size=12)
+            # axs = fig.add_subplot(len(self.plots), 1, sharex=True, sharey=True, figsize=(6.5,2.4*len(self.plots)))
+
+            for idx, ele in enumerate(self.plots):
+                elements = ['x-coordinate', 'y-coordinate', 'axial-velocity', 'radial-velocity']
+                data_header = list(self.data[ele].columns)
+                if all(elem in data_header for elem in elements) == False:
+                    logging.error(f"Not all needed elements {elements} for plot {ele} in data for case {cas}")
+                    continue
+
+                X, Y, res = self.convert2field(self.data[ele], ['axial-velocity', 'radial-velocity'], vel_field=True)
+                # mirror across diagonal
+                x_tmp = Y
+                y_tmp = X
+                v_z_vals = res['axial-velocity']
+                v_z_vals = np.rot90(np.fliplr(v_z_vals))
+                v_r_vals = res['radial-velocity']
+                v_r_vals = np.rot90(np.fliplr(v_r_vals))
+
+                x_final = res['x-field']
+                x_final = np.rot90(np.fliplr(x_final))
+                y_final = res['y-field']
+                y_final = np.rot90(np.fliplr(y_final))
+                
+                logging.debug("Size X = {}, Size Y = {}, Size v_z = {}, Size v_r = {}".format(len(X), len(Y), len(v_z_vals), len(v_r_vals)))
+                            
+                # plot n
+                scl_val= 0.02
+
+                if len(self.plots) != 1:
+                    if self.image_conf["set_custom_range"]:
+                        # cax = axs[idx].pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'), vmin=self.image_conf["min"], vmax=self.image_conf["max"])
+                        cax = axs[idx].quiver(y_final, x_final, v_r_vals, v_z_vals, scale=scl_val)
+                    else:
+                        cax = axs[idx].quiver(y_final, x_final, v_r_vals, v_z_vals, scale=scl_val)
+                        # cax = axs[idx].pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'))
+                    # add axis description
+                    if idx == len(self.plots)-1 :
+                        axs[idx].set_xlabel("radius r [m]")
+                    axs[idx].set_ylabel("height z [m]")
+                    axs[idx].set_title("t = {}s".format(round(ele * self.case_conf["timestep"], 1)))
+                    # add colorbar
+                    cbar = fig.colorbar(cax, ax=axs[idx])
+                    cbar.set_label(self.config["c_bar"], rotation=90, labelpad=7)
+
+                else:
+                    if self.image_conf["set_custom_range"]:
+                        # cax = axs.pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'), vmin=self.image_conf["min"], vmax=self.image_conf["max"])
+                        cax = axs.quiver(y_final, x_final, v_r_vals, v_z_vals, scale=scl_val)
+                    else:
+                        # cax = axs.pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'))
+                        cax = axs.quiver(y_final, x_final, v_r_vals, v_z_vals, scale=scl_val)
+                    axs.set_xlabel("radius r [m]")
+                    axs.set_ylabel("height z [m]")
+                    axs.set_title("t = {}s".format(round(ele * self.case_conf["timestep"], 1)))
+                    # add colorbar
+                    cbar = fig.colorbar(cax, ax=axs)
+                    cbar.set_label(self.config["c_bar"], rotation=90, labelpad=7)
+            
+            plt.savefig(image_path)
+            plt.close(fig)
+            logging.info(f"saved image {image_name}.")
+
+
+
     def resi_plot(self):
         """
         Function that generates residuals plot for a case
@@ -110,11 +267,26 @@ class flowfield:
         self.update_plot_cfg()
 
         for cas in self.cases:
+
+                path = sys.path[0]
+                path = os.path.join(path, "assets")
+                sub_path = os.path.join(path, "residuals")
+                if os.path.exists(path) == False:
+                    os.mkdir(path)
+                if os.path.exists(sub_path) == False:
+                    os.mkdir(sub_path)
+
+                image_name = "residuals_" + cas + "." + self.config["plot_file_type"]
+                image_path = os.path.join(sub_path, image_name)
+
+                if os.path.exists(image_path):
+                    logging.info(f"Residuals for case {cas} already created")
+                    continue
             
                 logging.info(f"Creating residuals plot for case {cas}")
 
                 resid_file = glob.glob(r'*residuals.csv', root_dir=os.path.join(*self.cases_dir, cas))
-                data_path = os.path.join(*self.cases_dir, cas,resid_file[0])
+                data_path = os.path.join(*self.cases_dir, cas, resid_file[0])
                 data = pd.read_csv(data_path)
 
                 plot_vars = list(data.columns)
@@ -135,17 +307,6 @@ class flowfield:
                 axs.set_ylabel("value")
                 axs.legend(plot_vars)
                 axs.set_title(f"Resiudals {cas}")
-                
-                path = sys.path[0]
-                path = os.path.join(path, "assets")
-                sub_path = os.path.join(path, "transient")
-                if os.path.exists(path) == False:
-                    os.mkdir(path)
-                if os.path.exists(sub_path) == False:
-                    os.mkdir(sub_path)
-
-                image_name = "residuals_" + cas + "." + self.config["plot_file_type"]
-                image_path = os.path.join(sub_path, image_name)
 
                 plt.savefig(image_path)
                 plt.close(fig)
@@ -163,7 +324,22 @@ class flowfield:
 
             self.case = cas
             plot_cfg = self.update_plot_cfg(cas)
-    
+
+            path = sys.path[0]
+            path = os.path.join(path, "assets")
+            sub_path = os.path.join(path)
+            if os.path.exists(path) == False:
+                os.mkdir(path)
+            if os.path.exists(sub_path) == False:
+                os.mkdir(sub_path)
+
+            image_name = self.case + "_" + "_".join(self.plot_vars) + "." + self.config["plot_file_type"]
+            image_path = os.path.join(sub_path, image_name)
+
+            if os.path.exists(image_path):
+                logging.info(f"{self.plot_vars} field for case {self.case} already created")
+                continue
+
             logging.info(f"Creating {self.plot_vars} field {self.plots} for case {self.case}")
 
 
@@ -281,16 +457,7 @@ class flowfield:
                         axs.legend(l_conf)
                         # axs.set_title("t = {}".format(ele))
                 
-            path = sys.path[0]
-            path = os.path.join(path, "assets")
-            sub_path = os.path.join(path, "transient")
-            if os.path.exists(path) == False:
-                os.mkdir(path)
-            if os.path.exists(sub_path) == False:
-                os.mkdir(sub_path)
-
-            image_name = self.case + "_" + "_".join(self.plot_vars) + "." + self.config["plot_file_type"]
-            image_path = os.path.join(sub_path, image_name)
+           
 
             plt.savefig(image_path)
             plt.close(fig)
@@ -303,73 +470,86 @@ class flowfield:
         
         self.update_plot_cfg()
 
+        if 'velocity-field' in self.config["field_var"]:
+            self.vel_field()
+
         for cas in self.cases:
 
             self.case = cas
 
             self.update_plot_cfg(cas)
 
-            logging.info(f"Creating {self.field_var} field {self.plots} for case {self.case}")
+            if 'velocity-field' in self.field_var:
+                self.field_var.remove('velocity-field')
 
-            title = self.case
+            for var in self.field_var:
 
-            fig, axs = plt.subplots(len(self.plots), 1, sharex=True, sharey=True, figsize=(6.5,2.4*len(self.plots)))
-            fig.suptitle(title, size=12)
-            # axs = fig.add_subplot(len(self.plots), 1, sharex=True, sharey=True, figsize=(6.5,2.4*len(self.plots)))
+                var = [var]
 
-            for idx, ele in enumerate(self.plots):
+                path = sys.path[0]
+                path = os.path.join(path, "assets")
+                sub_path = os.path.join(path, var[0])
+                if os.path.exists(path) == False:
+                    os.mkdir(path)
+                if os.path.exists(sub_path) == False:
+                    os.mkdir(sub_path)
 
-                X, Y, res = self.convert2field(self.data[ele], self.field_var)
-                # mirror across diagonal
-                x_tmp = Y
-                y_tmp = X
-                Vals = res[self.field_var[0]]
-                logging.debug("Size X = {}, Size Y = {}, Size Vals = {}".format(len(X), len(Y), Vals.shape))
-                Vals = np.rot90(np.fliplr(Vals))            
-                # plot n
+                image_name = self.case + "_" + var[0] + "." + self.config["image_file_type"]
+                image_path = os.path.join(sub_path, image_name)
 
-                if len(self.plots) != 1:
-                    if self.image_conf["set_custom_range"]:
-                        cax = axs[idx].pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'), vmin=self.image_conf["min"], vmax=self.image_conf["max"])
+                if os.path.exists(image_path):
+                    logging.info(f"{var} field for case {self.case} already exsists.")
+                    continue
+
+                logging.info(f"Creating {var} field {self.plots} for case {self.case}")
+
+                title = self.case
+
+                fig, axs = plt.subplots(len(self.plots), 1, sharex=True, sharey=True, figsize=(6.5,2.4*len(self.plots)))
+                fig.suptitle(title, size=12)
+                # axs = fig.add_subplot(len(self.plots), 1, sharex=True, sharey=True, figsize=(6.5,2.4*len(self.plots)))
+
+                for idx, ele in enumerate(self.plots):
+
+                    X, Y, res = self.convert2field(self.data[ele], var)
+                    # mirror across diagonal
+                    x_tmp = Y
+                    y_tmp = X
+                    Vals = res[var[0]]
+                    logging.debug("Size X = {}, Size Y = {}, Size Vals = {}".format(len(X), len(Y), Vals.shape))
+                    Vals = np.rot90(np.fliplr(Vals))            
+                    # plot n
+
+                    if len(self.plots) != 1:
+                        if self.image_conf["set_custom_range"]:
+                            cax = axs[idx].pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'), vmin=self.image_conf["min"], vmax=self.image_conf["max"])
+                        else:
+                            cax = axs[idx].pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'))
+                        # add axis description
+                        if idx == len(self.plots)-1 :
+                            axs[idx].set_xlabel("radius r [m]")
+                        axs[idx].set_ylabel("height z [m]")
+                        axs[idx].set_title("t = {}s".format(round(ele * self.case_conf["timestep"], 1)))
+                        # add colorbar
+                        cbar = fig.colorbar(cax, ax=axs[idx])
+                        cbar.set_label(self.config["c_bar"], rotation=90, labelpad=7)
+
                     else:
-                        cax = axs[idx].pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'))
-                    # add axis description
-                    if idx == len(self.plots)-1 :
-                        axs[idx].set_xlabel("radius r [m]")
-                    axs[idx].set_ylabel("height z [m]")
-                    axs[idx].set_title("t = {}s".format(round(ele * self.case_conf["timestep"], 1)))
-                    # add colorbar
-                    cbar = fig.colorbar(cax, ax=axs[idx])
-                    cbar.set_label(self.config["c_bar"], rotation=90, labelpad=7)
+                        if self.image_conf["set_custom_range"]:
+                            cax = axs.pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'), vmin=self.image_conf["min"], vmax=self.image_conf["max"])
+                        else:
+                            cax = axs.pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'))
 
-                else:
-                    if self.image_conf["set_custom_range"]:
-                        cax = axs.pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'), vmin=self.image_conf["min"], vmax=self.image_conf["max"])
-                    else:
-                        cax = axs.pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'))
-
-                    axs.set_xlabel("radius r [m]")
-                    axs.set_ylabel("height z [m]")
-                    axs.set_title("t = {}s".format(round(ele * self.case_conf["timestep"], 1)))
-                    # add colorbar
-                    cbar = fig.colorbar(cax, ax=axs)
-                    cbar.set_label(self.config["c_bar"], rotation=90, labelpad=7)
+                        axs.set_xlabel("radius r [m]")
+                        axs.set_ylabel("height z [m]")
+                        axs.set_title("t = {}s".format(round(ele * self.case_conf["timestep"], 1)))
+                        # add colorbar
+                        cbar = fig.colorbar(cax, ax=axs)
+                        cbar.set_label(self.config["c_bar"], rotation=90, labelpad=7)
                 
-            path = sys.path[0]
-            path = os.path.join(path, "assets")
-            sub_path = os.path.join(path, "transient")
-            if os.path.exists(path) == False:
-                os.mkdir(path)
-            if os.path.exists(sub_path) == False:
-                os.mkdir(sub_path)
-
-            image_name = self.case + "_" + self.field_var[0] + "." + self.config["image_file_type"]
-            image_path = os.path.join(sub_path, image_name)
-
-            
-            plt.savefig(image_path)
-            plt.close(fig)
-            logging.info(f"saved image {image_name}.")
+                plt.savefig(image_path)
+                plt.close(fig)
+                logging.info(f"saved image {image_name}.")
 
     def setup_journal(self, exit=True, split_cases=False):
         """
@@ -541,9 +721,8 @@ class flowfield:
 
             if self.gif_conf["keep_images"] == False:
                 self.delete_gif_imgs()    
-        
-if __name__ == "__main__":
 
+def do_plots():
     cfg_path = os.path.join(sys.path[0], "conf.json")
 
     with open(cfg_path) as f:
@@ -562,6 +741,10 @@ if __name__ == "__main__":
 
     if config["create_resi_plot"]:
         field.resi_plot()
+
+if __name__ == "__main__":
+
+    do_plots()
 
     
     

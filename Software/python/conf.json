@@ -4,29 +4,30 @@
         "bigdata",
         "fwdt",
         "DFischer",
-        "Data",
-        "transient"
+        "Data"
     ],
-    "cases": ["v_3e-3"],
-    "plots": [
-        
+    "cases": [
+        "v_0.5e-3"
     ],
-    "create_resi_plot" : true,
-    "create_image": false,
-    "field_var": ["velocity-magnitude"],
+    "plots": [],
+    "create_resi_plot": false,
+    "create_image": true,
+    "field_var": [
+        "velocity-field",
+        "molef-fluid_b",
+        "molef-fluid_a"
+    ],
     "c_bar": "",
     "image_file_type": "png",
     "image_conf": {
-        "set_custom_range": false,
+        "set_custom_range": true,
         "min": 0.0,
         "max": 1.0
     },
     "create_plot": false,
     "one_plot": false,
     "plot_vars": [
-        "molef-fluid_a",
-        "molef-fluid_b",
-        "molef-fluid_c"
+        "molef-fluid_a"
     ],
     "plot_file_type": "png",
     "plot_conf": {
@@ -46,20 +47,20 @@
             "molef-fluid_c": "fluid c"
         }
     },
-    "create_gif" : false,
-    "gif_conf" : {
-        "cases" : {
-            "start" : 0,
-            "end" : 100,
-            "step" : 1
+    "create_gif": false,
+    "gif_conf": {
+        "cases": {
+            "start": 0,
+            "end": 100,
+            "step": 1
         },
-        "new" : false,
-        "keep_images" : false,
-        "videos" : true,
-        "gif_plot" : false,
-        "gif_image" : true,
-        "name" : "test",
-        "loop" : 0,
-        "frame_duration" : 200
+        "new": false,
+        "keep_images": false,
+        "videos": true,
+        "gif_plot": false,
+        "gif_image": true,
+        "name": "test",
+        "loop": 0,
+        "frame_duration": 200
     }
 }

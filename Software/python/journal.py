@@ -27,5 +27,23 @@ def run_journals(journals=[]):
             run_fluent(jou_name=jour)
 
 if __name__ == "__main__":
+
+    cfg_path = os.path.join(sys.path[0],".." ,"ansys","cases.json")
+    with open(cfg_path) as f:
+        config = json.load(f)
+
+    cases = list(config.keys())
+
+    cf_path = os.path.join(sys.path[0],"conf.json")
+    with open(cf_path) as f:
+        cf = json.load(f)
+
+    cf["cases"] = cases
+
+    with open(cf_path, "w") as f:
+        json.dump(cf, f, ensure_ascii=False, indent=4)
+
     create_journals(True, True)
-    run_journals(["v_3e-3"])
+    run_journals(cases)
+
+    do_plots()

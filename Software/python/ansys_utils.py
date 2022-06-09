@@ -127,8 +127,8 @@ def run_fluent(dims='2ddp', p_num=6, jou_name=""):
 
 
     if os.path.exists(jou_path) == False:
-        logging.error(f"journal {jou_name} doen't exsist.")
-        exit()
+        logging.warning(f"journal {jou_name} doesn't exsist. Continuing with next one.")
+        return
 
     # cmd = " ".join(['fluent', dims, f'-t{p_num}', f'-i{jou_path}', '> ' + os.path.join(sys.path[0], 'test.log'), '2>&1'])
     cmd = " ".join(['fluent', dims, f'-t{p_num}', f'-i{jou_path}'])
@@ -137,12 +137,15 @@ def run_fluent(dims='2ddp', p_num=6, jou_name=""):
 
 
     # os.remove("test.log")
-    time.sleep(10)
+    time.sleep(20)
     files = glob.glob('*.trn', root_dir=os.path.join(sys.path[0], "..", ".."), recursive=False)
-
+    if files == []:
+        files = glob.glob('**/*.trn', root_dir=os.path.join(sys.path[0], "..", ".."), recursive=True)
+        
     if files == []:
         logging.warning(f"No log files created for journal {jou_name}")
-        return logs
+        exit()
+        # return logs
 
     log_path = os.path.join(sys.path[0], "..", "..", files[0])
 
@@ -197,7 +200,8 @@ def build_journal(cases_dir_path, split_cases, end_exit=False):
     with open(path) as f:
         cfg = json.load(f)
 
-    cfg.pop("tmp")
+    if "tmp" in cfg.keys():
+        cfg.pop("tmp")
 
     template_path = os.path.join(sys.path[0], "..", "ansys", "journals", "gui_template.jou")
     logging.debug(f"Template path: {template_path}")
@@ -219,6 +223,8 @@ def build_journal(cases_dir_path, split_cases, end_exit=False):
         val["export_path"] = export_path
 
         cases = get_cases(cases_dir_path, key, True)
+        journal_cases = os.path.join(sys.path[0], "..", "ansys", "journals", "cases")
+        journal_path = os.path.join(journal_cases, key + ".jou")
 
         if cases == []:
 
@@ -246,8 +252,7 @@ def build_journal(cases_dir_path, split_cases, end_exit=False):
             if end_exit:
                 tmp_file = tmp_file + ["\n", "\n", ";Exiting Fluent \n", "/exit ok \n"]
 
-            journal_cases = os.path.join(sys.path[0], "..", "ansys", "journals", "cases")
-            journal_path = os.path.join(journal_cases, key + ".jou")
+            
             if os.path.exists(journal_cases) == False:
                 os.mkdir(journal_cases)
                 logging.info(f"Created cases directory for journals {journal_cases}")
@@ -264,7 +269,7 @@ def build_journal(cases_dir_path, split_cases, end_exit=False):
         with open(journal_path, "w") as f:
             f.writelines(tmp_file)
 
-    logging.info(f"Wrote journal to file {journal_path}")
+        logging.info(f"Wrote journal to file {journal_path}")
 
 def parse_logs(path2logfile):
     """
@@ -275,7 +280,7 @@ def parse_logs(path2logfile):
     filterd = []
     raw_data = {}
 
-    with open(path2logfile) as f:
+    with open(path2logfile, "r") as f:
         lines = f.readlines()
     
     case = ""
@@ -287,7 +292,7 @@ def parse_logs(path2logfile):
         line = line.strip()
         new_case = re.findall(r'cx-set-text-entry', line)
         if new_case != []:
-            case = re.findall(r'transient\\(.*)\\FFF', line)[0]
+            case = re.findall(r".*\\(.*)\\FFF", line)[0]
             tmp[case] = {}
             case_lines.append(idx)
 
@@ -398,30 +403,29 @@ def check_data_format(cases_dir_path):
         Function that checks that all needed config parameters are set
         """
 
-        path = os.path.join(*cases_dir_path, "..")
-        modes = os.listdir(path)
-        logging.debug("Modi = {}".format(modes))
+        path = os.path.join(*cases_dir_path)
+    
+        cases = os.listdir(os.path.join(path))
 
-        for mode in modes:
-            cases = os.listdir(os.path.join(path, mode))
-            if "cases.json" in cases:
-                cases.remove("cases.json")
-            logging.debug("Found {} for mode {}".format(cases, mode))
+        for case in cases:
 
-            for case in cases:
+            if re.findall(r".csv", case) != []:
+                continue
 
-                if re.findall(r".csv", case) != []:
-                    continue
+            timestamps = os.listdir(os.path.join(path, case))
+            logging.debug("Found {} files for case {}".format(len(timestamps), case))
+            renamed = 0
+            for file in timestamps:
+                if re.findall(r'.csv', file) == []:
+                    old_path = os.path.join(path, case, file)
+                    new_path = os.path.join(path, case, file + ".csv")
+                    logging.debug(f"Rename {file} to {file + '.csv'}")
+                    renamed += 1
+                    os.rename(old_path, new_path)
+            if renamed != 0:
+                logging.info("Renamed {} files in case {}".format(renamed, case))
 
-                timestamps = os.listdir(os.path.join(path, mode, case))
-                logging.debug("Found {} files for case {} in mode {}".format(len(timestamps), case, mode))
-                renamed = 0
-                for file in timestamps:
-                    if re.findall(r'.csv', file) == []:
-                        old_path = os.path.join(path, mode, case, file)
-                        new_path = os.path.join(path, mode, case, file + ".csv")
-                        logging.debug(f"Rename {file} to {file + '.csv'}")
-                        renamed += 1
-                        os.rename(old_path, new_path)
-                if renamed != 0:
-                    logging.info("Renamed {} files in case {} in mode {}".format(renamed, case, mode))
+if __name__ == "__main__":
+
+    path = os.path.join(sys.path[0], "fluent-20220608-110207-10944.trn")
+    parse_logs(path)
