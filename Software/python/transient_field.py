@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 from ansys_utils import *
 
 # setup logging
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(filename)s - %(levelname)s - %(funcName)s - %(message)s")
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(filename)s - %(funcName)s - %(message)s")
 
 
 class flowfield:
@@ -523,7 +523,7 @@ class flowfield:
 
                 title = self.case
 
-                fig, axs = plt.subplots(len(self.plots), 1, sharex=True, sharey=True, figsize=(6.5,2.4*len(self.plots)))
+                fig, axs = plt.subplots(len(self.plots), 1, sharex=True, sharey=True, figsize=(6.5, 2.0*len(self.plots)+2.5))
                 fig.suptitle(title, size=12)
                 # axs = fig.add_subplot(len(self.plots), 1, sharex=True, sharey=True, figsize=(6.5,2.4*len(self.plots)))
 
@@ -596,7 +596,7 @@ class flowfield:
         """
 
         path = sys.path[0]
-        img_path = os.path.join(path, "assets", "transient")
+        img_path = os.path.join(path, "assets", self.field_var[0])
 
         gifs = glob.glob('*_gif*', root_dir=img_path)
 
@@ -621,7 +621,7 @@ class flowfield:
             self.update_plot_cfg(cas)
 
             path = sys.path[0]
-            img_path = os.path.join(path, "assets", "transient")
+            img_path = os.path.join(path, "assets", self.field_var[0])
 
             if self.gif_conf["new"]:
                 self.delete_gif_imgs()
@@ -656,7 +656,7 @@ class flowfield:
                     if os.path.exists(os.path.join(img_path, plot_name + ".png")) == False:
                         self.multi_plot(update_conf=False)
                     else:
-                            logging.debug(f"Image {plot_name} already exsists")
+                        logging.debug(f"Image {plot_name} already exsists")
 
                 if self.gif_conf["gif_image"]:
                     if os.path.exists(os.path.join(img_path, field_name + ".png")) == False:
@@ -718,7 +718,13 @@ class flowfield:
                 if os.path.exists(video_path):
                     logging.info(f"Deleting existing video {video_name}")
 
-                imgs = (Image.open(os.path.join(img_path,f)) for f in sorted(glob.glob('*img_gif_*png', root_dir=img_path)))
+                tmp_imgs = sorted(glob.glob('*img_gif_*png', root_dir=img_path))
+
+                if tmp_imgs == []:
+                    logging.error(f"No images for gif found at {img_path}")
+                    exit()
+
+                imgs = (Image.open(os.path.join(img_path,f)) for f in tmp_imgs)
                 img = next(imgs)  # extract first image from iterator
                 img.save(gif_path, format="GIF", append_images=imgs,
                         save_all=True, duration=self.gif_conf["frame_duration"], loop=self.gif_conf["loop"])
