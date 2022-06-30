@@ -169,8 +169,9 @@ User Interface Basics (DesignModeler + Mesher)
 # Add Reaction
 
 ## general
-- think about reaction e.g. $ 1A + 1B \rightarrow 2C$
-- think about reation rate e.g. $r = k \cdot c_A^{n_{c_A}}$
+- think about reaction e.g. $ 1A + 1B \rightarrow 1C$
+- think about reation rate e.g. $r = k \cdot c_A^{n_{c_A}} \cdot c_B^{n_{c_B}} $
+    - e.g. $n_{c_A} = n_{c_B} = 1 $
     - $ k = k_{\infty} \cdot e^{\frac{-E_A}{R \cdot T}}$
 
 ## ansys configuration
@@ -183,18 +184,26 @@ User Interface Basics (DesignModeler + Mesher)
     - Pre-Exponential Factor: $k_\infty$
     - Activation Energy: $E_A$
 
-## Automation
+## troubleshooting
+- No or few product C
+    - activation energy $E_A$ to high ?
+    - temperature to low ?
+- No dispersion
+    - input velocity and diffusion rate match? (diffusion rate << input vel ?)
+    - flow time high enough (dependant on input velocity)
 
-### Commandline (holy grail)
+# Automation
 
-#### Run fluent from cmdline
+## Commandline (holy grail)
+
+### Run fluent from cmdline
 
 - find flunet installation path (windows installation)
     - e.g. `C:\Program Files\ANSYS Inc\v221\fluent\ntbin\win64`
     - add this path to PATH variable (windows 10)
         - Go to **Settings** --> **System** --> **Info** --> **System Information** --> **Advanced System Settings**
         - login as root
-        - go to tab **advenced** --> **Environment variables**
+        - go to tab **advanced** --> **Environment variables**
         - Doubleclick **Path** under system variables
         - click **new** --> paste your path here
         - click ok
@@ -202,7 +211,7 @@ User Interface Basics (DesignModeler + Mesher)
 - cmd: `fluent 3ddp -tX -i <journal>.jou -g`
     - X: number of processors
 
-### GUI Application
+## GUI Application
 
 - to automate the gui application these steps need to be done:
     1. Create case file (e.g. <name>.cas.gz)
@@ -221,3 +230,72 @@ User Interface Basics (DesignModeler + Mesher)
 
     5. Run new journal
         - Click **File** in Menubar --> **Read** --> **Journal** --> Choose your journal
+
+# Mesh dependancy study
+
+1. Create mesh
+2. Run steady simulation
+3. Export variable
+4. Refine mesh (e.g. number of divisions * 1.5)
+5. Run simulation again
+6. Check if variable has changed
+    - if so refine again
+
+# Scripts explaination
+
+## Workflow to run case
+
+1. Setup anys case within ansys workbench
+2. Create journal file that edits all needed variables
+3. Add marker (%variable name%) to base journal file
+4. Add case to cases.json (within ansys folder)
+5. Create and run journals with `journal.py`
+
+## Workflow to create images
+
+1. change `conf.json` within python directory acording to your needs
+2. run `transient_field.py`
+3. resulting images will be stored under `assets\<var_name>`
+
+
+### Cases.json
+
+| Variable|Explaination|Example|
+|:--------:|:------------:|:------:|
+|case_name|name of case to calculate. directory (see case_dir_path) will be created under data path if it doesn't exsist already | test |
+|timestep|number of seconds per timestep| 0.01|
+|data_export_interval| interval at which results will be created| 10|
+|iterations| number of iterations per timestep | 30|
+|timestep_number|number of timesteps to calculate|1e2|
+|case|case to import first and then apply all variables| case_name.cas.gz|
+
+### conf.json
+
+|Variable|Explaination|Example|
+|:-----:|:-----:|:-----:|
+|cases_dir_path|path where cases are stored| ["\\\\gssnas", "bigdata", "fwdt", "DFischer" ,"Data"]
+|cases| cases to create results for | ["test", "test1] |
+|plots| timestamps that plots are created for | [], [-1, -2], [0, 10, 30] |
+|create_resi_plot| if residual plots need to be created | false, true |
+|create_image| if field needs to be created | false, true |
+|field_var| variables that fields are created for | ["just put something here. if wrong u get shown all options"] |
+|c_bar| colorbar label | velocity [m/s]
+|image_file_type| image filetype | pmg, pdf, ...|
+|set_custom_range| if custom range needs to be applied to field | true, false |
+|min| minimum field_var value | 0 |
+|max| maximum filed_var value | 1 |
+|create_plot| if plots need to be created (averaged values over radius) | true, false |
+|plot_vars| variables that are ploted| ["molef-fluid_a"]|
+|plot_file_type| file type of plot | png, pdf, ... |
+|one_plot| if multiple timesteps are ploted into one plot| true, false|
+|plot_conf| plot config | |
+|create_gif| if animation needs to be created (.gif file| true, false |
+|video| if animation needs to be created (.avi file) | true, false |
+|cases| animation image selection | |
+|new| if existing images should be replaced | true, false |
+|keep_images | if gif images are deleted after gif creation | true, false |
+|gif_plot | if animation needs to be done for plots | true, false |
+|gif_image | if animation needs to be done for fields | true, false |
+|name | gif and video name | "bla"|
+|loop | how many times gif and video needs to loop | 0 |
+|frame_duration| how long in [ms] a frame should be displayed | 200 |

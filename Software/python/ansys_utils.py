@@ -53,13 +53,17 @@ def get_case_info(case):
         logging.error("No config for case {} found in config.json. Please add the case to the config file".format(case))
         exit()
 
-def get_colsest_plots(plots, timestep, cases_dir_path, case_dir):
+def get_closest_plots(plots, timestep, cases_dir_path, case_dir, export_times):
     """
     Funtion that returns the closest dataset to a given timestep
     """
-    cases = get_cases(cases_dir_path, case_dir)
+    cases = get_cases(cases_dir_path, case_dir, export_times)
     cases.sort()
     logging.debug("Cases = {}".format(cases))
+
+    if export_times == "flow_time":
+        plots = plots * timestep
+
     for id, ele in enumerate(plots):
 
         if ele < 0:
@@ -70,7 +74,7 @@ def get_colsest_plots(plots, timestep, cases_dir_path, case_dir):
         plots[id] = case
     return plots
 
-def get_cases(cases_dir_path, case_dir, auto_add=False):
+def get_cases(cases_dir_path, case_dir, auto_add=False, export_time="flow_time"):
     """
     Function that returns all cases from a case_dir
     """
@@ -89,13 +93,17 @@ def get_cases(cases_dir_path, case_dir, auto_add=False):
             logging.info(f"Case {case_dir} added")
 
 
-    files = glob.glob(r'*Output.csv', root_dir=case_path)
+    files = glob.glob(r'*-Output*', root_dir=case_path)
     cases = []
 
     for id, file in enumerate(files):
         m = re.findall(r'\d+', file)
         if m:
-            cases.append(float(m[0]))
+            if export_time == "flow_time":
+                cases.append(float(m[-2] + "." + m[-1]))
+            else:
+                cases.append(float(m[0]))
+
     return cases
 
 def checkIfProcessRunning(processName):
@@ -158,12 +166,12 @@ def run_fluent(dims='2ddp', p_num=6, jou_name=""):
     logging.info(f"Removing .trn file {log_path}")
     os.remove(log_path)
 
-def get_default_cases(cases_dir_path, case_dir):
+def get_default_cases(cases_dir_path, case_dir, export_times):
     """
     Function that creates default cases to plot if no plots have been set
     """
 
-    cases = get_cases(cases_dir_path, case_dir)
+    cases = get_cases(cases_dir_path, case_dir, export_times)
 
     if cases == []:
         logging.error("No data to process for case {}".format(case_dir))
@@ -178,11 +186,11 @@ def get_default_cases(cases_dir_path, case_dir):
 
     return default_cases
 
-def get_case_vars(cases_dir_path, case_dir):
+def get_case_vars(cases_dir_path, case_dir, export_times):
     """
     Function that gets all resulting variables for a case
     """
-    cases = get_cases(cases_dir_path, case_dir)
+    cases = get_cases(cases_dir_path, case_dir, export_times)
 
     data = read_transient_data(cases_dir_path, case_dir, [cases[0]])
 
@@ -351,7 +359,7 @@ def save_residuals(resis):
         
 
 
-def read_transient_data(cases_dir_path ,case_dir, times):
+def read_transient_data(cases_dir_path ,case_dir, times, export_times="flow_time"):
     """
     Read Ansys transient export data
 
@@ -360,7 +368,7 @@ def read_transient_data(cases_dir_path ,case_dir, times):
 
     path = os.path.join(*cases_dir_path, case_dir)
     
-    files = glob.glob(r'*Output.csv', root_dir=path)
+    files = glob.glob(r'*-Output*', root_dir=path)
 
     if files == []:
         logging.error("No data to process for case {}".format(case_dir))
@@ -372,7 +380,11 @@ def read_transient_data(cases_dir_path ,case_dir, times):
         m = re.findall(r'\d+', file)
 
         if m:
-            timestamp =int(m[0])
+            if export_times != "flow_time":
+                timestamp =int(m[0])
+            else:
+                timestamp =float(m[-2] + "." + m[-1])
+
 
         if timestamp in times:
             

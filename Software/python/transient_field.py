@@ -135,18 +135,20 @@ class flowfield:
         self.do_image = self.config["create_image"]
         self.image_conf = self.config["image_conf"]
         self.gif_conf = self.config["gif_conf"]
+        
 
         if case != None:
             self.case_conf = get_case_info(self.case)
+            self.export_times = self.case_conf["export_times"]
             
             if self.plots == []:
                 logging.info("Plots are not set. Creating default ones ...")
-                self.plots = get_default_cases(self.config["cases_dir_path"], self.case)
+                self.plots = get_default_cases(self.config["cases_dir_path"], self.case, self.export_times)
 
             else:
-                self.plots = get_colsest_plots(np.array(self.plots)/self.case_conf["timestep"], self.case_conf["timestep"] ,self.config["cases_dir_path"], self.case)
+                self.plots = get_closest_plots(np.array(self.plots)/self.case_conf["timestep"], self.case_conf["timestep"] ,self.config["cases_dir_path"], self.case, self.export_times)
             
-            self.data = read_transient_data(self.config["cases_dir_path"], self.case, self.plots)
+            self.data = read_transient_data(self.config["cases_dir_path"], self.case, self.plots, self.export_times)
 
             cols = list(self.data[list(self.data.keys())[0]].columns)
             cols.append('velocity-field')
@@ -183,10 +185,10 @@ class flowfield:
             if os.path.exists(sub_path) == False:
                 os.mkdir(sub_path)
 
-            image_name = self.case + "_" + var + "." + self.config["image_file_type"]
+            image_name = "field_" + self.case + "_" + var + "." + self.config["image_file_type"]
             image_path = os.path.join(sub_path, image_name)
 
-            if os.path.exists(image_path):
+            if os.path.exists(image_path) and self.config["ignore_exsisting"] == True:
                 logging.info(f"{var} field for case {self.case} already exsists.")
                 continue
 
@@ -314,11 +316,12 @@ class flowfield:
             
 
 
-    def multi_plot(self):
+    def multi_plot(self, update_conf=True):
         """
         Function that plots variables over the radius for multiple timesteps
         """
-        self.update_plot_cfg()
+        if update_conf == True:
+            self.update_plot_cfg()
 
         for cas in self.cases:
 
@@ -327,13 +330,16 @@ class flowfield:
 
             path = sys.path[0]
             path = os.path.join(path, "assets")
-            sub_path = os.path.join(path)
+            sub_path = os.path.join(path, "plots")
             if os.path.exists(path) == False:
                 os.mkdir(path)
             if os.path.exists(sub_path) == False:
                 os.mkdir(sub_path)
 
-            image_name = self.case + "_" + "_".join(self.plot_vars) + "." + self.config["plot_file_type"]
+            if update_conf:
+                image_name = "plot_" + self.case + "_" + "_".join(self.plot_vars) + "." + self.config["plot_file_type"]
+            else:
+                image_name = self.config["plot_file_name"] + self.config["plot_file_type"]
             image_path = os.path.join(sub_path, image_name)
 
             if os.path.exists(image_path):
@@ -388,8 +394,11 @@ class flowfield:
                             axs[idx].set_xlabel("radius r [m]")
                         axs[idx].set_ylabel("height z [m]")
                         axs[idx].legend(legend)
-                        axs[idx].set_title("t = {}s".format(round(ele * self.case_conf["timestep"],1)))
-                        
+                        if self.export_times != "flow_time":
+                            axs[idx].set_title("t = {}s".format(round(ele * self.case_conf["timestep"],1)))
+                        else:
+                            axs[idx].set_title("t = {}s".format(ele))
+
 
                     else:
                         for tmp_var in data_tmp.keys():
@@ -400,7 +409,10 @@ class flowfield:
                         axs.set_xlabel("radius r [m]")
                         axs.set_ylabel("height z [m]")
                         axs.legend(legend)
-                        axs.set_title("t = {}s".format(round(ele* self.case_conf["timestep"],1)))
+                        if self.export_times != "flow_time":
+                            axs.set_title("t = {}s".format(round(ele* self.case_conf["timestep"],1)))
+                        else:
+                            axs.set_title("t = {}s".format(ele))
 
             else:
                 
@@ -436,8 +448,11 @@ class flowfield:
                             l_style = plot_cfg["linestyles"]["t" + str(idx + 1)]
                             col = plot_cfg["colors"][tmp_var]
                             cax = axs.plot(x_tmp, data_tmp[tmp_var], linestyle=l_style, color=col)
-                            l_conf.append(plot_cfg["legend"][tmp_var] + ", t={}s".format(round(ele * self.case_conf["timestep"],1)))
-                            
+                            if self.export_times != "flow_time":
+                                l_conf.append(plot_cfg["legend"][tmp_var] + ", t={}s".format(round(ele * self.case_conf["timestep"],1)))
+                            else:
+                                l_conf.append(plot_cfg["legend"][tmp_var] + ", t={}s".format(ele))
+
                             # add axis description
                         if idx == len(self.plots)-1 :
                             axs.set_xlabel("radius r [m]")
@@ -463,12 +478,12 @@ class flowfield:
             plt.close(fig)
             logging.info(f"saved image {image_name}.")
     
-    def multi_field(self):
+    def multi_field(self, update_conf=True):
         """
         Function that shows ansys fields for multiple timesteps within one image
         """
-        
-        self.update_plot_cfg()
+        if update_conf == True:
+            self.update_plot_cfg()
 
         if 'velocity-field' in self.config["field_var"]:
             self.vel_field()
@@ -494,10 +509,13 @@ class flowfield:
                 if os.path.exists(sub_path) == False:
                     os.mkdir(sub_path)
 
-                image_name = self.case + "_" + var[0] + "." + self.config["image_file_type"]
+                if update_conf == True:
+                    image_name = "field_" + self.case + "_" + var[0] + "." + self.config["image_file_type"]
+                else:
+                    image_name = self.config["image_file_name"] + "." + self.config["image_file_type"]
                 image_path = os.path.join(sub_path, image_name)
 
-                if os.path.exists(image_path):
+                if os.path.exists(image_path) and self.config["ignore_exsisting"] == True:
                     logging.info(f"{var} field for case {self.case} already exsists.")
                     continue
 
@@ -542,7 +560,11 @@ class flowfield:
 
                         axs.set_xlabel("radius r [m]")
                         axs.set_ylabel("height z [m]")
-                        axs.set_title("t = {}s".format(round(ele * self.case_conf["timestep"], 1)))
+                        if self.export_times != "flow_time":
+                            axs.set_title("t = {}s".format(round(ele * self.case_conf["timestep"], 1)))
+                        else:
+                            axs.set_title("t = {}s".format(ele))
+
                         # add colorbar
                         cbar = fig.colorbar(cax, ax=axs)
                         cbar.set_label(self.config["c_bar"], rotation=90, labelpad=7)
@@ -615,10 +637,10 @@ class flowfield:
             cases = get_cases(self.config["cases_dir_path"], self.case)
 
 
-            raw_cases = list(range(self.gif_conf["cases"]["start"],self.gif_conf["cases"]["end"] + 1, self.gif_conf["cases"]["step"]))
+            raw_cases = list(range(int(self.gif_conf["cases"]["start"]), int(self.gif_conf["cases"]["end"]) + 1, int(self.gif_conf["cases"]["step"])))
 
             if raw_cases != []:
-                start_end = get_colsest_plots(np.array(raw_cases)/self.case_conf["timestep"], self.case_conf["timestep"] ,self.config["cases_dir_path"], self.case)
+                start_end = get_closest_plots(np.array(raw_cases)/self.case_conf["timestep"], self.case_conf["timestep"] ,self.config["cases_dir_path"], self.case, self.export_times)
                 cases = list(set(start_end))
                 cases.sort()
 
@@ -632,13 +654,13 @@ class flowfield:
                 self.config["image_file_name"] = field_name
                 if self.gif_conf["gif_plot"]:
                     if os.path.exists(os.path.join(img_path, plot_name + ".png")) == False:
-                        self.multi_plot()
+                        self.multi_plot(update_conf=False)
                     else:
                             logging.debug(f"Image {plot_name} already exsists")
 
                 if self.gif_conf["gif_image"]:
                     if os.path.exists(os.path.join(img_path, field_name + ".png")) == False:
-                        self.multi_field()
+                        self.multi_field(update_conf=False)
                     else:
                         logging.debug(f"Image {field_name} already exsists")
 

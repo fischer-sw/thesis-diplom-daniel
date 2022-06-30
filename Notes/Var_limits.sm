@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <?application progid="SMath Studio Desktop" version="1.0.8151.26392"?>
 <worksheet xmlns="http://smath.info/schemas/worksheet/1.0">
-  <settings ppi="96">
+  <settings ppi="120">
     <identity>
       <id>390948a1-83e5-4a42-a9d0-ff29322d1faf</id>
-      <revision>3</revision>
+      <revision>6</revision>
     </identity>
     <calculation>
       <precision>4</precision>
@@ -39,7 +39,7 @@
       <math>
         <input>
           <e type="operand">d_cyl</e>
-          <e type="operand">2</e>
+          <e type="operand">1</e>
           <e type="operand" style="unit">mm</e>
           <e type="operator" args="2">*</e>
           <e type="operator" args="2">:</e>
@@ -50,7 +50,7 @@
       <math>
         <input>
           <e type="operand">v_raw_min</e>
-          <e type="operand">0.05</e>
+          <e type="operand">0.01</e>
           <e type="operand" style="unit">mL</e>
           <e type="operand" style="unit">min</e>
           <e type="operator" args="2">/</e>
@@ -59,11 +59,11 @@
         </input>
       </math>
     </region>
-    <region left="369" top="72" width="142" height="41" color="#000000" fontSize="10">
+    <region left="369" top="72" width="166" height="41" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">v_raw_max</e>
-          <e type="operand">5</e>
+          <e type="operand">0.09</e>
           <e type="operand" style="unit">mL</e>
           <e type="operand" style="unit">min</e>
           <e type="operator" args="2">/</e>
@@ -72,22 +72,33 @@
         </input>
       </math>
     </region>
-    <region left="153" top="135" width="122" height="24" color="#000000" fontSize="10">
+    <region left="153" top="135" width="114" height="24" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">h_max</e>
-          <e type="operand">0.75</e>
+          <e type="operand">0.6</e>
           <e type="operand" style="unit">mm</e>
           <e type="operator" args="2">*</e>
           <e type="operator" args="2">:</e>
         </input>
       </math>
     </region>
-    <region left="369" top="135" width="122" height="24" color="#000000" fontSize="10">
+    <region left="369" top="135" width="114" height="24" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">h_min</e>
-          <e type="operand">0.12</e>
+          <e type="operand">0.2</e>
+          <e type="operand" style="unit">mm</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="288" top="180" width="138" height="24" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">h_middle</e>
+          <e type="operand">0.4</e>
           <e type="operand" style="unit">mm</e>
           <e type="operator" args="2">*</e>
           <e type="operator" args="2">:</e>
@@ -119,7 +130,7 @@
         </input>
       </math>
     </region>
-    <region left="135" top="333" width="298" height="41" color="#000000" fontSize="10">
+    <region left="135" top="279" width="298" height="41" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">v_raw_max</e>
@@ -128,7 +139,7 @@
           <e type="function" args="3">v</e>
         </input>
         <result action="numeric">
-          <e type="operand">0.1105</e>
+          <e type="operand">0.0024</e>
           <e type="operand" style="unit">m</e>
           <e type="operand" style="unit">s</e>
           <e type="operator" args="2">/</e>
@@ -136,7 +147,75 @@
         </result>
       </math>
     </region>
-    <region left="135" top="405" width="298" height="41" color="#000000" fontSize="10">
+    <region left="135" top="306" width="322" height="41" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">v_raw_max</e>
+          <e type="operand">d_cyl</e>
+          <e type="operand">h_middle</e>
+          <e type="function" args="3">v</e>
+        </input>
+        <result action="numeric">
+          <e type="operand">0.0012</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operand" style="unit">s</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">*</e>
+        </result>
+      </math>
+    </region>
+    <region left="135" top="351" width="298" height="41" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">v_raw_max</e>
+          <e type="operand">d_cyl</e>
+          <e type="operand">h_max</e>
+          <e type="function" args="3">v</e>
+        </input>
+        <result action="numeric">
+          <e type="operand">0.0008</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operand" style="unit">s</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">*</e>
+        </result>
+      </math>
+    </region>
+    <region left="135" top="414" width="298" height="41" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">v_raw_min</e>
+          <e type="operand">d_cyl</e>
+          <e type="operand">h_min</e>
+          <e type="function" args="3">v</e>
+        </input>
+        <result action="numeric">
+          <e type="operand">0.0003</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operand" style="unit">s</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">*</e>
+        </result>
+      </math>
+    </region>
+    <region left="135" top="450" width="322" height="41" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">v_raw_min</e>
+          <e type="operand">d_cyl</e>
+          <e type="operand">h_middle</e>
+          <e type="function" args="3">v</e>
+        </input>
+        <result action="numeric">
+          <e type="operand">0.0001</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operand" style="unit">s</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">*</e>
+        </result>
+      </math>
+    </region>
+    <region left="135" top="495" width="345" height="42" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">v_raw_min</e>
@@ -145,7 +224,12 @@
           <e type="function" args="3">v</e>
         </input>
         <result action="numeric">
-          <e type="operand">0.0002</e>
+          <e type="operand">8.8419</e>
+          <e type="operand">10</e>
+          <e type="operand">5</e>
+          <e type="operator" args="1">-</e>
+          <e type="operator" args="2">^</e>
+          <e type="operator" args="2">*</e>
           <e type="operand" style="unit">m</e>
           <e type="operand" style="unit">s</e>
           <e type="operator" args="2">/</e>
