@@ -1,15 +1,9 @@
 # Notes
 
-# Running a new case
+## Ansys learning materials
 
-1. Make shure the directory the auto export writes files to is empty
-    - if not run add_data.py
-
-2. Make shure the case is setup within cases.json (you can put all relevant parameters here. helps if you need to look them up later ;-) )
-
-3. Run the case
-
-4. Take a look at the latest results with running watcher.py (Config is done in watcher.json)
+- [CADFem](https://students.cadfem.net/de/elearning/ansys-fur-studenten-stromungssimulation-mit-ansys-fluent-17697.html)
+- [Cornell University](https://confluence.cornell.edu/display/SIMULATION/FLUENT+Learning+Modules)
 
 ## Ansys Configuration
 
@@ -134,7 +128,37 @@ User Interface Basics (DesignModeler + Mesher)
             - click **save**
 
 # Log Files
--  Console output will be saved within `Solution.trn` file
+- Console output will be saved within `*.trn` file. The path to this file is: `.\tmp_files\progress_files\dp0\FFF\Fluent\Solution.trn`
+- if u load a journal the `*.trn` file will be stored in the same location as the journal is read from
+
+# Mesh dependancy study
+
+1. Create paramerterized mesh
+    - Create mesh
+    - Add paramerts to control mesh size
+        - e.g (number of divisions)
+        - ![Image not found](img/no_parameter.PNG)
+        - ![Image not found](img/check_parameter.PNG)
+2. Add Export variable
+    - `Report Definitions` --> `New` --> `Surface Report` --> `Facet Average`
+    - ![Iamge not found](img/report_definitions.PNG)
+3. Setup steady simulation
+    - Mode: Steady
+    - check that number of iterations is set high enough by running the case for some mesh --> Solution should converge!
+4. Add parameter data
+    - double click `Parameter Set` within workbench --> you should see the parameter table now (if not check that under View in menubar `Table` is checked `Messages` and `Progress` are usefull as well)
+    - Add your parameter to table
+    - Click `Update All Design Points`
+        - sometimes it's usefull to only add 2-3 designpoints at a time to prevent crashing etc.
+5. Export data
+    - click into a cell
+    - `rightclick` --> `Export Table data as CSV`
+    - save data
+6. Analyze data
+    - when plotting the parameter it should at somepoint do not change very match with increasing mesh resultion. That is your meshsize
+
+The average wall shear stress is mostly affected by the resultion within the perpendicular direction to the wall. Within the wall direction the value always increases slightly.
+
 
 # Animations
 
@@ -156,6 +180,8 @@ User Interface Basics (DesignModeler + Mesher)
     - ![Image not found](img/data_export.png)
     - File Type ASCII to be able to read data
     - File Name (including path) can have **.csv** extension for easier post processing but doesn't have to
+    - Make shure `Export Data Every` has the option `flow time` set
+    - Make shure `Append File Name with` has the option `flow time` set
 
 # Intialize with species
 - under **Initialize** menu --> Patch... --> set values --> click ++Patch++
@@ -163,8 +189,12 @@ User Interface Basics (DesignModeler + Mesher)
 
 # Parabolic velocity at inlet
 
+1. Add variables
+    - Add changed variables under `Named Expressions`
+        - rightclick `Named Expression` --> `New` --> give name and value with unit (e.g. Name: vel_in | Definition: 1 [m/s]; Name: height | Definition: 0.006 [m])
+2. Create equation
 - under **inlet** setup click on dropdown menu --> select **expression** --> click on **f(x)** button and enter expression
-- expression: 
+- expression: `inp_vel/(height/2)**2 * ((height/2)**2- ((height/2) - Position.x)**2)`
 
 # Add Reaction
 
@@ -231,15 +261,7 @@ User Interface Basics (DesignModeler + Mesher)
     5. Run new journal
         - Click **File** in Menubar --> **Read** --> **Journal** --> Choose your journal
 
-# Mesh dependancy study
 
-1. Create mesh
-2. Run steady simulation
-3. Export variable
-4. Refine mesh (e.g. number of divisions * 1.5)
-5. Run simulation again
-6. Check if variable has changed
-    - if so refine again
 
 # Scripts explaination
 
@@ -250,6 +272,18 @@ User Interface Basics (DesignModeler + Mesher)
 3. Add marker (%variable name%) to base journal file
 4. Add case to cases.json (within ansys folder)
 5. Create and run journals with `journal.py`
+
+
+## Running a new case
+
+1. Make shure the directory the auto export writes files to is empty
+    - if not run add_data.py
+
+2. Make shure the case is setup within cases.json (you can put all relevant parameters here. helps if you need to look them up later ;-) )
+
+3. Run the case
+
+4. Take a look at the latest results with running watcher.py (Config is done in watcher.json)
 
 ## Workflow to create images
 

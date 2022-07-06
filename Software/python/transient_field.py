@@ -613,6 +613,8 @@ class flowfield:
         """
         Function that creates missing Images if necessary and then creates .gif out of all obtained images
         """
+        if not hasattr(self, 'cases'):
+            self.update_plot_cfg()
 
         for cas in self.cases:
 
@@ -645,24 +647,38 @@ class flowfield:
                 cases.sort()
 
             digits = len(str(int(max(cases))))
+            plot_images = []
+            field_images = []
 
             for cas in cases:
                 self.config["plots"] = [cas * self.case_conf["timestep"]]
                 plot_name = "_".join(["plot_gif", self.case, f"{int(cas):0{digits}d}"])
+                
                 self.config["plot_file_name"] = plot_name
                 field_name = "_".join(["img_gif", self.case, f"{int(cas):0{digits}d}"])
+                
                 self.config["image_file_name"] = field_name
+                
                 if self.gif_conf["gif_plot"]:
-                    if os.path.exists(os.path.join(img_path, plot_name + ".png")) == False:
-                        self.multi_plot(update_conf=False)
+
+                    number = int(cas)
+                    search_res = glob.glob(f'*{number}.png', root_dir=img_path)
+                    if search_res != [] and int(re.findall('\d+', search_res[0])[0]) == number:
+                        logging.info(f"Image {plot_name} already exsists")
+                        plot_images.append(search_res[0])
                     else:
-                        logging.debug(f"Image {plot_name} already exsists")
+                        self.multi_field(update_conf=False)
+                        plot_images.append(plot_name)
 
                 if self.gif_conf["gif_image"]:
-                    if os.path.exists(os.path.join(img_path, field_name + ".png")) == False:
-                        self.multi_field(update_conf=False)
+                    number = int(cas)
+                    search_res = glob.glob(f'*{number}.png', root_dir=img_path)
+                    if search_res != [] and int(re.findall('\d+', search_res[0])[0]) == number:
+                        logging.info(f"Image {field_name} already exsists")
+                        field_images.append(search_res[0])
                     else:
-                        logging.debug(f"Image {field_name} already exsists")
+                        self.multi_field(update_conf=False)
+                        field_images.append(field_name)
 
             # create Images
             if self.gif_conf["gif_plot"]:
@@ -678,16 +694,18 @@ class flowfield:
                 if os.path.exists(video_path):
                     logging.info(f"Deleting existing video {video_name}")
                 
-                imgs = (Image.open(os.path.join(img_path,f)) for f in sorted(glob.glob('*plot_gif_*png', root_dir=img_path)))
+                imgs = (Image.open(os.path.join(img_path,f)) for f in plot_images)
                 img = next(imgs)  # extract first image from iterator
                 img.save(gif_path, format="GIF", append_images=imgs,
                         save_all=True, duration=self.gif_conf["frame_duration"], loop=self.gif_conf["loop"])
+                logging.info(f"Created gif for variable {self.plot_vars} for case {self.case}")
 
                 if self.gif_conf["videos"]:
 
                     logging.info(f"Creating plot video for case {self.case}")
                     
-                    images = sorted(glob.glob('plot_gif_*png', root_dir=img_path))
+                    # images = sorted(glob.glob('plot_gif_*png', root_dir=img_path))
+                    images = plot_images
 
                     frame = cv2.imread(os.path.join(img_path, images[0]))
 
@@ -701,7 +719,9 @@ class flowfield:
                         out.write(img)
 
                     cv2.destroyAllWindows()
-                    out.release()    
+                    out.release()
+                    logging.info(f"Video created for var {self.plot_vars} for case {self.case}.")
+
 
             if self.gif_conf["gif_image"]:
 
@@ -718,20 +738,22 @@ class flowfield:
                 if os.path.exists(video_path):
                     logging.info(f"Deleting existing video {video_name}")
 
-                tmp_imgs = sorted(glob.glob('*img_gif_*png', root_dir=img_path))
+                tmp_imgs = field_images
 
                 if tmp_imgs == []:
                     logging.error(f"No images for gif found at {img_path}")
                     exit()
 
-                imgs = (Image.open(os.path.join(img_path,f)) for f in tmp_imgs)
+                imgs = (Image.open(os.path.join(img_path,f)) for f in field_images)
                 img = next(imgs)  # extract first image from iterator
                 img.save(gif_path, format="GIF", append_images=imgs,
                         save_all=True, duration=self.gif_conf["frame_duration"], loop=self.gif_conf["loop"])
+                logging.info(f"Created gif for variable {self.field_var} for case {self.case}")
 
                 if self.gif_conf["videos"]:
                     
-                    images = sorted(glob.glob('img_gif_*png', root_dir=img_path))
+                    # images = sorted(glob.glob('img_gif_*png', root_dir=img_path))
+                    images = field_images
 
                     frame = cv2.imread(os.path.join(img_path, images[0]))
 
@@ -746,6 +768,7 @@ class flowfield:
 
                     cv2.destroyAllWindows()
                     out.release()
+                    logging.info(f"Video created for var {self.field_var} for case {self.case}.")
 
             if self.gif_conf["keep_images"] == False:
                 self.delete_gif_imgs()    
