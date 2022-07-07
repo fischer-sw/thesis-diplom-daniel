@@ -333,3 +333,24 @@ The average wall shear stress is mostly affected by the resultion within the per
 |name | gif and video name | "bla"|
 |loop | how many times gif and video needs to loop | 0 |
 |frame_duration| how long in [ms] a frame should be displayed | 200 |
+
+# Experimental Setup
+
+- Heights:
+    - 0.2 [mm]
+    - 0.4 [mm]
+    - 0.6 [mm]
+
+- Radius:
+    - 50 [mm]
+
+- Inner Tube Diameter
+    - 1 [mm]
+
+- Pumping rates:
+    - 0.01 [ml/min] 
+    - 0.02 [ml/min]  
+    - 0.03 [ml/min]  
+    - 0.05 [ml/min]  
+    - 0.07 [ml/min]  
+    - 0.09 [ml/min]  

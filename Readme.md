@@ -10,6 +10,7 @@ diplom thesis on numerical simulation of reaction-diffusion-advection fronts
  - [x] compare analytical with computed solution
  - [x] add species to model
  - [x] solve model for species
- - [ ] add reaction to model
- - [ ] solve model with reaction
+ - [x] add reaction to model
+ - [x] solve model with reaction
+ - [ ] setup correct model
  - [ ] do parameter studies
