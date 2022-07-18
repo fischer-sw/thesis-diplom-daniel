@@ -6,28 +6,34 @@
         "DFischer",
         "Data"
     ],
-    
     "cases": [
-        "test_reaction"
+        "reaction_test"
     ],
-
-    "ignore_exsisting" : false,
-    "plots": [50],
+    "ignore_exsisting": false,
+    "plots": [
+        0,
+        0.5,
+        1.0,
+        1.5,
+        2
+    ],
     "create_resi_plot": false,
-    "create_image": false,
+    "create_image": true,
     "field_var": [
-        "molef-fluid_c"
+        "velocity-magnitude"
     ],
-    "c_bar": "",
+    "c_bar": "vel [m/s]",
     "image_file_type": "png",
     "image_conf": {
-        "set_custom_range": true,
+        "set_custom_range": false,
         "min": 0.0,
         "max": 1.0
     },
     "create_plot": false,
     "one_plot": false,
     "plot_vars": [
+        "molef-fluid_a",
+        "molef-fluid_b",
         "molef-fluid_c"
     ],
     "plot_file_type": "png",
@@ -48,20 +54,20 @@
             "molef-fluid_c": "fluid c"
         }
     },
-    "create_gif": true,
+    "create_gif": false,
     "gif_conf": {
         "cases": {
             "start": 0,
-            "end": 2e3,
-            "step": 1
+            "end": 20,
+            "step": 0.1
         },
-        "new": false,
+        "new": true,
         "keep_images": true,
         "videos": true,
         "gif_plot": false,
         "gif_image": true,
-        "name": "test_reaction",
+        "name": "reaction_test",
         "loop": 0,
-        "frame_duration": 25
+        "frame_duration": 200
     }
 }

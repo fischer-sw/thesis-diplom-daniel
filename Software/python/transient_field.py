@@ -146,7 +146,7 @@ class flowfield:
                 self.plots = get_default_cases(self.config["cases_dir_path"], self.case, self.export_times)
 
             else:
-                self.plots = get_closest_plots(np.array(self.plots)/self.case_conf["timestep"], self.case_conf["timestep"] ,self.config["cases_dir_path"], self.case, self.export_times)
+                self.plots = get_closest_plots(np.array(self.plots)/self.case_conf["data_export_interval"], self.case_conf["data_export_interval"] ,self.config["cases_dir_path"], self.case, self.export_times)
             
             self.data = read_transient_data(self.config["cases_dir_path"], self.case, self.plots, self.export_times)
 
@@ -547,7 +547,11 @@ class flowfield:
                         if idx == len(self.plots)-1 :
                             axs[idx].set_xlabel("radius r [m]")
                         axs[idx].set_ylabel("height z [m]")
-                        axs[idx].set_title("t = {}s".format(round(ele * self.case_conf["timestep"], 1)))
+                        if self.export_times != "flow_time":
+                            axs[idx].set_title("t = {}s".format(round(ele * self.case_conf["timestep"], 1)))
+                        else:
+                            axs[idx].set_title("t = {}s".format(ele))
+                        
                         # add colorbar
                         cbar = fig.colorbar(cax, ax=axs[idx])
                         cbar.set_label(self.config["c_bar"], rotation=90, labelpad=7)
@@ -639,23 +643,29 @@ class flowfield:
             cases = get_cases(self.config["cases_dir_path"], self.case)
 
 
-            raw_cases = list(range(int(self.gif_conf["cases"]["start"]), int(self.gif_conf["cases"]["end"]) + 1, int(self.gif_conf["cases"]["step"])))
+            # raw_cases = list(range(int(self.gif_conf["cases"]["start"]), int(self.gif_conf["cases"]["end"]) + 1, int(self.gif_conf["cases"]["step"])))
+            start = float(self.gif_conf["cases"]["start"])
+            end = float(self.gif_conf["cases"]["end"])
+            steps = int((self.gif_conf["cases"]["end"] - self.gif_conf["cases"]["start"])/self.gif_conf["cases"]["step"] +1)
+            raw_cases = np.linspace(start, end, steps)
 
             if raw_cases != []:
-                start_end = get_closest_plots(np.array(raw_cases)/self.case_conf["timestep"], self.case_conf["timestep"] ,self.config["cases_dir_path"], self.case, self.export_times)
+                start_end = get_closest_plots(np.array(raw_cases)/self.case_conf["data_export_interval"], self.case_conf["data_export_interval"] ,self.config["cases_dir_path"], self.case, self.export_times)
                 cases = list(set(start_end))
                 cases.sort()
 
-            digits = len(str(int(max(cases))))
+            digits = len(str(max(cases)))
             plot_images = []
             field_images = []
 
             for cas in cases:
-                self.config["plots"] = [cas * self.case_conf["timestep"]]
-                plot_name = "_".join(["plot_gif", self.case, f"{int(cas):0{digits}d}"])
+                # self.config["plots"] = [cas * self.case_conf["timestep"]]
+                self.config["plots"] = [cas]
+
+                plot_name = "_".join(["plot_gif", self.case, f"{cas:0>{digits}}".replace(".", ",")])
                 
                 self.config["plot_file_name"] = plot_name
-                field_name = "_".join(["img_gif", self.case, f"{int(cas):0{digits}d}"])
+                field_name = "_".join(["img_gif", self.case, f"{cas:0>{digits}}".replace(".", ",")])
                 
                 self.config["image_file_name"] = field_name
                 
@@ -773,6 +783,26 @@ class flowfield:
             if self.gif_conf["keep_images"] == False:
                 self.delete_gif_imgs()    
 
+def parse_log_file(case):
+    cfg_path = os.path.join(sys.path[0], "conf.json")
+
+    with open(cfg_path) as f:
+        config = json.load(f)
+
+    field = flowfield(config)
+
+    field.update_plot_cfg(case)
+    
+    case_path = os.path.join(*field.cases_dir, case)
+
+    log_file = glob.glob("*.trn", root_dir=case_path)[0]
+
+    logfile_path = os.path.join(case_path, log_file)
+
+    res = parse_logs(logfile_path, False, case)
+
+    print(res)
+
 def do_plots():
     cfg_path = os.path.join(sys.path[0], "conf.json")
 
@@ -795,7 +825,8 @@ def do_plots():
 
 if __name__ == "__main__":
 
-    do_plots()
+    # do_plots()
+    parse_log_file("reaction_test")
 
     
     

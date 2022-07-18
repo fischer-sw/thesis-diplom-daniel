@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <?application progid="SMath Studio Desktop" version="1.0.8151.26392"?>
 <worksheet xmlns="http://smath.info/schemas/worksheet/1.0">
-  <settings ppi="120">
+  <settings ppi="96">
     <identity>
       <id>390948a1-83e5-4a42-a9d0-ff29322d1faf</id>
-      <revision>7</revision>
+      <revision>8</revision>
     </identity>
     <calculation>
       <precision>4</precision>
@@ -230,6 +230,117 @@
           <e type="operator" args="1">-</e>
           <e type="operator" args="2">^</e>
           <e type="operator" args="2">*</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operand" style="unit">s</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">*</e>
+        </result>
+      </math>
+    </region>
+    <region left="234" top="585" width="102" height="41" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">Q</e>
+          <e type="operand">0.07</e>
+          <e type="operand" style="unit">mL</e>
+          <e type="operand" style="unit">min</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="135" top="594" width="81" height="23" color="#000000" fontSize="10">
+      <text lang="eng" fontFamily="Arial" fontSize="10">
+        <content>
+          <p>h = 0.2 mm</p>
+        </content>
+      </text>
+    </region>
+    <region left="153" top="639" width="234" height="41" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">Q</e>
+          <e type="operand">d_cyl</e>
+          <e type="operand">h_min</e>
+          <e type="function" args="3">v</e>
+        </input>
+        <result action="numeric">
+          <e type="operand">0.0019</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operand" style="unit">s</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">*</e>
+        </result>
+      </math>
+    </region>
+    <region left="243" top="693" width="110" height="41" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">Q</e>
+          <e type="operand">0.144</e>
+          <e type="operand" style="unit">mL</e>
+          <e type="operand" style="unit">min</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="135" top="702" width="81" height="23" color="#000000" fontSize="10" isBreakable="false">
+      <text lang="eng" fontFamily="Arial" fontSize="10">
+        <content>
+          <p>h = 0.4 mm</p>
+        </content>
+      </text>
+    </region>
+    <region left="153" top="747" width="258" height="41" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">Q</e>
+          <e type="operand">d_cyl</e>
+          <e type="operand">h_middle</e>
+          <e type="function" args="3">v</e>
+        </input>
+        <result action="numeric">
+          <e type="operand">0.0019</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operand" style="unit">s</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">*</e>
+        </result>
+      </math>
+    </region>
+    <region left="243" top="801" width="102" height="41" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">Q</e>
+          <e type="operand">8.22</e>
+          <e type="operand" style="unit">mL</e>
+          <e type="operand" style="unit">min</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="135" top="810" width="81" height="23" color="#000000" fontSize="10" isBreakable="false">
+      <text lang="eng" fontFamily="Arial" fontSize="10">
+        <content>
+          <p>h = 0.6 mm</p>
+        </content>
+      </text>
+    </region>
+    <region left="153" top="855" width="234" height="41" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">Q</e>
+          <e type="operand">d_cyl</e>
+          <e type="operand">h_max</e>
+          <e type="function" args="3">v</e>
+        </input>
+        <result action="numeric">
+          <e type="operand">0.0727</e>
           <e type="operand" style="unit">m</e>
           <e type="operand" style="unit">s</e>
           <e type="operator" args="2">/</e>

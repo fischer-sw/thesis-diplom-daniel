@@ -1,4 +1,30 @@
-{  
+{
+    "case_h06_5s": {
+        "export_times" : "flow_time",
+        "total_time" : 10,
+        "fixed_timesteps" : 1,
+        "timestep_min" : 1e-4,
+        "timestep_max" : 0.1,
+        "input_vel": 0.0727,
+        "input_c": 1.0,
+        "data_export_interval": 0.1,
+        "iterations": 20,
+        "case": "h06_r03_fine.cas.gz"
+    },
+
+    "reaction_test": {
+        "export_times" : "flow_time",
+        "total_time" : 20,
+        "fixed_timesteps" : 1,
+        "timestep_min" : 1e-4,
+        "timestep_max" : 0.1,
+        "input_vel": 0.0727,
+        "input_c": 1.0,
+        "data_export_interval": 0.1,
+        "iterations": 20,
+        "case": "h06_r03_fine.cas.gz"
+    },
+    
     "auto_export": {
         "export_times" : "flow_time",
         "timestep": 0.001,
@@ -16,7 +42,8 @@
         "input_vel": 2.4e-3,
         "input_c": 1.0,
         "iterations": 20,
-        "timestep_number": 3e3
+        "timestep_number": 3e3,
+        "case": "fine_mesh_no_reaction_r0,1_h0,01.cas.gz"
     },
 
     "auto_export_1": {

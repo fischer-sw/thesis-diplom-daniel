@@ -46,4 +46,4 @@ if __name__ == "__main__":
     create_journals(True, True)
     run_journals(cases)
 
-    do_plots()
+    # do_plots()

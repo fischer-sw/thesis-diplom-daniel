@@ -1,0 +1,13 @@
+﻿# 
+# 07/12/2022 12:21:57
+# The parameters defined in the project are:
+# ,P3 - Inflation Maximum Layers,P13 - Edge Sizing Element Size [mm],P14 - Edge Sizing 2 Element Size [mm],P9 - wall_shear_max-op [Pa],P11 - wall_shear_min-op [Pa],P12 - wall_shear_avg-op [Pa]
+# 
+# The following header line defines the name of the columns by reference to the parameters.
+Name,P3,P13,P14,P9,P11,P12
+DP 0,2,0.005,0.005,0.018922208,2.0285197E-05,9.0923734E-05
+DP 1,2,0.01,0.01,0.0098894425,2.0073634E-05,8.9532739E-05
+DP 2,2,0.02,0.02,0.0054476578,1.9758521E-05,8.6673922E-05
+DP 3,2,0.004,0.004,0.023319207,2.025494E-05,9.2477655E-05
+DP 4,2,0.002,0.002,0.045603774,2.0261878E-05,9.4423274E-05
+DP 5,2,0.001,0.001,0.089559756,2.0275354E-05,9.6332914E-05
