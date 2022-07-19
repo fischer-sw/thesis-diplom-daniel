@@ -92,11 +92,60 @@ These four equations form a system of non-linear partial differential equations.
 
 \section{Finite Volume Method}
 
-The finite Volume Method is a discretization method. It converts the set of partial differential equations into a system of linear algebraic equations \cite{darwish2021finite}. This is done in two steps. At first the partial differential equations are integrated and so transformed into balance equations \cite{darwish2021finite}. For demonstration the conservation equation for a generic variable $ \Phi $ is given by
+The finite Volume Method is a discretization method. It converts the set of partial differential equations into a system of linear algebraic equations \cite{darwish2021finite}. This is done in two steps. At first the partial differential equations are integrated and so transformed into balance equations \cite{darwish2021finite}. 
+
+\subsection{Semi-Discretization}
+
+For demonstration the conservation equation for a generic variable $ \Phi $ is given by
 
 \begin{equation}
-	Inhalt...
+	\label{eqn:conserv_eq}
+	\underbrace{\dfrac{\partial(\rho \Phi)}{\partial t}}_{\text{transient term}} + \underbrace{\nabla \cdot (\rho \bold{u} \Phi)}_{\text{convective term}} = \underbrace{\nabla \cdot (\Gamma_\Phi \nabla \Phi)}_{\text{diffusion term}} + \underbrace{S_\Phi}_{\text{source term}}
 \end{equation}
+
+Within this equation $ \rho $ represents the density and $ \bold{u} $ is the velocity vector. $ \nabla $ contains the spacial derivatives and $ \Gamma_\Phi $ is the diffusion coefficient of the property $ \Phi $.
+For an easier explanation of the maths behind the method the steady state form of \autoref{eqn:conserv_eq} is used.
+
+\begin{equation}
+	\nabla \cdot (\rho \bold{u} \Phi) = \nabla \cdot (\Gamma_\Phi \nabla \Phi) + S_\Phi
+\end{equation}
+
+As already stated this equation is integrated over the control volume shown in \autoref{fig:FVM_CV} witch leads to \autoref{eqn:FVM_volint}.
+
+\begin{equation}
+	\label{eqn:FVM_volint}
+	\int_{V_C} \nabla \cdot (\rho \bold{u} \Phi) dV = \int_{V_C} \nabla \cdot (\Gamma_\Phi \nabla \Phi) dV + \int_{V_C} S_\Phi dV
+\end{equation}
+
+The volume integrals, within the convective and diffusive term, can be replaced by surface integrals due to the divergence theorem. That leads to the semi-discretized \autoref{eqn:FVM_Aint}.
+
+\begin{equation}
+	\label{eqn:FVM_Aint}
+	\oint_{\partial V_C} (\rho \bold{u} \Phi) d\bold{S} = \oint_{\partial V_C} (\Gamma_\Phi \nabla \Phi) d\bold{S} + \int_{V_C} S_\Phi dV
+\end{equation}
+
+The variable $ \bold{S}$ is the surface vector, the operator ($\cdot$) is the dot product and $ \oint_{\partial V_C}$ is the surface integral operator.
+
+\subsection{Surface Integration}
+
+As seen in \autoref{eqn:FVM_Aint} surface integrals are needed to calculate the value of the property $\Phi$ for the control volume. Theses surface integrals can be split into a summation over each cell surface. This step can be done for each the convective shown in \autoref{eqn:conv_sint} and the diffusion term shown in \autoref{eqn:diffu_sint}.
+
+\begin{equation}
+	\label{eqn:conv_sint}
+	\oint_{\partial V_C} (\rho \bold{u} \Phi) d\bold{S} = \sum_{f_i}^{n_{\text{faces}}}\left( \int_{f} (\rho \bold{u} \Phi) d\bold{S} \right)
+\end{equation}
+
+\begin{equation}
+	\label{eqn:diffu_sint}
+	\oint_{\partial V_C} (\Gamma_\Phi \nabla \Phi) d\bold{S} =  \sum_{f_i}^{n_{\text{faces}}}\left( \int_{f} (\Gamma_\Phi \nabla \Phi) \right)
+\end{equation} 
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[scale=0.70]{Control_Volumen}
+	\caption{Control Volume example}
+	\label{fig:FVM_CV}
+\end{figure}
 
 \section{Solution Method}
 
