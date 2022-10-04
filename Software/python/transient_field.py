@@ -808,14 +808,13 @@ class flowfield:
             var = config["field_var"][0]
 
             if config["hpc_calculation"]:
-                img_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "fields")
+                img_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "fields", var)
                 plot_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "plots")
                 folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "animations")
             else:
                 path = sys.path[0]
-                img_path = os.path.join(path, "assets" , "fields", cas)
-                plot_path = os.path.join(path, "assets", "plots", cas)
-                
+                img_path = os.path.join(path, "assets" , "fields", cas, var)
+                plot_path = os.path.join(path, "assets", "plots", cas)    
                 folder_path = os.path.join(path, "animations")
 
             if os.path.exists(folder_path) == False:
@@ -845,9 +844,11 @@ class flowfield:
             plot_images = []
             field_images = []
 
-            for tmp_cas in raw_cases:
+            # Check for exsisting images
+            raw_plots = []
+            raw_imgs = []
 
-                # config["plots"] = [tmp_cas * tmp_case_conf["timestep"]]
+            for tmp_cas in raw_cases:
                 config["plots"] = [tmp_cas]
 
                 plot_name = "_".join(["plot_gif", cas, f"{tmp_cas:0>{digits}}".replace(".", ",")])
@@ -856,48 +857,32 @@ class flowfield:
                 field_name = "_".join(["img_gif", cas, f"{tmp_cas:0>{digits}}".replace(".", ",")])
                 
                 config["image_file_name"] = field_name
+
+                if gif_conf["gif_plot"] and os.path.exists(os.path.join(plot_path, plot_name + ".png")) == False:
+                    raw_plots.append(tmp_cas)
+                else:
+                    plot_images.append(plot_name + ".png")
+                    logging.info(f"Plot {plot_name} already created")
                 
-                if gif_conf["gif_plot"]:
+                if gif_conf["gif_image"] and os.path.exists(os.path.join(img_path, field_name + ".png")) == False:
+                    raw_imgs.append(tmp_cas)
+                else:
+                    field_images.append(field_name + ".png")
+                    logging.info(f"Field {field_name} already created")
 
-                    number = str(tmp_cas).replace(".", ",")
-                    search_res = glob.glob(f'plot*{cas}*{number}.png', root_dir=plot_path)
+            for tmp_cas in raw_plots:
+                config["plots"] = [tmp_cas]
+                plot_name = "_".join(["plot_gif", cas, f"{tmp_cas:0>{digits}}".replace(".", ",")])
+                config["plot_file_name"] = plot_name
+                self.multi_plot(config, cases_conf)
 
-                    logging.debug(f"Res = {search_res}")
-                    
-                    if search_res != []:
-                        cas_splt = re.findall('\d+', search_res[0])
-                        logging.debug(f"cas_splt = {cas_splt}")
-                        if len(cas_splt) == 6:
-                            cas_nr = float(".".join(cas_splt[-2:]))
-                        else:
-                            cas_nr = float(re.findall('\d+', search_res[0])[0])
-                        logging.debug(f"cas_nr = {cas_nr}. tmp_cas = {tmp_cas}")
-                    if search_res != [] and cas_nr == tmp_cas:
-                        logging.info(f"Plot {plot_name} already exsists")
-                        plot_images.append(search_res[0])
-                    else:
-                        self.multi_plot(config, cases_conf)
-                        plot_images.append(plot_name + ".png")
+            for tmp_cas in raw_imgs:
 
-                if gif_conf["gif_image"]:
-                    number = str(tmp_cas).replace(".", ",")
-                    search_res = glob.glob(f'img*{cas}*{number}.png', root_dir=img_path)
-                    
-                    logging.debug(f"Res = {search_res}")
-                    if search_res != []:
-                        cas_splt = re.findall('\d+', search_res[0])
-                        logging.debug(f"cas_splt = {cas_splt}")
-                        if len(cas_splt) == 6:
-                            cas_nr = float(".".join(cas_splt[-2:]))
-                        else:
-                            cas_nr = float(re.findall('\d+', search_res[0])[0])
-                        logging.debug(f"cas_nr = {cas_nr}. tmp_cas = {tmp_cas}")
-                    if search_res != [] and cas_nr == tmp_cas:
-                        logging.info(f"Image {field_name} already exsists")
-                        field_images.append(search_res[0])
-                    else:
-                        self.multi_field(config, cases_conf)
-                        field_images.append(field_name + ".png")
+                # config["plots"] = [tmp_cas * tmp_case_conf["timestep"]]
+                config["plots"] = [tmp_cas]
+                field_name = "_".join(["img_gif", cas, f"{tmp_cas:0>{digits}}".replace(".", ",")])
+                config["image_file_name"] = field_name
+                self.multi_field(config, cases_conf)
 
             # create Images
             if gif_conf["gif_plot"]:
@@ -914,8 +899,8 @@ class flowfield:
                 if os.path.exists(video_path):
                     logging.info(f"Deleting existing video {video_name}")
                 
-                logging.info(f"Plot imgs={plot_images}")
-                logging.info(f"Plot path={plot_path}")
+                logging.debug(f"Plot imgs={plot_images}")
+                logging.debug(f"Plot path={plot_path}")
                 imgs = None
                 imgs = (Image.open(os.path.join(plot_path, f)) for f in plot_images)
                 img = next(imgs)  # extract first image from iterator

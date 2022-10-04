@@ -427,6 +427,8 @@ def add_post_proc(config, cases_cfg, cas, post_file, case_file):
     tmp_cfg["create_image"] = True
     tmp_cfg["ignore_exsisting"] = True
     tmp_cfg["c_bar"] = "fluid_c"
+    tmp_cfg["image_file_type"] = "png"
+    tmp_cfg["plot_file_type"] = "png"
     tmp_cfg["create_plot"] = True
     tmp_cfg["create_gif"] = True
     tmp_cfg["create_front"] = True

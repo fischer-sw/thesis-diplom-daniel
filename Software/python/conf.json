@@ -69,7 +69,7 @@
         "keep_images": true,
         "videos": true,
         "gif_plot": true,
-        "gif_image": false,
+        "gif_image": true,
         "loop": 0,
         "frame_duration": 200
     }
