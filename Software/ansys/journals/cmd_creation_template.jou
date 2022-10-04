@@ -1,0 +1,92 @@
+/file/set-tui-version "22.1"
+(cx-gui-do cx-activate-item "MenuBar*ReadSubMenu*Case...")
+;(cx-gui-do cx-activate-item "MenuBar*ImportSubMenu*Case...")
+;(cx-gui-do cx-activate-item "Question*OK")
+
+; Read Case from file
+(cx-gui-do cx-set-file-dialog-entries "Select File" '("%case_path%") "All Files (*)")
+
+(cx-gui-do cx-set-list-tree-selections "NavigationPane*Frame2*Table1*List_Tree2" (list "Setup|Boundary Conditions|Inlet|inlet (velocity-inlet, id=5)"))
+(cx-gui-do cx-set-list-tree-selections "NavigationPane*Frame2*Table1*List_Tree2" (list "Setup|Boundary Conditions|Inlet|inlet (velocity-inlet, id=5)"))
+
+(cx-gui-do cx-list-tree-right-click "NavigationPane*Frame2*Table1*List_Tree2" )
+(cx-gui-do cx-activate-item "MenuBar*PopupMenuTree-inlet (velocity-inlet, id=5)*Edit...")
+(cx-gui-do cx-enable-apply-button "Velocity Inlet")
+
+; Set inlet velocity
+(cx-gui-do cx-set-expression-entry "Velocity Inlet*Frame2*Frame2*Frame1(Momentum)*Table1*Table8*ExpressionEntry1(Velocity Magnitude)" '("%input_vel%" . 0))
+(cx-gui-do cx-activate-tab-index "Velocity Inlet*Frame2*Frame2" 3)
+
+; Set inlet molefraction of fluid_a
+(cx-gui-do cx-set-expression-entry "Velocity Inlet*Frame2*Frame2*Frame4(Species)*Table1*Table2(Species Mass Fractions)*Table1*ExpressionEntry1(fluid_a)" '("%input_c%" . 0))
+(cx-gui-do cx-activate-item "Velocity Inlet*PanelButtons*PushButton1(OK)")
+(cx-gui-do cx-activate-item "Velocity Inlet*PanelButtons*PushButton2(Cancel)")
+(cx-gui-do cx-set-list-tree-selections "NavigationPane*Frame2*Table1*List_Tree2" (list "Solution|Run Calculation"))
+(cx-gui-do cx-activate-item "NavigationPane*Frame2*Table1*List_Tree2")
+(cx-gui-do cx-set-list-tree-selections "NavigationPane*Frame2*Table1*List_Tree2" (list "Solution|Run Calculation"))
+
+; Set export vars
+(cx-gui-do cx-activate-item "Ribbon*Frame1*Frame5(Solution)*Table1*Table3(Activities)*PushButton3(Manage)")
+(cx-gui-do cx-activate-item "Calculation Activities*ButtonBox4*PushButton2(Edit)")
+; To add variables add their numbers here
+(cx-gui-do cx-set-list-selections "Automatic Export*Table1*Table2*Table4*List1(Quantities)" '( 4 8 9 10 19 38 39 40 41 42 43 44 45 46 47 48 49 58 81 89 90))
+(cx-gui-do cx-activate-item "Automatic Export*Table1*Table2*Table4*List1(Quantities)")
+(cx-gui-do cx-activate-item "Automatic Export*PanelButtons*PushButton1(OK)")
+
+; Set fixed timesteps
+(cx-gui-do cx-set-integer-entry "Run Calculation*Table1*Table7(Time Advancement)*Table3(Parameters)*Table2*Table1*Table1*IntegerEntry7(Number of Fixed Time Steps)" %fixed_timesteps%)
+(cx-gui-do cx-set-integer-entry "Run Calculation*Table1*Table7(Time Advancement)*Table3(Parameters)*Table2*Table1*Table1*IntegerEntry7(Initial Time Step Size)" %timestep_min%)
+
+; Set minimum/maximum timestep size
+(cx-gui-do cx-activate-item "Run Calculation*Table1*Table7(Time Advancement)*Table3(Parameters)*Table6*Table1*PushButton1(Settings)")
+(cx-gui-do cx-set-real-entry-list "Adaptive Time Stepping*Table1(Settings)*Table2*RealEntry1(Minimum Time Step Size)" '( %timestep_min%))
+(cx-gui-do cx-set-real-entry-list "Adaptive Time Stepping*Table1(Settings)*Table2*RealEntry2(Maximum Time Step Size)" '( %data_export_interval%))
+(cx-gui-do cx-activate-item "Adaptive Time Stepping*PanelButtons*PushButton1(OK)")
+
+; Set Maximum Iterations per Timestep
+(cx-gui-do cx-set-integer-entry "Run Calculation*Table1*Table7(Time Advancement)*Table3(Parameters)*Table5*Table1*Table1*IntegerEntry1(Max Iterations/Time Step)" %iterations%)
+(cx-gui-do cx-activate-item "Run Calculation*Table1*Table7(Time Advancement)*Table3(Parameters)*Table5*Table1*Table1*IntegerEntry1(Max Iterations/Time Step)")
+(cx-gui-do cx-activate-item "Ribbon*Frame1*Frame5(Solution)*Table1*Table3(Activities)*PushButton3(Manage)")
+(cx-gui-do cx-activate-item "Calculation Activities*ButtonBox4*PushButton2(Edit)")
+
+; Set Data Export timesteps
+(cx-gui-do cx-set-real-entry-list "Automatic Export*Table1*Table2*Frame6*RealEntry2(Export Data Every)" '( %data_export_interval%))
+
+; Set data export path
+(cx-gui-do cx-set-text-entry "Automatic Export*Table1*Table2*Table7*Table1*TextEntry1(File Name)" "%export_path%")
+(cx-gui-do cx-activate-item "Automatic Export*PanelButtons*PushButton1(OK)")
+(cx-gui-do cx-set-list-tree-selections "NavigationPane*Frame2*Table1*List_Tree2" (list "Solution|Run Calculation"))
+(cx-gui-do cx-list-tree-right-click "NavigationPane*Frame2*Table1*List_Tree2" )
+
+; Set viscosity
+(cx-gui-do cx-set-list-tree-selections "NavigationPane*Frame2*Table1*List_Tree2" (list "Setup|Materials|Mixture|mixture-template"))
+(cx-gui-do cx-set-list-tree-selections "NavigationPane*Frame2*Table1*List_Tree2" (list "Setup|Materials|Mixture|mixture-template"))
+(cx-gui-do cx-list-tree-right-click "NavigationPane*Frame2*Table1*List_Tree2" )
+(cx-gui-do cx-activate-item "MenuBar*PopupMenuTree-mixture-template*Edit...")
+(cx-gui-do cx-set-real-entry-list "Create/Edit Materials*RealEntry16" '( %viscosity%))
+(cx-gui-do cx-activate-item "Create/Edit Materials*PanelButtons*PushButton3(Change/Create)")
+(cx-gui-do cx-activate-item "Create/Edit Materials*PanelButtons*PushButton1(Close)")
+
+; Initialize Case
+(cx-gui-do cx-set-list-tree-selections "NavigationPane*Frame2*Table1*List_Tree2" (list "Solution|Initialization"))
+(cx-gui-do cx-list-tree-right-click "NavigationPane*Frame2*Table1*List_Tree2" )
+(cx-gui-do cx-activate-item "MenuBar*PopupMenuTree-Initialization*Initialize")
+
+; Set total time
+(cx-gui-do cx-set-list-tree-selections "NavigationPane*Frame2*Table1*List_Tree2" (list "Solution|Run Calculation"))
+(cx-gui-do cx-set-list-tree-selections "NavigationPane*Frame2*Table1*List_Tree2" (list "Solution|Run Calculation"))
+(cx-gui-do cx-activate-item "NavigationPane*Frame2*Table1*List_Tree2")
+(cx-gui-do cx-set-list-tree-selections "NavigationPane*Frame2*Table1*List_Tree2" (list "Solution|Run Calculation"))
+(cx-gui-do cx-set-real-entry-list "Run Calculation*Table1*Table7(Time Advancement)*Table3(Parameters)*Table2*Table1*Table1*RealEntry2(Total Time)" '( %total_time%))
+
+; Calc one Step to generate Data file
+solve/iterate 1
+
+; Export Case & Data
+(cx-gui-do cx-activate-item "MenuBar*WriteSubMenu*Case & Data...")
+(cx-gui-do cx-set-file-dialog-entries "Select File" '( %case_export_path%) "CFF Case/Data Files (*.cas.h5 *.dat.h5 )")
+
+
+; Accept dialog
+;(cx-gui-do cx-activate-item "Question*OK")
+;(cx-gui-do cx-activate-item "Information*OK")

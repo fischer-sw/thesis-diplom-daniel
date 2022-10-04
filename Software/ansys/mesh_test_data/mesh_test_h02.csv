@@ -1,0 +1,10 @@
+﻿# 
+# 10/04/2022 10:51:36
+# The parameters defined in the project are:
+# ,P1 - Edge Sizing Element Size [m],P2 - Edge Sizing 2 Element Size [m],P4 - inlet-op [Pa],P5 - wall-shear-avg-op [Pa],P6 - wall-shear-max-op [Pa],P7 - wall-shear-min-op [Pa],P8 - Mesh Elements
+# 
+# The following header line defines the name of the columns by reference to the parameters.
+Name,P1,P2,P4,P5,P6,P7,P8
+DP 0,6E-06,6E-06,20.00025,0.00010041135,0.012569181,6.1889564E-06,246679
+DP 1,4E-06,4E-06,20.038596,9.845358E-05,0.018260922,1.3804838E-05,540000
+DP 2,2E-06,2E-06,19.996628,0.00010893714,0.035881791,5.2146556E-06,2080000

@@ -1,0 +1,68 @@
+{
+    "cases_dir_path": [
+        "\\\\gssnas",
+        "bigdata",
+        "fwdt",
+        "DFischer",
+        "Data"
+    ],
+    "cases": [
+        "reaction_test_04_grob_long"
+    ],
+    "ignore_exsisting": false,
+    "plots": [
+        -1
+    ],
+    "create_resi_plot": false,
+    "create_image": true,
+    "create_plot": false,
+    "create_gif": false,
+    "create_front": false,
+    "field_var": [
+        "molef-fluid_c"
+    ],
+    "c_bar": "fluid c",
+    "image_file_type": "png",
+    "image_conf": {
+        "set_custom_range": false,
+        "min": 0.0,
+        "max": 1.0
+    },
+    "one_plot": false,
+    "plot_vars": [
+        "molef-fluid_c"
+    ],
+    "plot_file_type": "png",
+    "plot_conf": {
+        "colors": {
+            "molef-fluid_a": "b",
+            "molef-fluid_b": "g",
+            "molef-fluid_c": "r"
+        },
+        "linestyles": {
+            "t1": "solid",
+            "t2": "dotted",
+            "t3": "dashed"
+        },
+        "legend": {
+            "molef-fluid_a": "fluid a",
+            "molef-fluid_b": "fluid b",
+            "molef-fluid_c": "fluid c"
+        }
+    },
+    "gif_conf": {
+        "cases": {
+            "start": 0,
+            "end": 20,
+            "step": 0.1
+        },
+        "new": true,
+        "keep_images": true,
+        "videos": true,
+        "gif_plot": false,
+        "gif_image": true,
+        "name": "reaction_test",
+        "loop": 0,
+        "frame_duration": 200
+    }
+}
