@@ -86,7 +86,7 @@ def get_cases(config, case_dir, auto_add=False, export_time="flow_time"):
             exit()
         else:
             logging.warning("Case {} doesn't exsist. Adding case ...".format(case_dir))
-            os.mkdir(case_path)
+            os.makedirs(case_path)
             logging.info(f"Case {case_dir} added")
 
 
@@ -233,7 +233,7 @@ def get_case_vars(config, case_dir):
     return elements
 
 
-def build_journal(config, cases_cfg, end_exit=False, mode="cmd"):
+def build_journal(config, cases_cfg, end_exit=False, mode="cmd", update_exsisting=False):
     """
     Function that builds a journal file to run multiple cases in series
     """
@@ -268,12 +268,16 @@ def build_journal(config, cases_cfg, end_exit=False, mode="cmd"):
 
     for key, val in cfg.items():
 
+        if "." in key or len(key) > 20:
+            logging.warning(f"Case name {key} too long or contains character '.'")
+            continue
+
         gui_tmp_file = []
         cmd_tmp_file = []
         case_tmp_file = []
         post_tmp_file = []
 
-        cases = get_cases(config, key)
+        cases = get_cases(config, key, auto_add=True)
         match mode:
 
             case "cmd":
@@ -395,8 +399,8 @@ def build_journal(config, cases_cfg, end_exit=False, mode="cmd"):
         if cases != []:
             logging.info(f"Already calculated data for case {key}")
             cfg_path = os.path.join(*cases_dir_windows_path, key, "conf.json")
-            # if os.path.exists(cfg_path) == False:
-            add_post_proc(config, cases_cfg, key, post_tmp_file, case_tmp_file)
+            if update_exsisting:
+                add_post_proc(config, cases_cfg, key, post_tmp_file, case_tmp_file)
             continue
 
         with open(gui_journal_path, "w") as f:

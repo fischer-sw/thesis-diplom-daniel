@@ -9,7 +9,7 @@ from ansys_utils import *
 """
 File that calls build journal function 
 """
-def create_journals(exit=True, mode="cmd"):
+def create_journals(exit=True, mode="cmd", update_exsisting=False):
 
     cfg_path = os.path.join(sys.path[0],".." ,"ansys","cases.json")
     with open(cfg_path) as f:
@@ -25,7 +25,7 @@ def create_journals(exit=True, mode="cmd"):
 
     field = flowfield(config, cases_cfg)
 
-    field.setup_journal(config, cases_cfg, mode ,exit)
+    field.setup_journal(config, cases_cfg, mode ,exit, update_exsisting)
 
 def run_journals(run_gui_case=False):
 
@@ -45,7 +45,7 @@ if __name__ == "__main__":
     # mode = "gui"
     mode = "cmd"
 
-    create_journals(exit=True, mode=mode)
+    create_journals(exit=True, mode=mode, update_exsisting=False)
     if mode == "cmd":
         run_journals(False)
     else:

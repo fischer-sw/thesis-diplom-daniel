@@ -591,5 +591,33 @@
         "tasks_p_node" : 10,
         "wall_time" : "12:00:00",
         "case": "h02_r03_grob_piso.cas.gz"
+    },
+    "h6r3_Pe1_0e3_Sc1219": {
+        "export_times" : "flow_time",
+        "total_time" : 60,
+        "fixed_timesteps" : 1,
+        "timestep_min" : 1e-2,
+        "data_export_interval": 1.0,
+        "input_vel": 1.4e-3,
+        "input_c": 1.0,
+        "viscosity" : 1e-6,
+        "iterations": 20,
+        "tasks_p_node" : 10,
+        "wall_time" : "12:00:00",
+        "case": "h06_r03_middle_piso.cas.gz"
+    },
+    "h6r3_Pe5_4e4_Sc1219": {
+        "export_times" : "flow_time",
+        "total_time" : 30,
+        "fixed_timesteps" : 1,
+        "timestep_min" : 1e-2,
+        "data_export_interval": 0.5,
+        "input_vel": 7.27e-2,
+        "input_c": 1.0,
+        "viscosity" : 1e-6,
+        "iterations": 20,
+        "tasks_p_node" : 10,
+        "wall_time" : "12:00:00",
+        "case": "h06_r03_middle_piso.cas.gz"
     }
 }

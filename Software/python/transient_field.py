@@ -750,7 +750,7 @@ class flowfield:
                 plt.close(fig)
                 logging.info(f"saved image {image_name}.")
 
-    def setup_journal(self, config, cases_cfg, mode, exit=True):
+    def setup_journal(self, config, cases_cfg, mode, exit=True, update_exsisting=False):
         """
         Function that creates journal files
         """
@@ -765,7 +765,7 @@ class flowfield:
             os.remove(os.path.join(journal_path, file))
         logging.info(f"Removed {len(files)} journals")
 
-        build_journal(config, cases_cfg, exit, mode)
+        build_journal(config, cases_cfg, exit, mode, update_exsisting)
 
 
     def delete_gif_imgs(self, config):
