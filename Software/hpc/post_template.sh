@@ -23,9 +23,6 @@
 # Send mail to the following address
 #SBATCH --mail-user=d.fischer@hzdr.de
 
-# Set dependency on FLUENT calculation
-#SBATCH --dependency=afterok:%job_name%
-
 rm post.log
 
 LOG_FILE=./post.log

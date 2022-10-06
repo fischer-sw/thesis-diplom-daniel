@@ -446,6 +446,17 @@ def add_post_proc(config, cases_cfg, cas, post_file, case_file):
     tmp_cfg["gif_conf"]["loop"] = 0
     tmp_cfg["gif_conf"]["frame_duration"] = 300
     tmp_cfg["plot_vars"] = ["molef-fluid_a", "molef-fluid_b", "molef-fluid_c"]
+
+    copy_files = ["ansys_utils.py", "hpc_requirements.txt", "transient_field.py"]
+
+    del_files = copy_files + ["conf.json", "cases.json"]
+
+    logging.info(f"Deleting old config files for case {cas}")
+    for file in del_files:
+        path_tmp = os.path.join(*cases_dir_windows_path, cas, file)
+        if os.path.exists(path_tmp):
+            os.remove(path_tmp)
+
     logging.info(f"Creating conf.json at hpc destination")
     with open(cfg_path, "w") as f:
         json.dump(tmp_cfg, f, ensure_ascii=False, indent=4)
@@ -454,8 +465,6 @@ def add_post_proc(config, cases_cfg, cas, post_file, case_file):
     cases_path = os.path.join(*cases_dir_windows_path, cas, "cases.json")
     with open(cases_path, "w") as f:
         json.dump(cases_cfg, f, ensure_ascii=False, indent=4)
-
-    copy_files = ["ansys_utils.py", "hpc_requirements.txt", "transient_field.py"]
 
     for file in copy_files:
         dest_path = os.path.join(*cases_dir_windows_path, cas, file)

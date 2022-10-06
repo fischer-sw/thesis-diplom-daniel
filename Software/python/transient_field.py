@@ -492,7 +492,7 @@ class flowfield:
             logging.info(f"Creating {plot_vars} plot {plots} for case {cas}")
 
             if config["hpc_calculation"]:
-                folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "plots")
+                folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "plots", "animation_images")
             else:
                 path = sys.path[0]
                 path = os.path.join(path, "assets", "plots", cas)
@@ -506,6 +506,7 @@ class flowfield:
                 image_name = config["plot_file_name"]
             else:
                 image_name = "plot_" + cas + "_" + "_".join(plot_vars) + "." + config["plot_file_type"]
+                folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "plots")
             image_path = os.path.join(folder_path, image_name)
 
             if os.path.exists(image_path) and config["ignore_exsisting"]:
@@ -652,7 +653,6 @@ class flowfield:
         hpc_cases_dir[0] = "/" + hpc_cases_dir[0]
         
         image_conf = config["image_conf"]
-
         for cas in cases:
             config["plots"] = plots_tmp
             field_var = field_var_tmp[:]
@@ -674,7 +674,7 @@ class flowfield:
                 logging.info(f"Creating {var} field {plots} for case {cas}")
 
                 if config["hpc_calculation"]:
-                    folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "fields")
+                    folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "fields", "animation_images")
                 else:
                     path = sys.path[0]
                     path = os.path.join(path, "assets", "fields", cas)
@@ -686,6 +686,7 @@ class flowfield:
                 if "image_file_name" in config.keys():
                     image_name = config["image_file_name"]
                 else:
+                    folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "fields")
                     image_name = "field_" + cas + "_" + var + "." + config["image_file_type"]
 
                 image_path = os.path.join(folder_path, image_name)
@@ -808,8 +809,8 @@ class flowfield:
             var = config["field_var"][0]
 
             if config["hpc_calculation"]:
-                img_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "fields", var)
-                plot_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "plots")
+                img_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "fields", "animation_images")
+                plot_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "plots", "animation_images")
                 folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "animations")
             else:
                 path = sys.path[0]

@@ -508,6 +508,20 @@
         "wall_time" : "12:00:00",
         "case": "h02_r03_grob_piso.cas.gz"
     },
+    "h02_r03_Pe1000_Sc20": {
+        "export_times" : "flow_time",
+        "total_time" : 60,
+        "fixed_timesteps" : 1,
+        "timestep_min" : 1e-2,
+        "data_export_interval": 1.0,
+        "input_vel": 4.2e-3,
+        "input_c": 1.0,
+        "viscosity" : 1.75e-5,
+        "iterations": 20,
+        "tasks_p_node" : 10,
+        "wall_time" : "12:00:00",
+        "case": "h02_r03_grob_piso.cas.gz"
+    },
     "h02_r03_Pe2000_Sc20": {
         "export_times" : "flow_time",
         "total_time" : 60,
@@ -618,6 +632,20 @@
         "iterations": 20,
         "tasks_p_node" : 10,
         "wall_time" : "12:00:00",
+        "case": "h06_r03_middle_piso.cas.gz"
+    },
+    "h6r3_P5_4e4_S1219_v1": {
+        "export_times" : "flow_time",
+        "total_time" : 25,
+        "fixed_timesteps" : 1,
+        "timestep_min" : 0.5e-2,
+        "data_export_interval": 0.1,
+        "input_vel": 7.27e-2,
+        "input_c": 1.0,
+        "viscosity" : 1e-6,
+        "iterations": 30,
+        "tasks_p_node" : 10,
+        "wall_time" : "48:00:00",
         "case": "h06_r03_middle_piso.cas.gz"
     }
 }
