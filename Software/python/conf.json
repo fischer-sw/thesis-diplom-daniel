@@ -14,24 +14,26 @@
         "Jobs"
     ],
     "cases": [
-        "h02_r03_Pe2000_Sc20"
+        "h6r3_Pe1_0e3_Sc1219"
     ],
     "ignore_exsisting": false,
     "plots": [
+        30.0
     ],
     "create_widths" : false,
     "create_resi_plot": false,
-    "create_image": false,
+    "create_image": true,
     "create_plot": false,
-    "create_gif": true,
+    "create_gif": false,
     "create_front": false,
     "field_var": [
-        "molef-fluid_c"
+        "molef-fluid_c",
+        "cell-volume"
     ],
     "c_bar": "fluid c",
     "image_file_type": "png",
     "image_conf": {
-        "set_custom_range": true,
+        "set_custom_range": false,
         "min": 0.0,
         "max": 1.0
     },

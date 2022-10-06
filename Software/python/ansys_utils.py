@@ -655,9 +655,12 @@ def read_transient_data(config, case, export_times="flow_time"):
 
             tmp_data.dropna(subset=['x-coordinate','y-coordinate'], inplace=True)
             
+            tmp_data_old = tmp_data
+
             if tmp_data.empty == False:
-                # round data
-                tmp_data = tmp_data.round(6)
+                tmp_data['x-coordinate'] = tmp_data['x-coordinate'].round(6)
+                tmp_data['y-coordinate'] = tmp_data['y-coordinate'].round(6) 
+                # tmp_data = tmp_data.round(6)
                 data[timestamp] = tmp_data
 
     return data
