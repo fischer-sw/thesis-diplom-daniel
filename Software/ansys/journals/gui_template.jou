@@ -18,18 +18,25 @@
 (cx-gui-do cx-activate-tab-index "Velocity Inlet*Frame2*Frame2" 3)
 
 ; Set inlet molefraction of fluid_a
-(cx-gui-do cx-set-expression-entry "Velocity Inlet*Frame2*Frame2*Frame4(Species)*Table1*Table2(Species Mass Fractions)*Table1*ExpressionEntry1(fluid_a)" '("%input_c%" . 0))
+(cx-gui-do cx-set-expression-entry "Velocity Inlet*Frame2*Frame2*Frame4(Species)*Table1*Table2(Species Mass Fractions)*Table1*ExpressionEntry1(fluid_a)" '("%inlet_xA%" . 0))
 (cx-gui-do cx-activate-item "Velocity Inlet*PanelButtons*PushButton1(OK)")
 (cx-gui-do cx-activate-item "Velocity Inlet*PanelButtons*PushButton2(Cancel)")
 (cx-gui-do cx-set-list-tree-selections "NavigationPane*Frame2*Table1*List_Tree2" (list "Solution|Run Calculation"))
 (cx-gui-do cx-activate-item "NavigationPane*Frame2*Table1*List_Tree2")
 (cx-gui-do cx-set-list-tree-selections "NavigationPane*Frame2*Table1*List_Tree2" (list "Solution|Run Calculation"))
 
+; Set initial molefraction of fluid_b
+(cx-gui-do cx-set-list-tree-selections "NavigationPane*Frame2*Table1*List_Tree2" (list "Solution|Initialization"))
+(cx-gui-do cx-set-list-tree-selections "NavigationPane*Frame2*Table1*List_Tree2" (list "Solution|Initialization"))
+(cx-gui-do cx-activate-item "NavigationPane*Frame2*Table1*List_Tree2")
+(cx-gui-do cx-set-list-tree-selections "NavigationPane*Frame2*Table1*List_Tree2" (list "Solution|Initialization"))
+(cx-gui-do cx-set-real-entry-list "Solution Initialization*Table1*Table7(Initial Values)*RealEntry5(fluid_b)" '( %init_xB%))
+
 ; Set export vars
 (cx-gui-do cx-activate-item "Ribbon*Frame1*Frame5(Solution)*Table1*Table3(Activities)*PushButton3(Manage)")
 (cx-gui-do cx-activate-item "Calculation Activities*ButtonBox4*PushButton2(Edit)")
 ; To add variables add their numbers here
-(cx-gui-do cx-set-list-selections "Automatic Export*Table1*Table2*Table4*List1(Quantities)" '( 4 8 9 10 19 38 39 40 41 42 43 44 45 46 47 48 49 58 81 89 90))
+(cx-gui-do cx-set-list-selections "Automatic Export*Table1*Table2*Table4*List1(Quantities)" '( 4 8 9 10 19 20 38 39 40 41 42 43 44 45 46 47 48 49 58 81 89 90))
 (cx-gui-do cx-activate-item "Automatic Export*Table1*Table2*Table4*List1(Quantities)")
 (cx-gui-do cx-activate-item "Automatic Export*PanelButtons*PushButton1(OK)")
 

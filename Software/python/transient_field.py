@@ -741,6 +741,7 @@ class flowfield:
                 if "image_file_name" in config.keys():
                     image_name = config["image_file_name"]
                 else:
+                    folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "fields")
                     image_name = "field_" + cas + "_" + var + "." + config["image_file_type"]
 
                 image_path = os.path.join(folder_path, image_name)
