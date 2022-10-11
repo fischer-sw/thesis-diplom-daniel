@@ -16,13 +16,14 @@
     "cases": [
         "h6r3_Pe1_0e3_Sc1219"
     ],
-    "ignore_exsisting": false,
+    "ignore_exsisting": true,
     "plots": [
         30.0
     ],
     "create_widths" : false,
     "create_resi_plot": false,
     "create_image": true,
+    "create_prod": true,
     "create_plot": false,
     "create_gif": false,
     "create_front": false,

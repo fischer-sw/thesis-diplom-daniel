@@ -29,7 +29,7 @@
 (cx-gui-do cx-activate-item "Ribbon*Frame1*Frame5(Solution)*Table1*Table3(Activities)*PushButton3(Manage)")
 (cx-gui-do cx-activate-item "Calculation Activities*ButtonBox4*PushButton2(Edit)")
 ; To add variables add their numbers here
-(cx-gui-do cx-set-list-selections "Automatic Export*Table1*Table2*Table4*List1(Quantities)" '( 4 8 9 10 19 38 39 40 41 42 43 44 45 46 47 48 49 58 81 89 90))
+(cx-gui-do cx-set-list-selections "Automatic Export*Table1*Table2*Table4*List1(Quantities)" '( 4 8 9 10 19 20 38 39 40 41 42 43 44 45 46 47 48 49 58 81 89 90))
 (cx-gui-do cx-activate-item "Automatic Export*Table1*Table2*Table4*List1(Quantities)")
 (cx-gui-do cx-activate-item "Automatic Export*PanelButtons*PushButton1(OK)")
 

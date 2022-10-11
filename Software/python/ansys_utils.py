@@ -435,6 +435,7 @@ def add_post_proc(config, cases_cfg, cas, post_file, case_file):
     tmp_cfg["plot_file_type"] = "png"
     tmp_cfg["create_plot"] = True
     tmp_cfg["create_gif"] = True
+    tmp_cfg["create_prod"] = True
     tmp_cfg["create_front"] = True
     tmp_cfg["field_var"] = ["molef-fluid_c"]
     tmp_cfg["image_conf"] = {'set_custom_range': True, 'min': 0.0, 'max': 1.0}

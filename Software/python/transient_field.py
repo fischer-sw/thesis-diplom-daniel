@@ -9,6 +9,7 @@ import math
 from PIL import Image
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
 from ansys_utils import *
 
@@ -292,6 +293,57 @@ class flowfield:
 
             df.to_csv(data_path, index=False)
             logging.info(f"Saved front data for case {cas}")
+
+    def formed_product(self, config, cases_cfg):
+        """
+        Functions that calculates the total amount of prodct formed for a case
+        """
+
+        if config == None or cases_cfg == None:
+            logging.error("No cases.json or conf.json provided")
+            exit()
+
+        cases = config["cases"]
+        cases_dir_path = config["cases_dir_path"]
+
+        for cas in cases:
+
+            prod = {}
+            
+            prod["time [s]"] = []
+            prod["product [kmol]"] = []
+            
+            if config["hpc_calculation"]:
+                tmp_path = cases_dir_path[1:]
+                tmp_path[0] = "/" + tmp_path[0]
+                data_path = os.path.join(*tmp_path, cas, "total_product_formed" + ".csv")
+            else:
+                data_path = os.path.join(*cases_dir_path, cas, "total_product_formed" + ".csv")
+            if os.path.exists(data_path):
+                logging.info(f"Already created formed product data for case {cas}. Continuing with next case")
+                continue
+
+            logging.info(f"Creating formed product data for case {cas}")
+
+            times = get_cases(config, cas)
+            times.sort()
+
+            config["plots"] = times
+            for idx, time in enumerate(times):
+                config["plots"] = [time]
+                data = read_transient_data(config, cas)[time]
+                if not "cell-volume" in list(data.columns):
+                    logging.warning(f"No Cell-Volume Data in case {cas}")
+                    break
+
+                prod["product [kmol]"] = sum(data["cell-volume"] * data["concentration-fluid_c"])
+                prod["time [s]"].append(time)
+                logging.info(f"Added product formed for time {time}s for case {cas}")
+
+            if prod != {}:
+                prod = pd.DataFrame(prod)
+                prod.to_csv(data_path)
+
 
 
     def vel_field(self, config, cases_cfg):
@@ -864,14 +916,15 @@ class flowfield:
                 if gif_conf["gif_plot"] and os.path.exists(os.path.join(plot_path, plot_name + ".png")) == False:
                     raw_plots.append(tmp_cas)
                 else:
-                    plot_images.append(plot_name + ".png")
+                    
                     logging.info(f"Plot {plot_name} already created")
-                
+                plot_images.append(plot_name + ".png")
+
                 if gif_conf["gif_image"] and os.path.exists(os.path.join(img_path, field_name + ".png")) == False:
                     raw_imgs.append(tmp_cas)
                 else:
-                    field_images.append(field_name + ".png")
                     logging.info(f"Field {field_name} already created")
+                field_images.append(field_name + ".png")
 
             for tmp_cas in raw_plots:
                 config["plots"] = [tmp_cas]
@@ -902,8 +955,8 @@ class flowfield:
                 if os.path.exists(video_path):
                     logging.info(f"Deleting existing video {video_name}")
                 
-                logging.debug(f"Plot imgs={plot_images}")
-                logging.debug(f"Plot path={plot_path}")
+                logging.info(f"Plot imgs 1 to 3 = {plot_images[0:4]}, Amount={len(plot_images)}")
+                logging.info(f"Plot path={plot_path}")
                 imgs = None
                 imgs = (Image.open(os.path.join(plot_path, f)) for f in plot_images)
                 img = next(imgs)  # extract first image from iterator
@@ -950,8 +1003,8 @@ class flowfield:
                 if os.path.exists(video_path):
                     logging.info(f"Deleting existing video {video_name}")
 
-                logging.debug(f"Plot imgs {field_images}")
-                logging.debug(f"Plot path {img_path}")
+                logging.info(f"Field imgs 1 to 3 = {field_images[0:4]}, Amount={len(field_images)}")
+                logging.info(f"Field path {img_path}")
 
                 tmp_imgs = field_images
 
@@ -1048,6 +1101,9 @@ def do_plots():
     
     if config["create_widths"]:
         field.front_width(config, cases_cfg, 0.1)
+    
+    if config["create_prod"]:
+        field.formed_product(config, cases_cfg)
 
 if __name__ == "__main__":
 

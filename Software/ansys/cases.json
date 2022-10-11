@@ -647,5 +647,47 @@
         "tasks_p_node" : 10,
         "wall_time" : "48:00:00",
         "case": "h06_r03_middle_piso.cas.gz"
+    },
+    "h6r3_P5_4e4_S1219_v2": {
+        "export_times" : "flow_time",
+        "total_time" : 25,
+        "fixed_timesteps" : 1,
+        "timestep_min" : 1.0e-3,
+        "data_export_interval": 0.1,
+        "input_vel": 7.27e-2,
+        "input_c": 1.0,
+        "viscosity" : 1e-6,
+        "iterations": 30,
+        "tasks_p_node" : 20,
+        "wall_time" : "96:00:00",
+        "case": "h06_r03_middle_piso.cas.gz"
+    },
+    "h6r3_P5_4e4_S1219_v3": {
+        "export_times" : "flow_time",
+        "total_time" : 25,
+        "fixed_timesteps" : 1,
+        "timestep_min" : 1.0e-4,
+        "data_export_interval": 0.1,
+        "input_vel": 7.27e-2,
+        "input_c": 1.0,
+        "viscosity" : 1e-6,
+        "iterations": 30,
+        "tasks_p_node" : 40,
+        "wall_time" : "96:00:00",
+        "case": "h06_r03_middle_piso.cas.gz"
+    },
+    "h6r3_P5_4e4_S1219_v4": {
+        "export_times" : "flow_time",
+        "total_time" : 25,
+        "fixed_timesteps" : 1,
+        "timestep_min" : 1.0e-5,
+        "data_export_interval": 0.1,
+        "input_vel": 7.27e-2,
+        "input_c": 1.0,
+        "viscosity" : 1e-6,
+        "iterations": 30,
+        "tasks_p_node" : 40,
+        "wall_time" : "96:00:00",
+        "case": "h06_r03_middle_piso.cas.gz"
     }
 }
