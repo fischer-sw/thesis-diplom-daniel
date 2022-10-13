@@ -561,7 +561,8 @@ class flowfield:
                 image_name = config["plot_file_name"]
             else:
                 image_name = "plot_" + cas + "_" + "_".join(plot_vars) + "." + config["plot_file_type"]
-                folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "plots")
+                if config["hpc_calculation"]:
+                    folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "plots")
             image_path = os.path.join(folder_path, image_name)
 
             if os.path.exists(image_path) and config["ignore_exsisting"]:
@@ -741,7 +742,8 @@ class flowfield:
                 if "image_file_name" in config.keys():
                     image_name = config["image_file_name"]
                 else:
-                    folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "fields")
+                    if config["hpc_calculation"]:
+                        folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "fields")
                     image_name = "field_" + cas + "_" + var + "." + config["image_file_type"]
 
                 image_path = os.path.join(folder_path, image_name)

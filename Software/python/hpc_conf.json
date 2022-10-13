@@ -1,0 +1,85 @@
+{
+    "hpc_calculation" : true,
+    "data_path": [
+        "Data"
+    ],
+    "hpc_results_path": [
+        "Results"
+    ],
+    "cases_dir_path": [
+        "\\\\gssnas",
+        "bigdata",
+        "FWDT",
+        "DFischer",
+        "Jobs"
+    ],
+    "cases": [
+
+    ],
+    "ignore_exsisting": true,
+    "plots": [
+    ],
+    "create_widths" : true,
+    "create_resi_plot": true,
+    "create_image": true,
+    "create_plot": true,
+    "create_gif": true,
+    "create_front": true,
+    "create_prod": true,
+    "field_var": [
+        "concentration-fluid_a",
+        "concentration-fluid_b",
+        "concentration-fluid_c"
+    ],
+    "c_bar": "c [mol/l]",
+    "image_file_type": "png",
+    "image_conf": {
+        "set_custom_range": true,
+        "min": 0.0,
+        "max": 0.03
+    },
+    "one_plot": false,
+    "plot_vars": [
+        "concentration-fluid_a",
+        "concentration-fluid_b",
+        "concentration-fluid_c"
+    ],
+    "plot_file_type": "png",
+    "plot_conf": {
+        "colors": {
+            "molef-fluid_a": "b",
+            "molef-fluid_b": "g",
+            "molef-fluid_c": "r",
+            "concentration-fluid_a" : "b",
+            "concentration-fluid_b" : "g",
+            "concentration-fluid_c" : "r"
+
+        },
+        "linestyles": {
+            "t1": "solid",
+            "t2": "dotted",
+            "t3": "dashed"
+        },
+        "legend": {
+            "molef-fluid_a": "fluid a",
+            "molef-fluid_b": "fluid b",
+            "molef-fluid_c": "fluid c",
+            "concentration-fluid_a" : "cA [kmol/m³]",
+            "concentration-fluid_b" : "cB [kmol/m³]",
+            "concentration-fluid_c" : "cC [kmol/m³]"
+        }
+    },
+    "gif_conf": {
+        "cases": {
+            "start": 0,
+            "end": 60,
+            "step": 1
+        },
+        "keep_images": true,
+        "videos": true,
+        "gif_plot": true,
+        "gif_image": true,
+        "loop": 0,
+        "frame_duration": 300
+    }
+}

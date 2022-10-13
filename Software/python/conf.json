@@ -14,43 +14,49 @@
         "Jobs"
     ],
     "cases": [
-        "h6r3_Pe1_0e3_Sc1219"
+        "h4r3_P5_4e4_S1219_gs",
+        "h4r3_P5_4e4_S1219_ms",
+        "h4r3_P5_4e4_S1219_fs"
+
     ],
     "ignore_exsisting": true,
     "plots": [
-        30.0
     ],
     "create_widths" : false,
     "create_resi_plot": false,
     "create_image": true,
-    "create_prod": true,
-    "create_plot": false,
+    "create_plot": true,
     "create_gif": false,
     "create_front": false,
+    "create_prod": false,
     "field_var": [
-        "molef-fluid_c",
-        "cell-volume"
+        "concentration-fluid_a",
+        "concentration-fluid_b",
+        "concentration-fluid_c"
     ],
     "c_bar": "fluid c",
     "image_file_type": "png",
     "image_conf": {
-        "set_custom_range": false,
+        "set_custom_range": true,
         "min": 0.0,
-        "max": 1.0
+        "max": 0.03
     },
     "one_plot": false,
     "plot_vars": [
-        "molef-fluid_a",
-        "molef-fluid_b",
-        "molef-fluid_c"
-
+        "concentration-fluid_a",
+        "concentration-fluid_b",
+        "concentration-fluid_c"
     ],
     "plot_file_type": "png",
     "plot_conf": {
         "colors": {
             "molef-fluid_a": "b",
             "molef-fluid_b": "g",
-            "molef-fluid_c": "r"
+            "molef-fluid_c": "r",
+            "concentration-fluid_a" : "b",
+            "concentration-fluid_b" : "g",
+            "concentration-fluid_c" : "r"
+
         },
         "linestyles": {
             "t1": "solid",
@@ -60,7 +66,10 @@
         "legend": {
             "molef-fluid_a": "fluid a",
             "molef-fluid_b": "fluid b",
-            "molef-fluid_c": "fluid c"
+            "molef-fluid_c": "fluid c",
+            "concentration-fluid_a" : "cA [kmol/m³]",
+            "concentration-fluid_b" : "cB [kmol/m³]",
+            "concentration-fluid_c" : "cC [kmol/m³]"
         }
     },
     "gif_conf": {

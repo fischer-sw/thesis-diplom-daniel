@@ -422,31 +422,12 @@ def add_post_proc(config, cases_cfg, cas, post_file, case_file):
 
     cfg_path = os.path.join(*cases_dir_windows_path, cas, "conf.json")
     tmp_cfg = {}
-    for ele in config.keys():
-        tmp_cfg[ele] = config[ele]
+
+    with open(os.path.join(sys.path[0],"hpc_conf.json")) as f:
+        tmp_cfg = json.load(f)
+
+    tmp_cfg["plots"] = []
     tmp_cfg["cases"] = [cas]
-    tmp_cfg["hpc_calculation"] = True
-    tmp_cfg["create_widths"] = True
-    tmp_cfg["create_resi_plot"] = True
-    tmp_cfg["create_image"] = True
-    tmp_cfg["ignore_exsisting"] = True
-    tmp_cfg["c_bar"] = "fluid_c"
-    tmp_cfg["image_file_type"] = "png"
-    tmp_cfg["plot_file_type"] = "png"
-    tmp_cfg["create_plot"] = True
-    tmp_cfg["create_gif"] = True
-    tmp_cfg["create_prod"] = True
-    tmp_cfg["create_front"] = True
-    tmp_cfg["field_var"] = ["molef-fluid_c"]
-    tmp_cfg["image_conf"] = {'set_custom_range': True, 'min': 0.0, 'max': 1.0}
-    tmp_cfg["gif_conf"]["cases"] = {'start': 0, 'end': cases_cfg[cas]["total_time"], 'step': 1}
-    tmp_cfg["gif_conf"]["keep_images"] = True
-    tmp_cfg["gif_conf"]["videos"] = True
-    tmp_cfg["gif_conf"]["gif_plot"] = True
-    tmp_cfg["gif_conf"]["gif_image"] = True
-    tmp_cfg["gif_conf"]["loop"] = 0
-    tmp_cfg["gif_conf"]["frame_duration"] = 300
-    tmp_cfg["plot_vars"] = ["molef-fluid_a", "molef-fluid_b", "molef-fluid_c"]
 
     copy_files = ["ansys_utils.py", "hpc_requirements.txt", "transient_field.py"]
 
