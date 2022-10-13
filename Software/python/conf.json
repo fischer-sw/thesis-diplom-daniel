@@ -14,10 +14,10 @@
         "Jobs"
     ],
     "cases": [
-        "h4r3_P5_4e4_S1219_gs",
-        "h4r3_P5_4e4_S1219_ms",
-        "h4r3_P5_4e4_S1219_fs"
-
+        "h4r3_P931_S1219_gs",
+        "h4r3_P931_S1219_ms",
+        "h6r3_P931_S1219_ms",
+        "h6r3_P931_S1219_gs"
     ],
     "ignore_exsisting": true,
     "plots": [
@@ -32,9 +32,10 @@
     "field_var": [
         "concentration-fluid_a",
         "concentration-fluid_b",
-        "concentration-fluid_c"
+        "concentration-fluid_c",
+        "cell-reynolds-number"
     ],
-    "c_bar": "fluid c",
+    "c_bar": "c [mol/l]",
     "image_file_type": "png",
     "image_conf": {
         "set_custom_range": true,
@@ -72,6 +73,14 @@
             "concentration-fluid_c" : "cC [kmol/m³]"
         }
     },
+    "animation_field_vars" : [
+        "concentration-fluid_c"
+    ],
+    "animation_plot_vars" : [
+        "concentration-fluid_a",
+        "concentration-fluid_b",
+        "concentration-fluid_c"
+    ],
     "gif_conf": {
         "cases": {
             "start": 0,

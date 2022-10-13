@@ -29,7 +29,8 @@
     "field_var": [
         "concentration-fluid_a",
         "concentration-fluid_b",
-        "concentration-fluid_c"
+        "concentration-fluid_c",
+        "cell-reynolds-number"
     ],
     "c_bar": "c [mol/l]",
     "image_file_type": "png",
@@ -64,11 +65,19 @@
             "molef-fluid_a": "fluid a",
             "molef-fluid_b": "fluid b",
             "molef-fluid_c": "fluid c",
-            "concentration-fluid_a" : "cA [kmol/m³]",
-            "concentration-fluid_b" : "cB [kmol/m³]",
-            "concentration-fluid_c" : "cC [kmol/m³]"
+            "concentration-fluid_a" : "cA [mol/l]",
+            "concentration-fluid_b" : "cB [mol/l]",
+            "concentration-fluid_c" : "cC [mol/l]"
         }
     },
+    "animation_vars" : [
+        "concentration-fluid_c"
+    ],
+    "animation_plot_vars" : [
+        "concentration-fluid_a",
+        "concentration-fluid_b",
+        "concentration-fluid_c"
+    ],
     "gif_conf": {
         "cases": {
             "start": 0,

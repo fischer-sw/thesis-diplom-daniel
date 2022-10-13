@@ -14,6 +14,21 @@
         "wall_time" : "24:00:00",
         "case": "h4_r3_grob.cas.gz"
     },
+    "h4r3_P931_S1219_gl": {
+        "export_times" : "flow_time",
+        "total_time" : 500,
+        "fixed_timesteps" : 1,
+        "timestep_min" : 1.0e-3,
+        "data_export_interval": 1.0,
+        "input_vel": 1.9e-3,
+        "inlet_xA": 5e-4,
+        "init_phiB" : 7.2e-3,
+        "viscosity" : 1e-6,
+        "iterations": 30,
+        "tasks_p_node" : 40,
+        "wall_time" : "96:00:00",
+        "case": "h4_r3_grob.cas.gz"
+    },
     "h4r3_P931_S1219_ms": {
         "export_times" : "flow_time",
         "total_time" : 60,
@@ -29,6 +44,21 @@
         "wall_time" : "24:00:00",
         "case": "h4_r3_middle.cas.gz"
     },
+    "h4r3_P931_S1219_ml": {
+        "export_times" : "flow_time",
+        "total_time" : 500,
+        "fixed_timesteps" : 1,
+        "timestep_min" : 1.0e-3,
+        "data_export_interval": 1.0,
+        "input_vel": 1.9e-3,
+        "inlet_xA": 5e-4,
+        "init_phiB" : 7.2e-3,
+        "viscosity" : 1e-6,
+        "iterations": 30,
+        "tasks_p_node" : 40,
+        "wall_time" : "96:00:00",
+        "case": "h4_r3_middle.cas.gz"
+    },
     "h4r3_P931_S1219_fs": {
         "export_times" : "flow_time",
         "total_time" : 60,
@@ -41,7 +71,7 @@
         "viscosity" : 1e-6,
         "iterations": 30,
         "tasks_p_node" : 40,
-        "wall_time" : "24:00:00",
+        "wall_time" : "48:00:00",
         "case": "h4_r3_fine.cas.gz"
     },
     "h6r3_P931_S1219_gs": {
