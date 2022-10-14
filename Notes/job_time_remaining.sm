@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?application progid="SMath Studio Desktop" version="1.0.8253.4763"?>
+<worksheet xmlns="http://smath.info/schemas/worksheet/1.0">
+  <settings ppi="96">
+    <identity>
+      <id>f32a448f-9f1b-434c-91c4-e645d955e677</id>
+      <revision>2</revision>
+    </identity>
+    <calculation>
+      <precision>4</precision>
+      <exponentialThreshold>5</exponentialThreshold>
+      <trailingZeros>false</trailingZeros>
+      <significantDigitsMode>false</significantDigitsMode>
+      <roundingMode>0</roundingMode>
+      <approximateEqualAccuracy>0</approximateEqualAccuracy>
+      <fractions>decimal</fractions>
+    </calculation>
+    <pageModel active="false" viewMode="2" printGrid="false" printAreas="true" simpleEqualsOnly="false" printBackgroundImages="true">
+      <paper id="9" orientation="Portrait" width="827" height="1169" />
+      <margins left="39" right="39" top="49" bottom="49" />
+      <header alignment="Center" color="#a9a9a9">&amp;[DATE] &amp;[TIME] - &amp;[FILENAME]</header>
+      <footer alignment="Center" color="#a9a9a9">&amp;[PAGENUM] / &amp;[COUNT]</footer>
+      <backgrounds />
+    </pageModel>
+    <dependencies>
+      <assembly name="SMath Studio Desktop" version="1.0.8253.4763" guid="a37cba83-b69c-4c71-9992-55ff666763bd" />
+      <assembly name="MathRegion" version="1.11.8253.4763" guid="02f1ab51-215b-466e-a74d-5d8b1cf85e8d" />
+    </dependencies>
+  </settings>
+  <regions type="content">
+    <region left="54" top="126" width="195" height="24" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">job_run_hours</e>
+          <e type="operand">2</e>
+          <e type="operand">3600</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand" style="unit">s</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="297" top="126" width="146" height="24" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">flow_time</e>
+          <e type="operand">28.8</e>
+          <e type="operand" style="unit">s</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="54" top="162" width="178" height="24" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">job_run_minutes</e>
+          <e type="operand">37</e>
+          <e type="operand" style="unit">s</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="297" top="162" width="186" height="24" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">flow_time_total</e>
+          <e type="operand">500</e>
+          <e type="operand" style="unit">s</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="54" top="225" width="644" height="42" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">total_run_time</e>
+          <e type="operand">flow_time_total</e>
+          <e type="operand">flow_time</e>
+          <e type="operator" args="2">/</e>
+          <e type="operand">job_run_hours</e>
+          <e type="operand">job_run_minutes</e>
+          <e type="operator" args="2">+</e>
+          <e type="bracket">(</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <result action="numeric">
+          <e type="operand">1.2564</e>
+          <e type="operand">10</e>
+          <e type="operand">5</e>
+          <e type="operator" args="2">^</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand" style="unit">s</e>
+          <e type="operator" args="2">*</e>
+        </result>
+      </math>
+    </region>
+    <region left="54" top="306" width="657" height="33" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">run_time_remaining</e>
+          <e type="operand">total_run_time</e>
+          <e type="operand">job_run_hours</e>
+          <e type="operator" args="2">-</e>
+          <e type="operand">job_run_minutes</e>
+          <e type="operator" args="2">-</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <result action="numeric">
+          <e type="operand">1.1841</e>
+          <e type="operand">10</e>
+          <e type="operand">5</e>
+          <e type="operator" args="2">^</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand" style="unit">s</e>
+          <e type="operator" args="2">*</e>
+        </result>
+      </math>
+    </region>
+    <region left="54" top="369" width="244" height="41" color="#000000" fontSize="10">
+      <math ignoreUnits="true">
+        <input>
+          <e type="operand">run_time_remaining</e>
+          <e type="operand">3600</e>
+          <e type="operator" args="2">/</e>
+        </input>
+        <result action="numeric">
+          <e type="operand">32.8904</e>
+          <e type="operand" style="unit">s</e>
+          <e type="operator" args="2">*</e>
+        </result>
+      </math>
+    </region>
+    <region left="54" top="441" width="212" height="41" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">total_run_time</e>
+          <e type="operand">3600</e>
+          <e type="operator" args="2">/</e>
+        </input>
+        <result action="numeric">
+          <e type="operand">34.9007</e>
+          <e type="operand" style="unit">s</e>
+          <e type="operator" args="2">*</e>
+        </result>
+      </math>
+    </region>
+  </regions>
+</worksheet>

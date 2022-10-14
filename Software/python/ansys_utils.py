@@ -319,7 +319,7 @@ def build_journal(config, cases_cfg, end_exit=False, mode="cmd", update_exsistin
         if "post_walltime" in tmp_keys:
             val["post_walltime"] = cases_cfg[key]["post_walltime"]
         else:
-            val["post_walltime"] = "12:00:00"
+            val["post_walltime"] = "48:00:00"
 
         if not "job_name" in val.keys():
             val["job_name"] = key

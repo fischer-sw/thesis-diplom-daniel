@@ -1,5 +1,5 @@
 {
-    "hpc_calculation" : false,
+    "hpc_calculation": false,
     "data_path": [
         "Data"
     ],
@@ -14,15 +14,11 @@
         "Jobs"
     ],
     "cases": [
-        "h4r3_P931_S1219_gs",
-        "h4r3_P931_S1219_ms",
-        "h6r3_P931_S1219_ms",
-        "h6r3_P931_S1219_gs"
+        "h4r3_P931_S1219_gs"
     ],
     "ignore_exsisting": true,
-    "plots": [
-    ],
-    "create_widths" : false,
+    "plots": [],
+    "create_widths": false,
     "create_resi_plot": false,
     "create_image": true,
     "create_plot": true,
@@ -54,10 +50,9 @@
             "molef-fluid_a": "b",
             "molef-fluid_b": "g",
             "molef-fluid_c": "r",
-            "concentration-fluid_a" : "b",
-            "concentration-fluid_b" : "g",
-            "concentration-fluid_c" : "r"
-
+            "concentration-fluid_a": "b",
+            "concentration-fluid_b": "g",
+            "concentration-fluid_c": "r"
         },
         "linestyles": {
             "t1": "solid",
@@ -68,15 +63,15 @@
             "molef-fluid_a": "fluid a",
             "molef-fluid_b": "fluid b",
             "molef-fluid_c": "fluid c",
-            "concentration-fluid_a" : "cA [kmol/m³]",
-            "concentration-fluid_b" : "cB [kmol/m³]",
-            "concentration-fluid_c" : "cC [kmol/m³]"
+            "concentration-fluid_a": "cA [kmol/m³]",
+            "concentration-fluid_b": "cB [kmol/m³]",
+            "concentration-fluid_c": "cC [kmol/m³]"
         }
     },
-    "animation_field_vars" : [
+    "animation_field_vars": [
         "concentration-fluid_c"
     ],
-    "animation_plot_vars" : [
+    "animation_plot_vars": [
         "concentration-fluid_a",
         "concentration-fluid_b",
         "concentration-fluid_c"

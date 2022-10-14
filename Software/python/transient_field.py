@@ -155,7 +155,7 @@ class flowfield:
 
         return config
 
-    def front_width(self, config=None, cases_cfg=None, threshold=0.1):
+    def front_width(self, config=None, cases_cfg=None, threshold=0.01):
         """
         Function that calculates the width of the front at half gap height for every timestep. Threshold is the minimum value to determine front and back positions.
         """

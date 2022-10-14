@@ -71,7 +71,7 @@ fig = go.Figure()
 image_row = html.Div(
     [
         dash.html.Img(id="img", alt="no image yet created"),
-        # dcc.Graph(figure=fig, id="img")
+        dbc.Spinner(html.Div(id="loading-output")),
     ]
 )
 
@@ -210,7 +210,7 @@ if os.path.exists(cfg_path) == False:
     logging.info(f"no conf.json found at {cfg_path}")
     exit()
 with open(cfg_path) as f:
-    case_config = json.load(f)
+    config = json.load(f)
 
 data_cfg_path = os.path.join(sys.path[0], "..", "ansys", "cases.json")
 
@@ -219,23 +219,6 @@ if os.path.exists(data_cfg_path) == False:
     exit()
 with open(data_cfg_path) as f:
     cases_config = json.load(f)
-
-
-def write_val2cfg(key, val):
-
-    logging.debug(f"key={key}, value={val}")
-
-
-    logging.debug(f"cfg_path={cfg_path}")
-
-    with open(cfg_path) as f:
-        config = json.load(f)
-
-    config[key] = val
-
-    with open(cfg_path, "w") as f:
-        json.dump(config, f, ensure_ascii=False, indent=4)
-
 
 @app.callback(
     Output("image-modal", "is_open"),
@@ -277,7 +260,7 @@ def toggle_modal(n1, n2, is_open):
 
 def get_options(clicks):
     options = []
-    path = os.path.join(*case_config["cases_dir_path"])
+    path = os.path.join(*config["cases_dir_path"])
 
     if os.path.exists(path) == False:
         logging.info(f"Path {path} does not exsist")
@@ -320,7 +303,7 @@ def update_btn_hide(value, clicks):
             hide2 = True
             hide3 = False
 
-    write_val2cfg("cases", [value])
+    config["cases"] = [value]
     return [hide1, hide2, hide3]
 
 @app.callback(
@@ -331,7 +314,8 @@ def update_btn_hide(value, clicks):
 )
 
 def get_time_options(value):
-    cases = get_cases(case_config["hpc_data_path"], case_config["cases_dir_path"], value)
+    cases = get_cases(config, value)
+    # cases = get_cases(config["hpc_data_path"], config["cases_dir_path"], value)
 
     # times = cases_config[value]["timestep"] * np.array(cases)
 
@@ -365,7 +349,7 @@ def get_time_options(value):
 )
 
 def update_vars(case):
-    vars = get_case_vars(case_config["hpc_data_path"] ,case_config["cases_dir_path"], case, "flow_time")
+    vars = get_case_vars(config, case)
 
     options = []
 
@@ -384,6 +368,7 @@ def update_vars(case):
 
 @app.callback(
     Output("img", "src"),
+    Output("loading-output", "children"),
     Input("create-field", "n_clicks"),
     State("dd-times", "value"),
     State("var-dd", "value"),
@@ -391,38 +376,36 @@ def update_vars(case):
 )
 
 def create_image(clicks, time_values, var):
-    write_val2cfg("field_var", [var])
-
-    write_val2cfg("plots", time_values)
-    write_val2cfg("create_front", False)
-    write_val2cfg("create_image", True)
-    write_val2cfg("create_resi_plot", False)
-    write_val2cfg("create_gif", False)
-
-    cfg_path = os.path.join(sys.path[0], "conf.json")
-
-    with open(cfg_path) as f:
-        config = json.load(f)
-
-    field = flowfield(config)
+    config["field_var"] = [var]
+    config["ignore_exsisting"] = True
+    config["plots"]= time_values
+    config["create_front"]= False
+    config["create_image"]= True
+    config["create_resi_plot"]= False
+    config["create_gif"]= False
+    field = flowfield(config, cases_config)
 
     path = sys.path[0]
-    path = os.path.join(path, "assets")
+    path = os.path.join(path, "assets", "fields", config["cases"][0])
     sub_path = os.path.join(path, var)
     
     
     if config["create_image"]:
         image_name = "field_" + config["cases"][0] + "_" + var + "." + config["image_file_type"]
         image_path = os.path.join(sub_path, image_name)
-        field.multi_field()
+        field.multi_field(config, cases_config)
     
     if config["create_plot"]:
-        field.multi_plot()
+        field.multi_plot(config, cases_config)
 
-    encoded_image = base64.b64encode(open(image_path, 'rb').read())
-    base_src = 'data:image/png;base64,{}'.format(encoded_image.decode())
+    if config["create_plot"] or config["create_image"]:
+
+        encoded_image = base64.b64encode(open(image_path, 'rb').read())
+        base_src = 'data:image/png;base64,{}'.format(encoded_image.decode())
     
-    return base_src
+        return [base_src, None] 
+    
+    return "Output not reloaded yet"
 
 if __name__ == "__main__":
     app.run_server(debug=False)
