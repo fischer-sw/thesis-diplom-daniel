@@ -12,7 +12,7 @@ diplom thesis on numerical simulation of reaction-diffusion-advection fronts
 - [x] solve model for species
 - [x] add reaction to model
 - [x] solve model with reaction
-- [ ] setup correct model
+- [x] setup correct model
 - [ ] do parameter studies
 
 # Structure
@@ -48,11 +48,8 @@ diplom thesis on numerical simulation of reaction-diffusion-advection fronts
     - design studies (parametric)
     - experimental setup
     - model results
+- parameter variation
+    - Pe number
+    - Sc number
 - limitations and errors
 - outlook/conculsion
-
-
-
-aspect ratio = 1...5
-avg wall shear
-repeat 1-3 times
