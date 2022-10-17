@@ -533,7 +533,9 @@ class flowfield:
         hpc_cases_dir = config["cases_dir_path"][1:]
         hpc_cases_dir[0] = "/" + hpc_cases_dir[0]
 
+
         for cas in list(front_data.keys()):
+            logging.info(f"Creating front image for case {cas}")
             if config["hpc_calculation"]:
                 folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "plots")
             else:
@@ -544,55 +546,63 @@ class flowfield:
             if os.path.exists(folder_path) == False:
                 os.makedirs(folder_path)
 
-            image_name = f"front_{str(self.front_threshhold).replace('.', ',')}" + "." + config["plot_file_type"]
-            image_path = os.path.join(folder_path, image_name)
-            title = "front_" + cas
+            exps = ['ground', 'PF']
 
-            fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6.5,2.4*1))
+            for exp in exps:
 
-            fig.suptitle(title)
+                image_name = f"front_{exp}_{str(self.front_threshhold).replace('.', ',')}" + "." + config["plot_file_type"]
+                image_path = os.path.join(folder_path, image_name)
 
-            legend = ["sim_front_data", "sim_max_data", "exp_front_data", "exp_max_data"]
+                if os.path.exists(image_path) and config["ignore_exsisting"]:
+                    logging.info(f"Already created front image for {exp} for case {cas}")
+                    continue
 
-            # exp = 'ground'
-            exp = 'PF'
-            tmp_exp = exp_data[cas]
+                title = "front_" + cas
 
-            match exp:
-                case 'ground':
-                    tmp_front_exp = exp_data[cas]['r_f_ground']
-                    tmp_max_exp = exp_data[cas]['r_c_ground']
-                    time_front_name = 'r_f_ground t [s]'
-                    time_max_name = 'r_c_ground t [s]'
+                fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6.5,3.5))
 
-                case 'PF':
-                    tmp_front_exp = exp_data[cas]['r_f_PF']
-                    tmp_max_exp = exp_data[cas]['r_c_PF']
+                fig.suptitle(title)
 
-            sim_data = pd.DataFrame(front_data[cas])
-            front_exp_t = list(tmp_front_exp[f"r_f_{exp} t [s]"].round(0))
-            front_exp_r = list(tmp_front_exp[f"r_f_{exp} r [mm]"])
-            sim_matched = sim_data[sim_data["times [s]"].isin(front_exp_t)]
+                legend = ["sim_front_data", "sim_max_data", "exp_front_data", "exp_max_data"]
 
-            mx_data = pd.DataFrame(max_data[cas])
-            max_matched = mx_data[mx_data["times [s]"].isin(list(tmp_max_exp[f"r_c_{exp} t [s]"].round(0)))]
-            max_exp_t = list(tmp_max_exp[f"r_c_{exp} t [s]"].round(0))
-            max_exp_r = list(tmp_max_exp[f"r_c_{exp} r [mm]"])
+                
+                tmp_exp = exp_data[cas]
 
-            cax = axs.plot(sim_matched["times [s]"], sim_matched["r_s [m]"]*1e3, "bd")
-            cax = axs.plot(max_matched["times [s]"], max_matched["r_s [m]"]*1e3, "yd")
+                match exp:
+                    case 'ground':
+                        tmp_front_exp = exp_data[cas]['r_f_ground']
+                        tmp_max_exp = exp_data[cas]['r_c_ground']
+                        time_front_name = 'r_f_ground t [s]'
+                        time_max_name = 'r_c_ground t [s]'
 
-            cax = axs.plot(front_exp_t, front_exp_r, "rx")
-            cax = axs.plot(max_exp_t, max_exp_r, "gx")
+                    case 'PF':
+                        tmp_front_exp = exp_data[cas]['r_f_PF']
+                        tmp_max_exp = exp_data[cas]['r_c_PF']
 
-            axs.set_xlabel("time [s]")
-            axs.set_ylabel("radius [mm]")
-            axs.set_xlim(225, 380)
-            axs.legend(legend)
+                sim_data = pd.DataFrame(front_data[cas])
+                front_exp_t = list(tmp_front_exp[f"r_f_{exp} t [s]"].round(0))
+                front_exp_r = list(tmp_front_exp[f"r_f_{exp} r [mm]"])
+                sim_matched = sim_data[sim_data["times [s]"].isin(front_exp_t)]
 
-            plt.savefig(image_path)
-            plt.close(fig)
-            logging.info(f"saved image {image_name}.")
+                mx_data = pd.DataFrame(max_data[cas])
+                max_matched = mx_data[mx_data["times [s]"].isin(list(tmp_max_exp[f"r_c_{exp} t [s]"].round(0)))]
+                max_exp_t = list(tmp_max_exp[f"r_c_{exp} t [s]"].round(0))
+                max_exp_r = list(tmp_max_exp[f"r_c_{exp} r [mm]"])
+
+                cax = axs.plot(sim_matched["times [s]"], sim_matched["r_s [m]"]*1e3, "bd")
+                cax = axs.plot(max_matched["times [s]"], max_matched["r_s [m]"]*1e3, "yd")
+
+                cax = axs.plot(front_exp_t, front_exp_r, "rx")
+                cax = axs.plot(max_exp_t, max_exp_r, "gx")
+
+                axs.set_xlabel("time [s]")
+                axs.set_ylabel("radius [mm]")
+                axs.set_xlim(225, 380)
+                axs.legend(legend)
+
+                plt.savefig(image_path)
+                plt.close(fig)
+                logging.info(f"saved image {image_name}.")
 
 
     def multi_plot(self, config=None, cases_cfg=None):
