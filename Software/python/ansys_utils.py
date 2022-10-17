@@ -539,6 +539,7 @@ def add_post_proc(config, cases_cfg, cas, post_file, case_file):
 
     tmp_cfg["plots"] = []
     tmp_cfg["cases"] = [cas]
+    tmp_cfg["gif_conf"]["cases"]["end"] = cases_cfg[cas]["total_time"]
 
     copy_files = ["ansys_utils.py", "hpc_requirements.txt", "transient_field.py"]
 

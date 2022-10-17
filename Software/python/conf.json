@@ -14,8 +14,7 @@
         "Jobs"
     ],
     "cases": [
-        "h4r3_P931_S1219_gl",
-        "h4r3_P931_S1219_ml"
+        "h4r3_P931_S1219_gs"
     ],
     "ignore_exsisting": false,
     "plots": [
@@ -26,8 +25,8 @@
     "create_plot": false,
     "create_gif": false,
     "create_front": false,
-    "create_prod": false,
-    "plot_front" : true,
+    "create_prod": true,
+    "plot_front" : false,
     "field_var": [
         "concentration-fluid_a",
         "concentration-fluid_b",
@@ -66,9 +65,9 @@
             "molef-fluid_a": "fluid a",
             "molef-fluid_b": "fluid b",
             "molef-fluid_c": "fluid c",
-            "concentration-fluid_a": "cA [kmol/m³]",
-            "concentration-fluid_b": "cB [kmol/m³]",
-            "concentration-fluid_c": "cC [kmol/m³]"
+            "concentration-fluid_a": "cA [mol/l]",
+            "concentration-fluid_b": "cB [mol/l]",
+            "concentration-fluid_c": "cC [mol/l]"
         }
     },
     "animation_field_vars": [

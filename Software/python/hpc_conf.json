@@ -26,6 +26,7 @@
     "create_gif": true,
     "create_front": true,
     "create_prod": true,
+    "plot_front" : false,
     "field_var": [
         "concentration-fluid_a",
         "concentration-fluid_b",

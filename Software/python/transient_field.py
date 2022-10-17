@@ -336,13 +336,13 @@ class flowfield:
                     logging.warning(f"No Cell-Volume Data in case {cas}")
                     break
 
-                prod["product [kmol]"] = sum(data["cell-volume"] * data["concentration-fluid_c"])
+                prod["product [kmol]"].append(sum(data["cell-volume"] * data["concentration-fluid_c"]))
                 prod["time [s]"].append(time)
                 logging.info(f"Added product formed for time {time}s for case {cas}")
 
             if prod != {}:
                 prod = pd.DataFrame(prod)
-                prod.to_csv(data_path)
+                prod.to_csv(data_path, index=False)
 
 
 
