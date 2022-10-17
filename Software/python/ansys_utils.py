@@ -62,6 +62,117 @@ def get_closest_plots(config, cases_cfg, case, export_times="flow_time"):
         plots[id] = case
     return list(plots)
 
+def read_front_data(config):
+    """
+    Function to read front raw data
+    """
+    res = {}
+    res["sim"] = {}
+    res["exp"] = {}
+    found_exp = False
+
+    for cas in config["cases"]:
+
+        # read exp data
+        experiment = cas[:2]
+        name = ""
+
+        path = os.path.join(sys.path[0], "../..", "Experimente")
+        files = glob.glob("*csv", root_dir=path)
+        for file in files:
+            if experiment in file:
+                name = file
+                found_exp = True
+                break
+
+        if name == "":
+            logging.warning(f"No file containing {name} found")
+        
+        dat = {}
+        if found_exp:
+
+            data_path = os.path.join(path, name)
+
+            data = pd.read_csv(data_path)
+            exps = list(set([ele.split(" ")[0] for ele in list(data.columns)]))
+            
+
+            for ele in exps:
+                tmp = pd.DataFrame(data[[ele+ " t [s]", ele+ " r [mm]"]], copy=True)
+                tmp.dropna(inplace=True)
+                dat[ele] = tmp
+
+        res["exp"][cas] = dat
+
+
+        # read sim data
+        res["sim"][cas] = {}
+        cases_path = os.path.join(*config["cases_dir_path"])
+
+        case_path = os.path.join(cases_path, cas)
+
+        if os.path.exists(case_path) == False:
+            print(f"Case path {case_path} doesn't exsist for case {cas}")
+
+        file = glob.glob("*front*", root_dir=case_path)[0]
+
+        data = pd.read_csv(os.path.join(case_path, file))
+        res["sim"][cas] = data
+
+    return res
+
+def calc_front(data, threshhold, use_max=False):
+    """
+    Function to calculate front position for all cases
+    """
+
+
+    res = {}
+
+    for cas in data.keys():
+
+        cas_data = data[cas]
+
+        times = []
+        r_s = []
+        vals = []
+
+        timestamps = list(cas_data.columns)[1:]
+        # timestamps = [float(x.split(" ")[1]) for x in timestamps]
+        for time in timestamps:
+            
+
+            if use_max:
+                
+                tmp = cas_data.iloc[cas_data[time].idxmax()]
+
+                max_idx = cas_data[time].idxmax()
+                val_tmp = cas_data[time][max_idx]
+                r_tmp = cas_data["r [m]"][max_idx]
+            else:
+                tmp = cas_data[cas_data[time] >= threshhold]
+
+                if tmp.empty:
+                    continue
+
+                val_tmp = tmp[time].tail(1).values[0]
+                r_tmp = tmp["r [m]"].tail(1).values[0]
+
+            times.append(time.split(" ")[1])
+            vals.append(val_tmp)
+            r_s.append(r_tmp)
+
+        times = np.array(times).astype(float)
+        vals = np.array(vals).astype(float)
+        r_s = np.array(r_s).astype(float)
+
+        res[cas] = {}
+        res[cas]["times [s]"] = times
+        res[cas]["r_s [m]"] = r_s
+        res[cas]["values [mol/l]"] = vals
+    return res
+
+
 def get_cases(config, case_dir, auto_add=False, export_time="flow_time"):
     """
     Function that returns all cases from a case_dir
@@ -282,7 +393,7 @@ def build_journal(config, cases_cfg, end_exit=False, mode="cmd", update_exsistin
 
             case "cmd":
                 case_export_base_path = os.path.join(*config["cases_dir_path"], key)
-                cases_dir_path = "/".join([".", *config["data_path"], "FFF.1-Setup-Output.csv"])   
+                cases_dir_path = "/".join([".", *config["data_path"], "FFF.1-Setup-Output.csv"])
                 export_path = cases_dir_path
 
             case "gui":
