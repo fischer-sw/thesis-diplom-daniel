@@ -121,6 +121,26 @@ def read_front_data(config):
 
     return res
 
+def read_prod_data(config):
+    """
+    Function to read total product data
+    """
+    res = {}
+    for cas in config["cases"]:
+        cases_path = os.path.join(*config["cases_dir_path"])
+
+        case_path = os.path.join(cases_path, cas)
+
+        if os.path.exists(case_path) == False:
+            print(f"Case path {case_path} doesn't exsist for case {cas}")
+
+        file = glob.glob("*prod*", root_dir=case_path)[0]
+
+        data = pd.read_csv(os.path.join(case_path, file))
+        res[cas] = data
+
+    return res
+
 def calc_front(data, threshhold, use_max=False):
     """
     Function to calculate front position for all cases

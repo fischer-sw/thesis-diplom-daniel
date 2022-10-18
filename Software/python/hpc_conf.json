@@ -27,6 +27,7 @@
     "create_front": true,
     "create_prod": true,
     "plot_front" : false,
+    "plot_prod" : false,
     "field_var": [
         "concentration-fluid_a",
         "concentration-fluid_b",

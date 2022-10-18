@@ -14,7 +14,9 @@
         "Jobs"
     ],
     "cases": [
-        "h4r3_P931_S1219_gs"
+        "h4r3_P931_S1219_gs",
+        "h4r3_P931_S1219_ms",
+        "h4r3_P931_S1219_fs"
     ],
     "ignore_exsisting": false,
     "plots": [
@@ -25,8 +27,9 @@
     "create_plot": false,
     "create_gif": false,
     "create_front": false,
-    "create_prod": true,
+    "create_prod": false,
     "plot_front" : false,
+    "plot_prod" : true,
     "field_var": [
         "concentration-fluid_a",
         "concentration-fluid_b",

@@ -524,6 +524,90 @@ class flowfield:
             plt.savefig(image_path)
             plt.close(fig)
             logging.info(f"saved image {image_name} to {image_path}.")
+
+    def plot_prod(self, config):
+        """
+        Function that plots the total amount of product
+        """
+
+        data = read_prod_data(config)
+
+        hpc_cases_dir = config["cases_dir_path"][1:]
+        hpc_cases_dir[0] = "/" + hpc_cases_dir[0]
+
+        i = 0
+        legend = []
+
+        cols = ["r", "g", "b", "y"]
+
+        title = "total_product"
+        fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6.5,4.5))
+        fig.suptitle(title)
+
+        for cas in config["cases"]:
+            logging.info(f"Creating total_product image for case {cas}")
+            if config["hpc_calculation"]:
+                folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "plots")
+            else:
+                path = sys.path[0]
+                path = os.path.join(path, "assets", "plots", cas)
+                folder_path = os.path.join(path)
+    
+            if os.path.exists(folder_path) == False:
+                os.makedirs(folder_path)
+
+            image_name = f"total_product" + "." + config["plot_file_type"]
+            image_path = os.path.join(folder_path, image_name)
+
+            if os.path.exists(image_path) and config["ignore_exsisting"]:
+                logging.info(f"Already created total_product image for case {cas}")
+                continue
+            
+            if len(config["cases"]) == 1:
+                title = "total_product_" + cas
+                fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6.5,4.5))
+                fig.suptitle(title)
+                cax = axs.plot(data[cas]["time [s]"], data[cas]["product [kmol]"], f"{cols[i]}x")
+                legend.append(cas)
+                axs.set_xlim(0, 380)
+                axs.legend(legend)
+                axs.set_xlabel("time [s]")
+                axs.set_ylabel("product [kmol]")
+                plt.savefig(image_path)
+                plt.close(fig)
+                logging.info(f"saved image {image_name}.")
+                continue
+            else:
+                if config["hpc_calculation"]:
+                    folder_path = os.path.join(*hpc_cases_dir, "..", "Results" ,"plots")
+                else:
+                    path = sys.path[0]
+                    path = os.path.join(path, "assets", "plots")
+                    folder_path = os.path.join(path)
+                    
+        
+                if os.path.exists(folder_path) == False:
+                    os.makedirs(folder_path)
+
+                image_path = os.path.join(folder_path, image_name)
+                
+            cax = axs.plot(data[cas]["time [s]"], data[cas]["product [kmol]"], f"{cols[i]}x")
+            i += 1
+            
+            legend.append(cas)
+        
+        if os.path.exists(image_path) and config["ignore_exsisting"]:
+            cases = config["cases"]
+            logging.info(f"Already created total_product image for cases {cases}")
+        else:    
+            # axs.set_xlim(0, 380)
+            axs.legend(legend)
+            axs.set_xlabel("time [s]")
+            axs.set_ylabel("product [kmol]")
+            plt.savefig(image_path)
+            plt.close(fig)
+            logging.info(f"saved image {image_name}.")
+
             
     def plot_front(self, config, front_data, max_data, exp_data):
         """
@@ -532,7 +616,6 @@ class flowfield:
 
         hpc_cases_dir = config["cases_dir_path"][1:]
         hpc_cases_dir[0] = "/" + hpc_cases_dir[0]
-
 
         for cas in list(front_data.keys()):
             logging.info(f"Creating front image for case {cas}")
@@ -612,8 +695,10 @@ class flowfield:
 
         cases = config["cases"]
         plot_vars = config["plot_vars"]
-        
 
+        hpc_cases_dir = config["cases_dir_path"][1:]
+        hpc_cases_dir[0] = "/" + hpc_cases_dir[0]
+        
         for cas in cases:
 
             config = self.update_plot_cfg(config, cases_cfg, cas)
@@ -1204,6 +1289,9 @@ def do_plots():
         front = calc_front(data["sim"], field.front_threshhold, False)
         mx = calc_front(data["sim"], 0.0, True)
         field.plot_front(config, front, mx, data["exp"])
+
+    if config["plot_prod"]:
+        field.plot_prod(config)
 if __name__ == "__main__":
 
     do_plots()
