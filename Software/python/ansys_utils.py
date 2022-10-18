@@ -78,7 +78,7 @@ def read_front_data(config):
         name = ""
 
         path = os.path.join(sys.path[0], "../..", "Experimente")
-        files = glob.glob("*csv", root_dir=path)
+        files = glob.glob("*front*.csv", root_dir=path)
         for file in files:
             if experiment in file:
                 name = file
@@ -126,7 +126,43 @@ def read_prod_data(config):
     Function to read total product data
     """
     res = {}
+    res["sim"] = {}
+    res["exp"] = {}
+    found_exp = False
+
     for cas in config["cases"]:
+
+        # read exp data
+        experiment = cas[:2]
+        name = ""
+
+        path = os.path.join(sys.path[0], "../..", "Experimente")
+        files = glob.glob("*prod*.csv", root_dir=path)
+        for file in files:
+            if experiment in file:
+                name = file
+                found_exp = True
+                break
+
+        if name == "":
+            logging.warning(f"No file containing {name} found")
+        
+        dat = {}
+        if found_exp:
+
+            data_path = os.path.join(path, name)
+
+            data = pd.read_csv(data_path)
+            exps = list(set([ele.split(" ")[0] for ele in list(data.columns)]))
+            for ele in exps:
+                tmp = pd.DataFrame(data[[ele+ " t [s]", ele+ " n_C [mol]"]], copy=True)
+                tmp.dropna(inplace=True)
+                dat[ele] = tmp
+
+        res["exp"][cas] = dat
+
+
+        # read sim_data
         cases_path = os.path.join(*config["cases_dir_path"])
 
         case_path = os.path.join(cases_path, cas)
@@ -137,7 +173,7 @@ def read_prod_data(config):
         file = glob.glob("*prod*", root_dir=case_path)[0]
 
         data = pd.read_csv(os.path.join(case_path, file))
-        res[cas] = data
+        res["sim"][cas] = data
 
     return res
 
@@ -145,8 +181,6 @@ def calc_front(data, threshhold, use_max=False):
     """
     Function to calculate front position for all cases
     """
-
-
     res = {}
 
     for cas in data.keys():

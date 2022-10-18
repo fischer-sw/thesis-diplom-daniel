@@ -525,7 +525,7 @@ class flowfield:
             plt.close(fig)
             logging.info(f"saved image {image_name} to {image_path}.")
 
-    def plot_prod(self, config):
+    def plot_prod(self, config, use_exp=True):
         """
         Function that plots the total amount of product
         """
@@ -564,11 +564,19 @@ class flowfield:
                 continue
             
             if len(config["cases"]) == 1:
+                exps = ["ground", "PF"]          
                 title = "total_product_" + cas
                 fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6.5,4.5))
                 fig.suptitle(title)
-                cax = axs.plot(data[cas]["time [s]"], data[cas]["product [kmol]"], f"{cols[i]}x")
-                legend.append(cas)
+
+                if use_exp:
+                    for exp in exps:
+                        image_name = f"total_product_sim_vs_{exp}" + "." + config["plot_file_type"]
+                        cax = axs.plot(data["exp"][cas][exp][f"{exp} t [s]"], data["exp"][cas][exp][f"{exp} n_C [mol]"], f"{cols[i]}d")
+                        i +=1
+                        legend.append(f"exp_data {exp}")
+                cax = axs.plot(data["sim"][cas]["time [s]"], data["sim"][cas]["product [kmol]"]*1e3*2*math.pi, f"{cols[i]}x")
+                legend.append("sim_data")
                 axs.set_xlim(0, 380)
                 axs.legend(legend)
                 axs.set_xlabel("time [s]")
@@ -576,7 +584,7 @@ class flowfield:
                 plt.savefig(image_path)
                 plt.close(fig)
                 logging.info(f"saved image {image_name}.")
-                continue
+                return
             else:
                 if config["hpc_calculation"]:
                     folder_path = os.path.join(*hpc_cases_dir, "..", "Results" ,"plots")
@@ -591,7 +599,7 @@ class flowfield:
 
                 image_path = os.path.join(folder_path, image_name)
                 
-            cax = axs.plot(data[cas]["time [s]"], data[cas]["product [kmol]"], f"{cols[i]}x")
+            cax = axs.plot(data["sim"][cas]["time [s]"], data["sim"][cas]["product [kmol]"]*1e3*2*math.pi, f"{cols[i]}x")
             i += 1
             
             legend.append(cas)
@@ -603,7 +611,7 @@ class flowfield:
             # axs.set_xlim(0, 380)
             axs.legend(legend)
             axs.set_xlabel("time [s]")
-            axs.set_ylabel("product [kmol]")
+            axs.set_ylabel("product [mol]")
             plt.savefig(image_path)
             plt.close(fig)
             logging.info(f"saved image {image_name}.")

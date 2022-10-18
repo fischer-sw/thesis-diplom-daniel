@@ -14,9 +14,7 @@
         "Jobs"
     ],
     "cases": [
-        "h4r3_P931_S1219_gs",
-        "h4r3_P931_S1219_ms",
-        "h4r3_P931_S1219_fs"
+        "h4r3_P931_S1219_gl"
     ],
     "ignore_exsisting": false,
     "plots": [
