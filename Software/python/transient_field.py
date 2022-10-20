@@ -7,7 +7,6 @@ import cv2
 import math
 
 from PIL import Image
-from cv2 import threshold
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -155,7 +154,7 @@ class flowfield:
 
         return config
 
-    def front_width(self, config=None, cases_cfg=None, threshold=0.01):
+    def front_width(self, config=None, cases_cfg=None):
         """
         Function that calculates the width of the front at half gap height for every timestep. Threshold is the minimum value to determine front and back positions.
         """
@@ -177,9 +176,9 @@ class flowfield:
             if config["hpc_calculation"]:
                 tmp_path = cases_dir_path[1:]
                 tmp_path[0] = "/" + tmp_path[0]
-                data_path = os.path.join(*tmp_path, cas, "widths_" + str(threshold).replace(".", ",") + ".csv")
+                data_path = os.path.join(*tmp_path, cas, "widths_" + ".csv")
             else:
-                data_path = os.path.join(*cases_dir_path, cas, "widths_" + str(threshold).replace(".", ",") + ".csv")
+                data_path = os.path.join(*cases_dir_path, cas, "widths_" + ".csv")
             if os.path.exists(data_path):
                 logging.info(f"Already created front for case {cas}. Continuing with next case")
                 continue
@@ -207,6 +206,7 @@ class flowfield:
                     if not row_name in widths.keys():
                         widths[row_name]  = []
                     tmp_front = Vals[id]
+                    threshold = max(tmp_front)/2
                     positions = np.array(np.where(tmp_front >= threshold))
                     if positions.size != 0:
                         front = positions[0][-1]
@@ -570,8 +570,9 @@ class flowfield:
                 fig.suptitle(title)
 
                 if use_exp:
+                    image_name = f"total_product_sim_vs_{exps}" + "." + config["plot_file_type"]
                     for exp in exps:
-                        image_name = f"total_product_sim_vs_{exp}" + "." + config["plot_file_type"]
+                        image_path = os.path.join(folder_path, image_name)
                         cax = axs.plot(data["exp"][cas][exp][f"{exp} t [s]"], data["exp"][cas][exp][f"{exp} n_C [mol]"], f"{cols[i]}d")
                         i +=1
                         legend.append(f"exp_data {exp}")
@@ -580,10 +581,10 @@ class flowfield:
                 axs.set_xlim(0, 380)
                 axs.legend(legend)
                 axs.set_xlabel("time [s]")
-                axs.set_ylabel("product [kmol]")
+                axs.set_ylabel("product [mol]")
                 plt.savefig(image_path)
                 plt.close(fig)
-                logging.info(f"saved image {image_name}.")
+                logging.info(f"saved image {image_name} at {image_path}.")
                 return
             else:
                 if config["hpc_calculation"]:
@@ -674,6 +675,9 @@ class flowfield:
                 front_exp_t = list(tmp_front_exp[f"r_f_{exp} t [s]"].round(0))
                 front_exp_r = list(tmp_front_exp[f"r_f_{exp} r [mm]"])
                 sim_matched = sim_data[sim_data["times [s]"].isin(front_exp_t)]
+
+                if sim_matched.empty:
+                    logging.warning(f"No matching times between experiment {exp} and simulation found.")
 
                 mx_data = pd.DataFrame(max_data[cas])
                 max_matched = mx_data[mx_data["times [s]"].isin(list(tmp_max_exp[f"r_c_{exp} t [s]"].round(0)))]
@@ -1286,13 +1290,13 @@ def do_plots():
         field.reaction_front(config, cases_cfg)
     
     if config["create_widths"]:
-        field.front_width(config, cases_cfg, 0.1)
+        field.front_width(config, cases_cfg)
     
     if config["create_prod"]:
         field.formed_product(config, cases_cfg)
 
     if config["plot_front"]:
-        field.front_threshhold = 1e-5
+        field.front_threshhold = 1e-6
         data = read_front_data(config)
         front = calc_front(data["sim"], field.front_threshhold, False)
         mx = calc_front(data["sim"], 0.0, True)

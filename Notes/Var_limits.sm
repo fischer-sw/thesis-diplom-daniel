@@ -4,7 +4,7 @@
   <settings ppi="96">
     <identity>
       <id>390948a1-83e5-4a42-a9d0-ff29322d1faf</id>
-      <revision>30</revision>
+      <revision>31</revision>
     </identity>
     <calculation>
       <precision>4</precision>
@@ -400,11 +400,11 @@
         </input>
       </math>
     </region>
-    <region left="216" top="585" width="102" height="41" color="#000000" fontSize="10">
+    <region left="216" top="585" width="110" height="41" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">Q</e>
-          <e type="operand">0.07</e>
+          <e type="operand">0.072</e>
           <e type="operand" style="unit">mL</e>
           <e type="operand" style="unit">min</e>
           <e type="operator" args="2">/</e>
@@ -448,11 +448,11 @@
           <e type="function" args="3">Pe</e>
         </input>
         <result action="numeric">
-          <e type="operand">452.8799</e>
+          <e type="operand">465.8193</e>
         </result>
       </math>
     </region>
-    <region left="72" top="666" width="230" height="26" color="#000000" fontSize="10">
+    <region left="72" top="666" width="222" height="26" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">h_min</e>
@@ -461,7 +461,7 @@
           <e type="function" args="3">t_c</e>
         </input>
         <result action="numeric">
-          <e type="operand">480.2544</e>
+          <e type="operand">493.976</e>
           <e type="operand" style="unit">s</e>
           <e type="operator" args="2">*</e>
         </result>

@@ -53,3 +53,27 @@ diplom thesis on numerical simulation of reaction-diffusion-advection fronts
     - Sc number
 - limitations and errors
 - outlook/conculsion
+
+# Open Questions
+
+- threshold for front position --> widths calculation
+- Sc and Pe numbers
+    - Pe [500, 931, 5000]?
+    - Sc [500, 1219, 2500]?
+
+case_name | Pe | Sc |
+| - | - | - |
+| h4r3_P500_S1219_gs | 500 | 1219 |
+| h4r3_P931_S1219_gs | 931 | 1219 |
+| h4r3_P5e3_S1219_gs | 5000 | 1219 |
+| h6r3_P500_S1219_ms | 500 | 1219 |
+| h6r3_P931_S1219_ms | 931 | 1219 |
+| h6r3_P5e3_S1219_ms | 5000 | 1219 |
+
+- investigations:
+    - front position
+        - threshold as pct value of maximum
+        - substract offset from values
+    - front width
+        - Full width at half maximum
+    - total amount of product

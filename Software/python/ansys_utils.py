@@ -4,6 +4,7 @@ import sys
 import glob
 import time
 import logging
+from cv2 import threshold
 import pandas as pd
 import json
 import psutil
@@ -76,7 +77,6 @@ def read_front_data(config):
         # read exp data
         experiment = cas[:2]
         name = ""
-
         path = os.path.join(sys.path[0], "../..", "Experimente")
         files = glob.glob("*front*.csv", root_dir=path)
         for file in files:
@@ -112,7 +112,7 @@ def read_front_data(config):
         case_path = os.path.join(cases_path, cas)
 
         if os.path.exists(case_path) == False:
-            print(f"Case path {case_path} doesn't exsist for case {cas}")
+            logging.info(f"Case path {case_path} doesn't exsist for case {cas}")
 
         file = glob.glob("*front*", root_dir=case_path)[0]
 
@@ -177,7 +177,7 @@ def read_prod_data(config):
 
     return res
 
-def calc_front(data, threshhold, use_max=False):
+def calc_front(data, pct_threshold, use_max=False):
     """
     Function to calculate front position for all cases
     """
@@ -204,7 +204,8 @@ def calc_front(data, threshhold, use_max=False):
                 val_tmp = cas_data[time][max_idx]
                 r_tmp = cas_data["r [m]"][max_idx]
             else:
-                tmp = cas_data[cas_data[time] >= threshhold]
+                threshold = max(cas_data[time])*pct_threshold
+                tmp = cas_data[cas_data[time] >= threshold]
 
                 if tmp.empty:
                     continue
@@ -222,7 +223,8 @@ def calc_front(data, threshhold, use_max=False):
 
         res[cas] = {}
         res[cas]["times [s]"] = times
-        res[cas]["r_s [m]"] = r_s
+        res[cas]["r_s [m]"] = r_s - 5e-3 # account for inlet offset
+        # res[cas]["r_s [m]"] = r_s
         res[cas]["values [mol/l]"] = vals
     return res
 
@@ -484,7 +486,7 @@ def build_journal(config, cases_cfg, end_exit=False, mode="cmd", update_exsistin
         if "post_walltime" in tmp_keys:
             val["post_walltime"] = cases_cfg[key]["post_walltime"]
         else:
-            val["post_walltime"] = "48:00:00"
+            val["post_walltime"] = "24:00:00"
 
         if not "job_name" in val.keys():
             val["job_name"] = key
