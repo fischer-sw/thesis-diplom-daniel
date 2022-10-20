@@ -171,6 +171,7 @@ class flowfield:
             widths = {}
             
             widths["time [s]"] = []
+            widths["FWHM [mm]"] = []
 
             var = "concentration-fluid_c"
             if config["hpc_calculation"]:
@@ -181,7 +182,7 @@ class flowfield:
                 data_path = os.path.join(*cases_dir_path, cas, "widths_" + ".csv")
             if os.path.exists(data_path):
                 logging.info(f"Already created front for case {cas}. Continuing with next case")
-                continue
+                # continue
 
             logging.info(f"Creating reaction width data for case {cas}")
 
@@ -206,7 +207,7 @@ class flowfield:
                     if not row_name in widths.keys():
                         widths[row_name]  = []
                     tmp_front = Vals[id]
-                    threshold = max(tmp_front)/2
+                    threshold = max(tmp_front) * 1e-6
                     positions = np.array(np.where(tmp_front >= threshold))
                     if positions.size != 0:
                         front = positions[0][-1]
@@ -219,6 +220,25 @@ class flowfield:
                     widths[row_name].append(width)
                 
                 widths["time [s]"].append(time)
+
+                # calculating FWHM
+                # logging.info(f"Calculating FWHM for time {time}")
+                Vals_tmp = np.rot90(np.fliplr(Vals))
+                avg_fluid_c_vals = []
+                for idx, ele in enumerate(Y):
+                    avg_fluid_c_vals.append(np.mean(Vals_tmp[idx]))
+                threshold = max(avg_fluid_c_vals)/2
+                positions = np.array(np.where(avg_fluid_c_vals >= threshold))
+                if positions.size != 0:
+                    front = positions[0][-1]
+                    back = positions[0][0]
+                    r_front = Y[front]
+                    r_back = Y[back]
+                    width = abs(r_front - r_back)*1e3 # mm
+                else:
+                    width = math.nan
+                widths["FWHM [mm]"].append(width)
+
                 logging.info(f"Added widths for time {time}s for case {cas}")
 
             df = pd.DataFrame(widths)

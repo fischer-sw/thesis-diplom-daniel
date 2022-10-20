@@ -25,7 +25,7 @@
     "create_gif": false,
     "create_front": false,
     "create_prod": false,
-    "create_widths": false,
+    "create_widths": true,
     "plot_front" : true,
     "plot_prod" : false,
     "field_var": [
