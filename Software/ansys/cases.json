@@ -163,5 +163,35 @@
         "tasks_p_node" : 40,
         "wall_time" : "24:00:00",
         "case": "h6_r3_middle.cas.gz"
+    },
+    "h6r3_P3468_S1219_ms": {
+        "export_times" : "flow_time",
+        "total_time" : 60,
+        "fixed_timesteps" : 1,
+        "timestep_min" : 1.0e-3,
+        "data_export_interval": 0.1,
+        "input_vel": 4.7e-3,
+        "inlet_xA": 5.4e-4,
+        "init_phiB" : 7.2e-3,
+        "viscosity" : 1e-6,
+        "iterations": 30,
+        "tasks_p_node" : 40,
+        "wall_time" : "24:00:00",
+        "case": "h6_r3_middle.cas.gz"
+    },
+    "h6r3_P3468_S1219_ml": {
+        "export_times" : "flow_time",
+        "total_time" : 400,
+        "fixed_timesteps" : 1,
+        "timestep_min" : 1.0e-3,
+        "data_export_interval": 0.1,
+        "input_vel": 4.7e-3,
+        "inlet_xA": 5.4e-4,
+        "init_phiB" : 7.2e-3,
+        "viscosity" : 1e-6,
+        "iterations": 30,
+        "tasks_p_node" : 40,
+        "wall_time" : "24:00:00",
+        "case": "h6_r3_middle.cas.gz"
     }
 }
