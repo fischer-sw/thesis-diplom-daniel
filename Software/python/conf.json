@@ -14,9 +14,11 @@
         "Jobs"
     ],
     "cases": [
-        "h4r3_P931_S1219_gs"
+        "h4r3_P931_S1219_gs",
+        "h4r3_P500_S1219_gs",
+        "h4r3_P5e3_S1219_gs"
     ],
-    "ignore_exsisting": true,
+    "ignore_exsisting": false,
     "plots": [
     ],
     "create_resi_plot": false,
@@ -38,9 +40,31 @@
     "c_bar": "c [mol/l]",
     "image_file_type": "png",
     "image_conf": {
-        "set_custom_range": true,
-        "min": 0.0,
-        "max": 0.03
+        "concentration-fluid_a" : {
+            "set_custom_range": true,
+            "min": 0.0,
+            "max": 0.03,
+            "c_bar": "c [mol/l]"
+        },
+        "concentration-fluid_b" : {
+            "set_custom_range": true,
+            "min": 0.0,
+            "max": 0.03,
+            "c_bar": "c [mol/l]"
+        },
+        "concentration-fluid_c" : {
+            "set_custom_range": true,
+            "min": 0.0,
+            "max": 0.03,
+            "c_bar": "c [mol/l]"
+        },
+        "cell-reynolds-number" : {
+            "set_custom_range": false,
+            "min": 0.0,
+            "max": 0.03,
+            "c_bar": "reynolds-number"
+        }
+        
     },
     "one_plot": false,
     "plot_vars": [
@@ -50,6 +74,7 @@
     ],
     "plot_file_type": "png",
     "plot_conf": {
+        "y_label" : "c [mol/l]",
         "colors": {
             "molef-fluid_a": "b",
             "molef-fluid_b": "g",
@@ -67,9 +92,9 @@
             "molef-fluid_a": "fluid a",
             "molef-fluid_b": "fluid b",
             "molef-fluid_c": "fluid c",
-            "concentration-fluid_a": "cA [mol/l]",
-            "concentration-fluid_b": "cB [mol/l]",
-            "concentration-fluid_c": "cC [mol/l]"
+            "concentration-fluid_a": "$c_A$",
+            "concentration-fluid_b": "$c_B$",
+            "concentration-fluid_c": "$c_C$"
         }
     },
     "animation_field_vars": [

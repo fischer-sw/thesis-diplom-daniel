@@ -74,12 +74,13 @@
 (cx-gui-do cx-set-list-tree-selections "NavigationPane*Frame2*Table1*List_Tree2" (list "Solution|Run Calculation"))
 (cx-gui-do cx-list-tree-right-click "NavigationPane*Frame2*Table1*List_Tree2" )
 
-; Set viscosity
+; Set viscosity and diffusion coefficients
 (cx-gui-do cx-set-list-tree-selections "NavigationPane*Frame2*Table1*List_Tree2" (list "Setup|Materials|Mixture|mixture-template"))
 (cx-gui-do cx-set-list-tree-selections "NavigationPane*Frame2*Table1*List_Tree2" (list "Setup|Materials|Mixture|mixture-template"))
 (cx-gui-do cx-list-tree-right-click "NavigationPane*Frame2*Table1*List_Tree2" )
 (cx-gui-do cx-activate-item "MenuBar*PopupMenuTree-mixture-template*Edit...")
 (cx-gui-do cx-set-real-entry-list "Create/Edit Materials*RealEntry16" '( %viscosity%))
+(cx-gui-do cx-set-real-entry-list "Create/Edit Materials*RealEntry20" '( %diffusion%))
 (cx-gui-do cx-activate-item "Create/Edit Materials*PanelButtons*PushButton3(Change/Create)")
 (cx-gui-do cx-activate-item "Create/Edit Materials*PanelButtons*PushButton1(Close)")
 

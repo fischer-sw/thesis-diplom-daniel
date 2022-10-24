@@ -4,7 +4,7 @@
   <settings ppi="96">
     <identity>
       <id>390948a1-83e5-4a42-a9d0-ff29322d1faf</id>
-      <revision>31</revision>
+      <revision>32</revision>
     </identity>
     <calculation>
       <precision>4</precision>
@@ -619,11 +619,11 @@
         </result>
       </math>
     </region>
-    <region left="216" top="882" width="102" height="41" color="#000000" fontSize="10">
+    <region left="216" top="882" width="118" height="41" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">Q</e>
-          <e type="operand">8.22</e>
+          <e type="operand">0.3217</e>
           <e type="operand" style="unit">mL</e>
           <e type="operand" style="unit">min</e>
           <e type="operator" args="2">/</e>
@@ -667,7 +667,7 @@
           <e type="operator" args="2">:</e>
         </input>
         <result action="numeric">
-          <e type="operand">0.0727</e>
+          <e type="operand">0.0028</e>
           <e type="operand" style="unit">m</e>
           <e type="operand" style="unit">s</e>
           <e type="operator" args="2">/</e>
@@ -684,11 +684,11 @@
           <e type="function" args="3">Pe</e>
         </input>
         <result action="numeric">
-          <e type="operand">53181.042</e>
+          <e type="operand">2081.3067</e>
         </result>
       </math>
     </region>
-    <region left="72" top="963" width="249" height="34" color="#000000" fontSize="10">
+    <region left="72" top="963" width="238" height="26" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">h_max</e>
@@ -697,11 +697,7 @@
           <e type="function" args="3">t_c</e>
         </input>
         <result action="numeric">
-          <e type="operand">1.6919</e>
-          <e type="operand">10</e>
-          <e type="operand">5</e>
-          <e type="operator" args="2">^</e>
-          <e type="operator" args="2">*</e>
+          <e type="operand">6621.3363</e>
           <e type="operand" style="unit">s</e>
           <e type="operator" args="2">*</e>
         </result>
@@ -763,17 +759,17 @@
         </result>
       </math>
     </region>
-    <region left="81" top="1170" width="102" height="24" color="#000000" fontSize="10">
+    <region left="81" top="1170" width="110" height="24" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">Pe_tmp</e>
-          <e type="operand">931</e>
+          <e type="operand">2081</e>
           <e type="operator" args="2">:</e>
         </input>
       </math>
     </region>
-    <region left="81" top="1206" width="242" height="41" color="#000000" fontSize="10">
-      <math>
+    <region left="81" top="1206" width="258" height="41" color="#000000" fontSize="10">
+      <math decimalPlaces="6">
         <input>
           <e type="operand">Pe_tmp</e>
           <e type="operand">D</e>
@@ -781,7 +777,7 @@
           <e type="function" args="3">u</e>
         </input>
         <result action="numeric">
-          <e type="operand">0.0013</e>
+          <e type="operand">0.002844</e>
           <e type="operand" style="unit">m</e>
           <e type="operand" style="unit">s</e>
           <e type="operator" args="2">/</e>

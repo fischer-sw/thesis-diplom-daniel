@@ -368,7 +368,7 @@ class flowfield:
 
     def vel_field(self, config, cases_cfg):
         """
-        Function that plots velocity filed with directional info
+        Function that plots velocity filed with directional info. CURRENTLY BROKEN
         """
         cases = config["cases"]
         hpc_cases_dir = config["cases_dir_path"][1:]
@@ -557,6 +557,7 @@ class flowfield:
 
         i = 0
         legend = []
+        msg = True
 
         cols = ["r", "g", "b", "y"]
 
@@ -565,7 +566,7 @@ class flowfield:
         fig.suptitle(title)
 
         for cas in config["cases"]:
-            logging.info(f"Creating front_width image for case {cas}")
+            
             if config["hpc_calculation"]:
                 folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "plots")
             else:
@@ -579,11 +580,16 @@ class flowfield:
             image_name = f"front_width" + "." + config["plot_file_type"]
             image_path = os.path.join(folder_path, image_name)
 
-            if os.path.exists(image_path) and config["ignore_exsisting"]:
-                logging.info(f"Already created front_width image for case {cas}")
-                continue
-            
             if len(config["cases"]) == 1:
+                
+                if msg:
+                    logging.info(f"Creating front_width image for case {cas}")
+                    msg = False
+
+                if os.path.exists(image_path) and config["ignore_exsisting"]:
+                    logging.info(f"Already created front_width image for case {cas}")
+                    continue
+                
                 exps = ["ground", "PF"]          
                 title = "front_width_" + cas
                 fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6.5,4.5))
@@ -599,8 +605,7 @@ class flowfield:
                 # plot FWHM
                 cax = axs.plot(data["sim"][cas]["time [s]"], data["sim"][cas]["FWHM [mm]"], f"{cols[i]}x")
                 legend.append("FWHM")
-                i +=1
-                cax = axs.plot(data["sim"][cas]["time [s]"], data["sim"][cas][data["sim"][cas].keys()[-1]], f"{cols[i]}x")
+                cax = axs.plot(data["sim"][cas]["time [s]"], data["sim"][cas][data["sim"][cas].keys()[-1]], f"{cols[i]}d")
                 legend.append("middle width")
                 # axs.set_xlim(0, 380)
                 axs.legend(legend)
@@ -611,6 +616,9 @@ class flowfield:
                 logging.info(f"saved image {image_name} at {image_path}.")
                 return
             else:
+                if msg:
+                    logging.info(f"Creating front_width image for cases {config['cases']}")
+                    msg = False
                 if config["hpc_calculation"]:
                     folder_path = os.path.join(*hpc_cases_dir, "..", "Results" ,"plots")
                 else:
@@ -623,23 +631,20 @@ class flowfield:
                     os.makedirs(folder_path)
 
                 image_path = os.path.join(folder_path, image_name)
+            rows = 15
+            cax = axs.plot(data["sim"][cas]["time [s]"].iloc[::rows], data["sim"][cas]["FWHM [mm]"].iloc[::rows], f"{cols[i]}x")
+            legend.append(f"FWHM {cas}")
+            cax = axs.plot(data["sim"][cas]["time [s]"].iloc[::rows], data["sim"][cas][data["sim"][cas].keys()[-1]].iloc[::rows], f"{cols[i]}d")
+            legend.append(f"middle width {cas}")
                 
-            # cax = axs.plot(data["sim"][cas]["time [s]"], data["sim"][cas]["product [kmol]"]*1e3*2*math.pi, f"{cols[i]}x")
             i += 1
-            
-            legend.append(cas)
-        
-        if os.path.exists(image_path) and config["ignore_exsisting"]:
-            cases = config["cases"]
-            logging.info(f"Already created total_product image for cases {cases}")
-        else:    
-            # axs.set_xlim(0, 380)
-            axs.legend(legend)
-            axs.set_xlabel("time [s]")
-            axs.set_ylabel("product [mol]")
-            plt.savefig(image_path)
-            plt.close(fig)
-            logging.info(f"saved image {image_name}.")
+    
+        axs.legend(legend)
+        axs.set_xlabel("time [s]")
+        axs.set_ylabel("width [mm]")
+        plt.savefig(image_path)
+        plt.close(fig)
+        logging.info(f"saved image {image_name}.")
 
     def plot_prod(self, config, use_exp=True):
         """
@@ -874,8 +879,8 @@ class flowfield:
 
                 legend = []
 
-                for var in list(plot_cfg["legend"]):
-                    legend.append(plot_cfg["legend"][var])
+                # for var in list(plot_cfg["legend"]):
+                #     legend.append(plot_cfg["legend"][var])
                 
 
                 for idx, ele in enumerate(plots):
@@ -895,7 +900,8 @@ class flowfield:
                         tmp = np.array([])
                         for i in range(Vals.shape[1]):
                             tmp = np.append(tmp, np.mean(Vals[:,i]))
-                        data_tmp[var] = tmp 
+                        data_tmp[var] = tmp
+                        legend.append(plot_cfg["legend"][var])
 
                     # plot n
 
@@ -907,7 +913,7 @@ class flowfield:
                             # add axis description
                         if idx == len(plots)-1 :
                             axs[idx].set_xlabel("radius r [m]")
-                        axs[idx].set_ylabel("height z [m]")
+                        axs[idx].set_ylabel(config["plot_conf"]["y_label"])
                         axs[idx].legend(legend)
                         export_times = cases_cfg[cas]["export_times"]
                         if export_times != "flow_time":
@@ -924,7 +930,7 @@ class flowfield:
                             # add axis description
 
                         axs.set_xlabel("radius r [m]")
-                        axs.set_ylabel("height z [m]")
+                        axs.set_ylabel(config["plot_conf"]["y_label"])
                         axs.legend(legend)
                         if export_times != "flow_time":
                             axs.set_title("t = {}s".format(round(ele * cases_cfg["timestep"],1)))
@@ -970,7 +976,7 @@ class flowfield:
                             # add axis description
                         if idx == len(plots)-1 :
                             axs.set_xlabel("radius r [m]")
-                        axs.set_ylabel("height z [m]")
+                        axs.set_ylabel(config["plot_conf"]["y_label"])
                         # axs.set_title("t = {}".format(ele))
                         axs.legend(l_conf)
 
@@ -982,7 +988,7 @@ class flowfield:
                             # add axis description
 
                         axs.set_xlabel("radius r [m]")
-                        axs.set_ylabel("height z [m]")
+                        axs.set_ylabel(config["plot_conf"]["y_label"])
                         axs.legend(l_conf)
                         # axs.set_title("t = {}".format(ele))
 
@@ -1070,8 +1076,8 @@ class flowfield:
                     # plot n
 
                     if len(plots) != 1:
-                        if image_conf["set_custom_range"]:
-                            cax = axs[idx].pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'), vmin=image_conf["min"], vmax=image_conf["max"])
+                        if image_conf[var]["set_custom_range"]:
+                            cax = axs[idx].pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'), vmin=image_conf[var]["min"], vmax=image_conf[var]["max"])
                         else:
                             cax = axs[idx].pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'))
                         # add axis description
@@ -1085,11 +1091,11 @@ class flowfield:
                         
                         # add colorbar
                         cbar = fig.colorbar(cax, ax=axs[idx])
-                        cbar.set_label(config["c_bar"], rotation=90, labelpad=7)
+                        cbar.set_label(config["image_conf"][var]["c_bar"], rotation=90, labelpad=7)
 
                     else:
-                        if image_conf["set_custom_range"]:
-                            cax = axs.pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'), vmin=image_conf["min"], vmax=image_conf["max"])
+                        if image_conf[var]["set_custom_range"]:
+                            cax = axs.pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'), vmin=image_conf[var]["min"], vmax=image_conf[var]["max"])
                         else:
                             cax = axs.pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'))
 
@@ -1102,7 +1108,7 @@ class flowfield:
 
                         # add colorbar
                         cbar = fig.colorbar(cax, ax=axs)
-                        cbar.set_label(config["c_bar"], rotation=90, labelpad=7)
+                        cbar.set_label(config["image_conf"][var]["c_bar"], rotation=90, labelpad=7)
                 
                 plt.savefig(image_path)
                 plt.close(fig)

@@ -144,7 +144,7 @@ def read_width_data(config):
                 break
 
         if name == "":
-            logging.warning(f"No file containing {name} found")
+           logging.warning(f"No file containing {experiment} found for case {cas}")
         
         dat = {}
         if found_exp:
@@ -208,7 +208,7 @@ def read_prod_data(config):
                 break
 
         if name == "":
-            logging.warning(f"No file containing {name} found")
+            logging.warning(f"No file containing {experiment} found for case {cas}")
         
         dat = {}
         if found_exp:
