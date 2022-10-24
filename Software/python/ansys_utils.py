@@ -121,6 +121,69 @@ def read_front_data(config):
 
     return res
 
+def read_width_data(config):
+    """
+    Function to read front raw data
+    """
+    res = {}
+    res["sim"] = {}
+    res["exp"] = {}
+    found_exp = False
+
+    for cas in config["cases"]:
+
+        # read exp data
+        experiment = cas[:2]
+        name = ""
+        path = os.path.join(sys.path[0], "../..", "Experimente")
+        files = glob.glob("*width*.csv", root_dir=path)
+        for file in files:
+            if experiment in file:
+                name = file
+                found_exp = True
+                break
+
+        if name == "":
+            logging.warning(f"No file containing {name} found")
+        
+        dat = {}
+        if found_exp:
+
+            data_path = os.path.join(path, name)
+
+            data = pd.read_csv(data_path)
+            exps = list(set([ele.split(" ")[0] for ele in list(data.columns)]))
+            
+
+            for ele in exps:
+                tmp = pd.DataFrame(data[[ele+ " t [s]", ele+ " r [mm]"]], copy=True)
+                tmp.dropna(inplace=True)
+                dat[ele] = tmp
+
+        res["exp"][cas] = dat
+
+
+        # read sim data
+        res["sim"][cas] = {}
+        cases_path = os.path.join(*config["cases_dir_path"])
+
+        case_path = os.path.join(cases_path, cas)
+
+        if os.path.exists(case_path) == False:
+            logging.info(f"Case path {case_path} doesn't exsist for case {cas}")
+
+        file = glob.glob("*width*", root_dir=case_path)[0]
+
+        data = pd.read_csv(os.path.join(case_path, file))
+        raw_heights = list(data.columns)[2:]
+        heights = [float(x.split("=")[1].split("mm")[0].replace(",", ".")) for x in raw_heights]
+        middle_height = float(f'0.{experiment[1]}')/2
+        dist_heights = abs(np.array(heights) - middle_height)
+        target_height = min(dist_heights) + middle_height
+        res["sim"][cas] = data[["time [s]", "FWHM [mm]", f"w [mm] (h={str(target_height).replace('.', ',')}mm)"]]
+
+    return res
+
 def read_prod_data(config):
     """
     Function to read total product data

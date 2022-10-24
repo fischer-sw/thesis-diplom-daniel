@@ -182,7 +182,7 @@ class flowfield:
                 data_path = os.path.join(*cases_dir_path, cas, "widths_" + ".csv")
             if os.path.exists(data_path):
                 logging.info(f"Already created front for case {cas}. Continuing with next case")
-                # continue
+                continue
 
             logging.info(f"Creating reaction width data for case {cas}")
 
@@ -544,6 +544,102 @@ class flowfield:
             plt.savefig(image_path)
             plt.close(fig)
             logging.info(f"saved image {image_name} to {image_path}.")
+
+    def plot_width(self, config, use_exp=False):
+        """
+        Function that plots the width for cases
+        """
+
+        data = read_width_data(config)
+
+        hpc_cases_dir = config["cases_dir_path"][1:]
+        hpc_cases_dir[0] = "/" + hpc_cases_dir[0]
+
+        i = 0
+        legend = []
+
+        cols = ["r", "g", "b", "y"]
+
+        title = "front_width"
+        fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6.5,4.5))
+        fig.suptitle(title)
+
+        for cas in config["cases"]:
+            logging.info(f"Creating front_width image for case {cas}")
+            if config["hpc_calculation"]:
+                folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "plots")
+            else:
+                path = sys.path[0]
+                path = os.path.join(path, "assets", "plots", cas)
+                folder_path = os.path.join(path)
+    
+            if os.path.exists(folder_path) == False:
+                os.makedirs(folder_path)
+
+            image_name = f"front_width" + "." + config["plot_file_type"]
+            image_path = os.path.join(folder_path, image_name)
+
+            if os.path.exists(image_path) and config["ignore_exsisting"]:
+                logging.info(f"Already created front_width image for case {cas}")
+                continue
+            
+            if len(config["cases"]) == 1:
+                exps = ["ground", "PF"]          
+                title = "front_width_" + cas
+                fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6.5,4.5))
+                fig.suptitle(title)
+
+                if use_exp:
+                    image_name = f"front_width_sim_vs_{exps}" + "." + config["plot_file_type"]
+                    for exp in exps:
+                        image_path = os.path.join(folder_path, image_name)
+                        cax = axs.plot(data["exp"][cas][exp][f"{exp} t [s]"], data["exp"][cas][exp][f"{exp} n_C [mol]"], f"{cols[i]}d")
+                        i +=1
+                        legend.append(f"exp_data {exp}")
+                # plot FWHM
+                cax = axs.plot(data["sim"][cas]["time [s]"], data["sim"][cas]["FWHM [mm]"], f"{cols[i]}x")
+                legend.append("FWHM")
+                i +=1
+                cax = axs.plot(data["sim"][cas]["time [s]"], data["sim"][cas][data["sim"][cas].keys()[-1]], f"{cols[i]}x")
+                legend.append("middle width")
+                # axs.set_xlim(0, 380)
+                axs.legend(legend)
+                axs.set_xlabel("time [s]")
+                axs.set_ylabel("width [mm]")
+                plt.savefig(image_path)
+                plt.close(fig)
+                logging.info(f"saved image {image_name} at {image_path}.")
+                return
+            else:
+                if config["hpc_calculation"]:
+                    folder_path = os.path.join(*hpc_cases_dir, "..", "Results" ,"plots")
+                else:
+                    path = sys.path[0]
+                    path = os.path.join(path, "assets", "plots")
+                    folder_path = os.path.join(path)
+                    
+        
+                if os.path.exists(folder_path) == False:
+                    os.makedirs(folder_path)
+
+                image_path = os.path.join(folder_path, image_name)
+                
+            # cax = axs.plot(data["sim"][cas]["time [s]"], data["sim"][cas]["product [kmol]"]*1e3*2*math.pi, f"{cols[i]}x")
+            i += 1
+            
+            legend.append(cas)
+        
+        if os.path.exists(image_path) and config["ignore_exsisting"]:
+            cases = config["cases"]
+            logging.info(f"Already created total_product image for cases {cases}")
+        else:    
+            # axs.set_xlim(0, 380)
+            axs.legend(legend)
+            axs.set_xlabel("time [s]")
+            axs.set_ylabel("product [mol]")
+            plt.savefig(image_path)
+            plt.close(fig)
+            logging.info(f"saved image {image_name}.")
 
     def plot_prod(self, config, use_exp=True):
         """
@@ -1324,6 +1420,10 @@ def do_plots():
 
     if config["plot_prod"]:
         field.plot_prod(config)
+
+    if config["plot_width"]:
+        field.plot_width(config)
+    
 if __name__ == "__main__":
 
     do_plots()
