@@ -14,15 +14,15 @@
         "Jobs"
     ],
     "cases": [
-        "h4r3_P931_S1219_gs",
-        "h4r3_P500_S1219_gs",
-        "h4r3_P5e3_S1219_gs"
+        "h4r3_P931_S1219_gs"
     ],
     "ignore_exsisting": false,
     "plots": [
+        2.0,
+        4.0
     ],
     "create_resi_plot": false,
-    "create_image": false,
+    "create_image": true,
     "create_plot": true,
     "create_gif": false,
     "create_front": false,
@@ -30,12 +30,14 @@
     "create_widths": false,
     "plot_front" : false,
     "plot_prod" : false,
-    "plot_width" : true,
+    "plot_width" : false,
     "field_var": [
         "concentration-fluid_a",
         "concentration-fluid_b",
         "concentration-fluid_c",
-        "cell-reynolds-number"
+        "cell-reynolds-number",
+        "cell-convective-courant-number",
+        "velocity-magnitude"
     ],
     "c_bar": "c [mol/l]",
     "image_file_type": "png",
@@ -63,6 +65,18 @@
             "min": 0.0,
             "max": 0.03,
             "c_bar": "reynolds-number"
+        },
+        "cell-convective-courant-number" : {
+            "set_custom_range": false,
+            "min": 0.0,
+            "max": 0.03,
+            "c_bar": "courant-number"
+        },
+        "velocity-magnitude" : {
+            "set_custom_range": false,
+            "min": 0.0,
+            "max": 0.03,
+            "c_bar": "v [m/s]"
         }
         
     },

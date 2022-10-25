@@ -133,6 +133,7 @@ class flowfield:
             if plots == []:
                 logging.info("Plots are not set. Creating default ones ...")
                 config["plots"] = get_default_cases(config, case)
+                exit()
 
             else:
                 # config["plots"] = get_closest_plots(np.array(plots)/case_conf["data_export_interval"], case_conf["data_export_interval"] ,config["cases_dir_path"], config["data_path"], case, export_times)
@@ -386,7 +387,7 @@ class flowfield:
                 folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "vel_field", cas)
             else:
                 path = sys.path[0]
-                path = os.path.join(path, "assets")
+                path = os.path.join(path, "assets", cas, "fields")
                 folder_path = os.path.join(path, var)
     
             if os.path.exists(folder_path) == False:
@@ -845,7 +846,7 @@ class flowfield:
                 folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "plots", "animation_images")
             else:
                 path = sys.path[0]
-                path = os.path.join(path, "assets", "plots", cas)
+                path = os.path.join(path, "assets", cas, "plots")
                 folder_path = os.path.join(path)
     
             if os.path.exists(folder_path) == False:
@@ -856,7 +857,7 @@ class flowfield:
                 image_name = config["plot_file_name"]
                 if config["hpc_calculation"] == False:
                     path = sys.path[0]
-                    folder_path = os.path.join(path, "assets" , "plots", "animation_images", cas)
+                    folder_path = os.path.join(path, "assets", cas, "plots", "animation_images")
                     image_name = config["plot_file_name"] + "." + config["plot_file_type"]
             else:
                 image_name = "plot_" + cas + "_" + "_".join(plot_vars) + "." + config["plot_file_type"]
@@ -871,9 +872,9 @@ class flowfield:
             data = read_transient_data(config, cas)
             if one_plot == False:
                 
-                title = ""
+                title = cas
 
-                fig, axs = plt.subplots(len(plots), 1, sharex=True, sharey=True, figsize=(6.5,2.4*len(plots)))
+                fig, axs = plt.subplots(len(plots), 1, sharex=True, sharey=True, figsize=(9.0,2.4*(len(plots)-1) + 4.5))
 
                 fig.suptitle(title)
 
@@ -1033,7 +1034,7 @@ class flowfield:
                     folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "fields", "animation_images", var)
                 else:
                     path = sys.path[0]
-                    path = os.path.join(path, "assets", "fields", cas)
+                    path = os.path.join(path, "assets", cas ,"fields")
                     folder_path = os.path.join(path, var)
         
                 if os.path.exists(folder_path) == False:
@@ -1044,7 +1045,7 @@ class flowfield:
                     
                     if config["hpc_calculation"] == False:
                         path = sys.path[0]
-                        folder_path = os.path.join(path, "assets" , "fields", "animation_images", cas ,var)
+                        folder_path = os.path.join(path, "assets", cas , "fields", "animation_images" ,var)
                         image_name = config["image_file_name"] + "." + config["image_file_type"]
 
                 else:
@@ -1060,7 +1061,7 @@ class flowfield:
 
                 title = cas
 
-                fig, axs = plt.subplots(len(plots), 1, sharex=True, sharey=True, figsize=(6.5, 2.0*len(plots)+2.5))
+                fig, axs = plt.subplots(len(plots), 1, sharex=True, sharey=True, figsize=(9.0, 2.0*len(plots)+2.5))
                 fig.suptitle(title, size=12)
                 # axs = fig.add_subplot(len(plots), 1, sharex=True, sharey=True, figsize=(6.5,2.4*len(plots)))
 

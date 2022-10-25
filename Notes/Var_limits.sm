@@ -4,7 +4,7 @@
   <settings ppi="96">
     <identity>
       <id>390948a1-83e5-4a42-a9d0-ff29322d1faf</id>
-      <revision>32</revision>
+      <revision>33</revision>
     </identity>
     <calculation>
       <precision>4</precision>
@@ -768,16 +768,16 @@
         </input>
       </math>
     </region>
-    <region left="81" top="1206" width="258" height="41" color="#000000" fontSize="10">
+    <region left="81" top="1206" width="282" height="41" color="#000000" fontSize="10">
       <math decimalPlaces="6">
         <input>
           <e type="operand">Pe_tmp</e>
           <e type="operand">D</e>
-          <e type="operand">h_max</e>
+          <e type="operand">h_middle</e>
           <e type="function" args="3">u</e>
         </input>
         <result action="numeric">
-          <e type="operand">0.002844</e>
+          <e type="operand">0.004266</e>
           <e type="operand" style="unit">m</e>
           <e type="operand" style="unit">s</e>
           <e type="operator" args="2">/</e>

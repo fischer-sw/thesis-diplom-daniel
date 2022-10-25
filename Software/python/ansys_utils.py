@@ -401,7 +401,7 @@ def get_default_cases(config, case_dir):
 
     if cases == []:
         logging.error("No data to process for case {}".format(case_dir))
-        exit()
+        return []
     
     middle = round((max(cases)- min(cases))/2 + min(cases),0)
     if not middle in cases:

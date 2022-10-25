@@ -33,10 +33,13 @@
         "concentration-fluid_a",
         "concentration-fluid_b",
         "concentration-fluid_c",
-        "cell-reynolds-number"
+        "cell-reynolds-number",
+        "cell-convective-courant-number",
+        "velocity-magnitude"
     ],
     "image_file_type": "png",
     "image_conf": {
+        "one_plot" : true,
         "concentration-fluid_a" : {
             "set_custom_range": true,
             "min": 0.0,
@@ -60,6 +63,18 @@
             "min": 0.0,
             "max": 0.03,
             "c_bar": "reynolds-number"
+        },
+        "cell-convective-courant-number" : {
+            "set_custom_range": false,
+            "min": 0.0,
+            "max": 0.03,
+            "c_bar": "courant-number"
+        },
+        "velocity-magnitude" : {
+            "set_custom_range": false,
+            "min": 0.0,
+            "max": 0.03,
+            "c_bar": "v [m/s]"
         }
         
     },
