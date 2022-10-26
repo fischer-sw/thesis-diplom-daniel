@@ -831,9 +831,10 @@ class flowfield:
 
         hpc_cases_dir = config["cases_dir_path"][1:]
         hpc_cases_dir[0] = "/" + hpc_cases_dir[0]
+        init_plots = config["plots"]
         
         for cas in cases:
-
+            config["plots"] = init_plots
             config = self.update_plot_cfg(config, cases_cfg, cas)
             plots = config["plots"]
             plot_cfg = config["plot_conf"]
@@ -1004,13 +1005,13 @@ class flowfield:
         cases = config["cases"]
         field_var = config["field_var"]
         field_var_tmp = config["field_var"]
-        plots_tmp = config["plots"]
+        init_plots = config["plots"]
         hpc_cases_dir = config["cases_dir_path"][1:]
         hpc_cases_dir[0] = "/" + hpc_cases_dir[0]
         
         image_conf = config["image_conf"]
         for cas in cases:
-            config["plots"] = plots_tmp
+            config["plots"] = init_plots
             field_var = field_var_tmp[:]
             export_times = cases_cfg[cas]["export_times"]
             case_conf = cases_cfg[cas]

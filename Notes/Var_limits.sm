@@ -4,7 +4,7 @@
   <settings ppi="96">
     <identity>
       <id>390948a1-83e5-4a42-a9d0-ff29322d1faf</id>
-      <revision>34</revision>
+      <revision>35</revision>
     </identity>
     <calculation>
       <precision>4</precision>
@@ -803,6 +803,26 @@
         </input>
       </math>
     </region>
+    <region left="450" top="1323" width="168" height="50" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">D_poly</e>
+          <e type="operand">1</e>
+          <e type="operand">10</e>
+          <e type="operand">8</e>
+          <e type="operator" args="1">-</e>
+          <e type="operator" args="2">^</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand" style="unit">cm</e>
+          <e type="operand">2</e>
+          <e type="operator" args="2">^</e>
+          <e type="operand" style="unit">s</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
     <region left="81" top="1341" width="288" height="34" color="#000000" fontSize="10">
       <math>
         <input>
@@ -849,6 +869,48 @@
         </result>
       </math>
     </region>
+    <region left="450" top="1377" width="172" height="33" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">D_poly</e>
+        </input>
+        <result action="numeric">
+          <e type="operand">1</e>
+          <e type="operand">10</e>
+          <e type="operand">12</e>
+          <e type="operator" args="1">-</e>
+          <e type="operator" args="2">^</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand" style="unit">s</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand" style="unit">Gy</e>
+          <e type="operator" args="2">*</e>
+        </result>
+      </math>
+    </region>
+    <region left="450" top="1413" width="273" height="33" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">ν_poly</e>
+          <e type="operand">1.2</e>
+          <e type="operand">ν_exp</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <result action="numeric">
+          <e type="operand">1.2</e>
+          <e type="operand">10</e>
+          <e type="operand">6</e>
+          <e type="operator" args="1">-</e>
+          <e type="operator" args="2">^</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand" style="unit">s</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand" style="unit">Gy</e>
+          <e type="operator" args="2">*</e>
+        </result>
+      </math>
+    </region>
     <region left="81" top="1449" width="179" height="26" color="#000000" fontSize="10">
       <math>
         <input>
@@ -858,6 +920,22 @@
         </input>
         <result action="numeric">
           <e type="operand">20.9756</e>
+        </result>
+      </math>
+    </region>
+    <region left="450" top="1458" width="230" height="34" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">ν_poly</e>
+          <e type="operand">D_poly</e>
+          <e type="function" args="2">Sc</e>
+        </input>
+        <result action="numeric">
+          <e type="operand">1.2</e>
+          <e type="operand">10</e>
+          <e type="operand">6</e>
+          <e type="operator" args="2">^</e>
+          <e type="operator" args="2">*</e>
         </result>
       </math>
     </region>

@@ -22,7 +22,7 @@
     "plots": [
     ],
     "create_resi_plot": false,
-    "create_image": true,
+    "create_image": false,
     "create_plot": true,
     "create_gif": false,
     "create_front": false,
