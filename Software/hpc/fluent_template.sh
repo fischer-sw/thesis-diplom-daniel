@@ -1,6 +1,12 @@
 #!/bin/bash
 
-# Set number of nodes and tasks per node
+# Set number of nodes and tasks per node. Should not exceed number of cores for one node.
+# CPU Cores available depend on the chosen queue.
+# CPUs per node:
+# defq 40
+# intel_16 16
+# intel_32 32
+
 #SBATCH --ntasks-per-node=%tasks_p_node%
 #SBATCH --nodes=1
 
@@ -8,7 +14,7 @@
 #SBATCH --time=%wall_time%
 
 # Use partition defq|intel (the latter the includes former hydra nodes)
-#SBATCH -p defq
+#SBATCH -p %queue%
 
 # Set account for accessing a specific cpu time contingent
 # Options: default, fwd

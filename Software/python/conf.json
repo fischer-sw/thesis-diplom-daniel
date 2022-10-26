@@ -14,12 +14,12 @@
         "Jobs"
     ],
     "cases": [
-        "h4r3_P931_S1219_gs"
+        "h4r3_P1500_S1219_gs",
+        "h4r3_P1500_S1219_ms",
+        "h4r3_P1500_S1219_fs"
     ],
     "ignore_exsisting": false,
     "plots": [
-        2.0,
-        4.0
     ],
     "create_resi_plot": false,
     "create_image": true,
@@ -32,12 +32,12 @@
     "plot_prod" : false,
     "plot_width" : false,
     "field_var": [
+        "velocity-magnitude",
         "concentration-fluid_a",
         "concentration-fluid_b",
         "concentration-fluid_c",
         "cell-reynolds-number",
-        "cell-convective-courant-number",
-        "velocity-magnitude"
+        "cell-convective-courant-number"
     ],
     "c_bar": "c [mol/l]",
     "image_file_type": "png",

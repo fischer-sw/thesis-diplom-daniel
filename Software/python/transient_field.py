@@ -133,7 +133,6 @@ class flowfield:
             if plots == []:
                 logging.info("Plots are not set. Creating default ones ...")
                 config["plots"] = get_default_cases(config, case)
-                exit()
 
             else:
                 # config["plots"] = get_closest_plots(np.array(plots)/case_conf["data_export_interval"], case_conf["data_export_interval"] ,config["cases_dir_path"], config["data_path"], case, export_times)

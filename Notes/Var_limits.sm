@@ -4,7 +4,7 @@
   <settings ppi="96">
     <identity>
       <id>390948a1-83e5-4a42-a9d0-ff29322d1faf</id>
-      <revision>33</revision>
+      <revision>34</revision>
     </identity>
     <calculation>
       <precision>4</precision>
@@ -763,7 +763,7 @@
       <math>
         <input>
           <e type="operand">Pe_tmp</e>
-          <e type="operand">2081</e>
+          <e type="operand">1500</e>
           <e type="operator" args="2">:</e>
         </input>
       </math>
@@ -777,7 +777,7 @@
           <e type="function" args="3">u</e>
         </input>
         <result action="numeric">
-          <e type="operand">0.004266</e>
+          <e type="operand">0.003075</e>
           <e type="operand" style="unit">m</e>
           <e type="operand" style="unit">s</e>
           <e type="operator" args="2">/</e>
