@@ -3,10 +3,12 @@ import os
 import sys
 import logging
 import glob
+from contourpy import contour_generator
 import cv2
 import math
 
 from PIL import Image
+from cv2 import sqrt
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -57,8 +59,8 @@ class flowfield:
             return X, Y, res
         else:
 
-            x_diffs = 16
-            y_diffs = 16
+            x_diffs = 30 # height
+            y_diffs = 40 # radius
 
             X = sorted(set(data['x-coordinate']))
             step_x = int(round(len(X)/x_diffs,0))
@@ -403,18 +405,18 @@ class flowfield:
 
             title = cas
 
-            fig, axs = plt.subplots(len(plots), 1, sharex=True, sharey=True, figsize=(6.5,2.4*len(plots)))
+            fig, axs = plt.subplots(len(plots), 1, sharex=True, sharey=True, figsize=(9.0, 2.0*len(plots)+2.5))
             fig.suptitle(title, size=12)
-            # axs = fig.add_subplot(len(plots), 1, sharex=True, sharey=True, figsize=(6.5,2.4*len(plots)))
 
             for idx, ele in enumerate(plots):
-                elements = ['x-coordinate', 'y-coordinate', 'axial-velocity', 'radial-velocity']
+                elements = ['x-coordinate', 'y-coordinate', 'axial-velocity', 'radial-velocity', 'velocity-magnitude']
                 data_header = list(data[ele].columns)
                 if all(elem in data_header for elem in elements) == False:
                     logging.error(f"Not all needed elements {elements} for plot {ele} in data for case {cas}")
                     continue
 
                 X, Y, res = self.convert2field(data[ele], ['axial-velocity', 'radial-velocity'], vel_field=True)
+                X_vel, Y_vel, vel = self.convert2field(data[ele], ['velocity-magnitude'], vel_field=False)
                 # mirror across diagonal
                 x_tmp = Y
                 y_tmp = X
@@ -422,7 +424,7 @@ class flowfield:
                 v_z_vals = np.rot90(np.fliplr(v_z_vals))
                 v_r_vals = res['radial-velocity']
                 v_r_vals = np.rot90(np.fliplr(v_r_vals))
-
+                Vals = np.rot90(np.fliplr(vel['velocity-magnitude']))
                 x_final = res['x-field']
                 x_final = np.rot90(np.fliplr(x_final))
                 y_final = res['y-field']
@@ -433,37 +435,62 @@ class flowfield:
                 # plot n
                 scl_val= 0.02
 
+                # scale values to one length
+                tmp_length = (max(v_z_vals.max(), v_r_vals.max())-min(v_z_vals.max(), v_r_vals.max()))/2
+                v_r_scl_tmp =np.zeros(v_r_vals.shape)
+                v_z_scl_tmp =np.zeros(v_z_vals.shape)
+
+                for pos_col, col in enumerate(v_r_scl_tmp):
+                    for pos_row, row_val in  enumerate(col):
+                        v_r_val_tmp = v_r_vals[pos_col][pos_row]
+                        v_z_val_tmp = v_z_vals[pos_col][pos_row]
+                        l_tmp = (v_r_val_tmp**2 + v_z_val_tmp**2)**(1/2)
+                        if l_tmp == 0.0:
+                            scaling = 0.0
+                        else:
+                            scaling = tmp_length/l_tmp
+                        v_r_new = v_r_val_tmp * scaling
+                        v_z_new = v_z_val_tmp * scaling
+                        v_r_scl_tmp[pos_col][pos_row] = v_r_new
+                        v_z_scl_tmp[pos_col][pos_row] = v_z_new
+                        
+
                 if len(plots) != 1:
-                    if self.image_conf["set_custom_range"]:
-                        # cax = axs[idx].pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'), vmin=self.image_conf["min"], vmax=self.image_conf["max"])
-                        cax = axs[idx].quiver(y_final, x_final, v_r_vals, v_z_vals, scale=scl_val)
+                    if config["image_conf"][var]["set_custom_range"]:
+                        cax = axs[idx].pcolormesh(Y_vel, X_vel, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'), vmin=config["image_conf"]["velocity-magnitude"]["min"], vmax=config["image_conf"]["velocity-magnitude"]["max"])
+                        cbar = fig.colorbar(cax, ax=axs[idx])
+                        cax = axs[idx].quiver(y_final, x_final, v_r_scl_tmp, v_z_scl_tmp)
+
                     else:
-                        cax = axs[idx].quiver(y_final, x_final, v_r_vals, v_z_vals, scale=scl_val)
-                        # cax = axs[idx].pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'))
+                        
+                        # cax = axs[idx].quiver(y_final, x_final, v_r_vals, v_z_vals, scale=scl_val)
+                        cax = axs[idx].pcolormesh(Y_vel, X_vel, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'))
+                        cbar = fig.colorbar(cax, ax=axs[idx])
+                        cax = axs[idx].quiver(y_final, x_final, v_r_scl_tmp, v_z_scl_tmp)
+
                     # add axis description
+                    cbar.set_label(config["image_conf"][var]["c_bar"], rotation=90, labelpad=7)
                     if idx == len(plots)-1 :
                         axs[idx].set_xlabel("radius r [m]")
                     axs[idx].set_ylabel("height z [m]")
-                    axs[idx].set_title("t = {}s".format(round(ele * cases_cfg[cas]["timestep"], 1)))
-                    # add colorbar
-                    cbar = fig.colorbar(cax, ax=axs[idx])
-                    cbar.set_label(self.config["c_bar"], rotation=90, labelpad=7)
+                    axs[idx].set_title("t = {}s".format(ele))
 
                 else:
-                    if self.image_conf["set_custom_range"]:
-                        # cax = axs.pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'), vmin=self.image_conf["min"], vmax=self.image_conf["max"])
-                        cax = axs.quiver(y_final, x_final, v_r_vals, v_z_vals, scale=scl_val)
+                    if config["image_conf"][var]["set_custom_range"]:
+                        cax = axs.pcolormesh(Y_vel, X_vel, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'), vmin=config["image_conf"]["velocity-magnitude"]["min"], vmax=config["image_conf"]["velocity-magnitude"]["max"])
+                        cbar = fig.colorbar(cax, ax=axs)
+                        cax = axs.quiver(y_final, x_final, v_r_scl_tmp, v_z_scl_tmp)
                     else:
-                        # cax = axs.pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'))
-                        cax = axs.quiver(y_final, x_final, v_r_vals, v_z_vals, scale=scl_val)
+                        cax = axs.pcolormesh(Y_vel, X_vel, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'))
+                        cbar = fig.colorbar(cax, ax=axs)
+                        cax = axs.quiver(y_final, x_final, v_r_scl_tmp, v_z_scl_tmp)
+
                     axs.set_xlabel("radius r [m]")
                     axs.set_ylabel("height z [m]")
-                    axs.set_title("t = {}s".format(round(ele * cases_cfg[cas]["timestep"], 1)))
-                    # add colorbar
-                    cbar = fig.colorbar(cax, ax=axs)
-                    cbar.set_label(self.config["c_bar"], rotation=90, labelpad=7)
+                    axs.set_title("t = {}s".format(ele))
+                    cbar.set_label(config["image_conf"][var]["c_bar"], rotation=90, labelpad=7)
             
-            plt.savefig(image_path)
+            plt.savefig(image_path, dpi=600)
             plt.close(fig)
             logging.info(f"saved image {image_name}.")
 
@@ -541,7 +568,7 @@ class flowfield:
             axs.legend(plot_vars)
             axs.set_title(f"Resiudals {cas}")
 
-            plt.savefig(image_path)
+            plt.savefig(image_path, dpi=600)
             plt.close(fig)
             logging.info(f"saved image {image_name} to {image_path}.")
 
@@ -611,7 +638,7 @@ class flowfield:
                 axs.legend(legend)
                 axs.set_xlabel("time [s]")
                 axs.set_ylabel("width [mm]")
-                plt.savefig(image_path)
+                plt.savefig(image_path, dpi=600)
                 plt.close(fig)
                 logging.info(f"saved image {image_name} at {image_path}.")
                 return
@@ -642,7 +669,7 @@ class flowfield:
         axs.legend(legend)
         axs.set_xlabel("time [s]")
         axs.set_ylabel("width [mm]")
-        plt.savefig(image_path)
+        plt.savefig(image_path, dpi=600)
         plt.close(fig)
         logging.info(f"saved image {image_name}.")
 
@@ -703,7 +730,7 @@ class flowfield:
                 axs.legend(legend)
                 axs.set_xlabel("time [s]")
                 axs.set_ylabel("product [mol]")
-                plt.savefig(image_path)
+                plt.savefig(image_path, dpi=600)
                 plt.close(fig)
                 logging.info(f"saved image {image_name} at {image_path}.")
                 return
@@ -734,7 +761,7 @@ class flowfield:
             axs.legend(legend)
             axs.set_xlabel("time [s]")
             axs.set_ylabel("product [mol]")
-            plt.savefig(image_path)
+            plt.savefig(image_path, dpi=600)
             plt.close(fig)
             logging.info(f"saved image {image_name}.")
 
@@ -816,7 +843,7 @@ class flowfield:
                 axs.set_xlim(225, 380)
                 axs.legend(legend)
 
-                plt.savefig(image_path)
+                plt.savefig(image_path, dpi=600)
                 plt.close(fig)
                 logging.info(f"saved image {image_name}.")
 
@@ -993,7 +1020,7 @@ class flowfield:
                         axs.legend(l_conf)
                         # axs.set_title("t = {}".format(ele))
 
-            plt.savefig(image_path)
+            plt.savefig(image_path, dpi=600)
             plt.close(fig)
             logging.info(f"saved image {image_name}.")
     
@@ -1023,9 +1050,9 @@ class flowfield:
 
             for var in field_var:
 
-                if 'velocity-field' in field_var:
+                if var == 'velocity-field':
                     self.vel_field(config, cases_cfg)
-                    field_var.remove('velocity-field')
+                    continue
         
                 # var = [var]
                 logging.info(f"Creating {var} field {plots} for case {cas}")
@@ -1111,7 +1138,7 @@ class flowfield:
                         cbar = fig.colorbar(cax, ax=axs)
                         cbar.set_label(config["image_conf"][var]["c_bar"], rotation=90, labelpad=7)
                 
-                plt.savefig(image_path)
+                plt.savefig(image_path, dpi=600)
                 plt.close(fig)
                 logging.info(f"saved image {image_name}.")
 

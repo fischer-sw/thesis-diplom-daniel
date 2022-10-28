@@ -14,16 +14,14 @@
         "Jobs"
     ],
     "cases": [
-        "h4r3_P1500_S1219_gs",
-        "h4r3_P1500_S1219_ms",
-        "h4r3_P1500_S1219_fs"
+        "h4r3_P1500_S1219_gs"
     ],
     "ignore_exsisting": false,
     "plots": [
     ],
     "create_resi_plot": false,
-    "create_image": false,
-    "create_plot": true,
+    "create_image": true,
+    "create_plot": false,
     "create_gif": false,
     "create_front": false,
     "create_prod": false,
@@ -73,6 +71,12 @@
             "c_bar": "courant-number"
         },
         "velocity-magnitude" : {
+            "set_custom_range": false,
+            "min": 0.0,
+            "max": 0.03,
+            "c_bar": "v [m/s]"
+        },
+        "velocity-field" : {
             "set_custom_range": false,
             "min": 0.0,
             "max": 0.03,
