@@ -35,7 +35,8 @@
         "concentration-fluid_b",
         "concentration-fluid_c",
         "cell-reynolds-number",
-        "cell-convective-courant-number"
+        "cell-convective-courant-number",
+        "velocity-field"
     ],
     "c_bar": "c [mol/l]",
     "image_file_type": "png",

@@ -18,77 +18,63 @@ Within \autoref{fig:cdf_procedure} the general procedure of solving a CFD case i
 	\label{fig:cdf_procedure}
 \end{figure}
 
-The first step is to model the domain's geometry. In case of Ansys this step can either be done within the CFD software itself or an external CAD program. After the geometry is created or imported form an external source a mesh needs to be created. This mesh is the basis for the solver to solve the case and a vary important step. The way the mesh is set up has a significant influence on the model's results and the computational resources needed. The finer the mesh the more computational power is needed. By lowering the grid's element size the resources needed or simulation time increases exponentially.
+The first step is to model the domain's geometry. In case of Ansys this step can either be done within the CFD software itself or an external CAD program. After the geometry is created or imported form an external source a mesh needs to be created. This mesh is the basis for the solver to solve the case and a vary important step. The way the mesh is set up has a significant influence on the model's results and the computational resources needed. The finer the mesh the more computational power is needed for calculating the solution. By lowering the grid's element size the resources needed or simulation time increases exponentially if everything else is kept the same.
 
 When meshing is finished the solver has to be configured. Setting up the governing equations, simulation time and boundary conditions are steps that need to be done here for example. The hole setup is described in greater detail within \autoref{chp:model}. After the solver setup the case can be run by starting the solver. Depending on the resources needed or available this step can need some further configuration.
 
-When the solving process has come to an end the results can be inspected. If they contain errors some of the previous done steps need to be redone and adapted. 
+When the solving process has come to an end the results can be inspected. If they contain errors some of the previous done steps might need to be revisited and adapted. 
 
 All in all solving a CFD case is an iterative process that needs to be gone through until the results look as expected and can be trusted. Further details are given in \autoref{chp:model} and \autoref{chp:limitations}.
 
 \section{Navier-Stokes-Equations}
 
-In this thesis the chemical reaction diffusion advection front within a radial reactor is solved using Ansys FLUENT witch solves the incompressible Navier-Stokes Equations (\autoref{eqn:Navier-x} - \autoref{eqn:Navier-z})
+In this thesis the chemical reaction diffusion advection front within a radial reactor is solved using Ansys FLUENT. The program solves the incompressible Navier-Stokes equation in cylindrical coordinates (\autoref{eqn:Navier-r} - \autoref{eqn:Navier-z}) \cite{vitturi2016navier}. The coordinates used here are the radius $r$, the height $z$ and the angle $\Theta$. $\mu$ is the viscosity and $\rho$ describes the density.
 
-\begin{equation}
-	\label{eqn:Navier-x}
-	\begin{aligned}
-	\rho \dfrac{Du}{Dt} = - \dfrac{\partial p}{\partial x}
-		& + \dfrac{\partial}{\partial x} \left[
-				2 \mu \cdot \dfrac{\partial u}{\partial x} + \lambda \mathrm{div}(\bold{u})
-			\right] \\
-		& + \dfrac{\partial}{\partial y} \left[
-		 \mu  \left( \dfrac{\partial u}{\partial y} + \dfrac{\partial v}{\partial x} \right)
-		\right] \\
-		& + \dfrac{\partial}{\partial z} \left[
-		\mu  \left( \dfrac{\partial u}{\partial z} + \dfrac{\partial w}{\partial x} \right)
-		\right] +
-		S_{Mx}
-	\end{aligned}
-\end{equation}
+\begin{gather}
+	\label{eqn:Navier-r}
+	 \dfrac{\partial u_r}{\partial t} + u_r \dfrac{\partial u_r}{\partial r} + \dfrac{u_\Theta}{ r} \dfrac{\partial u_r}{\partial \Theta} - \dfrac{u_\Theta^2}{r} + u_z \dfrac{\partial u_r}{\partial z} = \\ \nonumber
+	-\dfrac{1}{\rho} \dfrac{\partial p}{\partial r} + \dfrac{\mu}{\rho} \left[
+		- \dfrac{u_r}{r^2} + \dfrac{1}{r} \dfrac{\partial}{\partial r} \left( r \cdot \dfrac{\partial u_r}{\partial r} \right) +
+		\dfrac{1}{r^2} \dfrac{\partial^2 u_r}{\partial \Theta^2} + \dfrac{\partial^2 u_r}{\partial z^2} + \dfrac{2}{r^2} \dfrac{\partial u_\Theta}{\partial \Theta}
+	\right] + g_r
+\end{gather}
 
-\begin{equation}
-	\label{eqn:Navier-y}
-	\begin{aligned}
-		\rho \dfrac{Dv}{Dt} = - \dfrac{\partial p}{\partial y}
-		& + \dfrac{\partial}{\partial x} \left[
-		\mu  \left( \dfrac{\partial u}{\partial y} + \dfrac{\partial v}{\partial x} \right)
-		\right] \\
-		& + \dfrac{\partial}{\partial y} \left[
-		2 \mu \cdot \dfrac{\partial v}{\partial y} + \lambda \mathrm{div}(\bold{u})
-		\right] \\
-		& + \dfrac{\partial}{\partial z} \left[
-		\mu  \left( \dfrac{\partial v}{\partial z} + \dfrac{\partial w}{\partial y} \right)
-		\right] +
-		S_{My}
-	\end{aligned}
-\end{equation}
+\begin{gather}
+	\label{eqn:Navier-Theta}
+	\dfrac{\partial u_\Theta}{\partial t} + u_r \dfrac{\partial u_\Theta}{\partial r} + \dfrac{u_\Theta}{ r} \dfrac{\partial u_\Theta}{\partial \Theta} - \dfrac{u_r u_\Theta}{r} + u_z \dfrac{\partial u_\Theta}{\partial z} = \\ \nonumber
+	-\dfrac{1}{\rho} \dfrac{\partial p}{\partial \Theta} + \dfrac{\mu}{\rho} \left[
+	- \dfrac{u_r}{r^2} + \dfrac{1}{r} \dfrac{\partial}{\partial r} \left( r \cdot \dfrac{\partial u_\Theta}{\partial r} \right) +
+	\dfrac{1}{r^2} \dfrac{\partial^2 u_\Theta}{\partial \Theta^2} + \dfrac{\partial^2 u_\Theta}{\partial z^2} + \dfrac{2}{r^2} \dfrac{\partial u_r}{\partial \Theta}
+	\right] + g_\Theta
+\end{gather}
 
-\begin{equation}
+
+\begin{gather}
 	\label{eqn:Navier-z}
-	\begin{aligned}
-		\rho \dfrac{Dw}{Dt} = - \dfrac{\partial p}{\partial z}
-		& + \dfrac{\partial}{\partial x} \left[
-		\mu  \left( \dfrac{\partial u}{\partial z} + \dfrac{\partial w}{\partial x} \right)
-		\right] \\
-		& + \dfrac{\partial}{\partial y} \left[
-		\mu  \left( \dfrac{\partial v}{\partial z} + \dfrac{\partial w}{\partial y} \right)
-		\right] \\
-		& + \dfrac{\partial}{\partial z} \left[
-		2 \mu \cdot \dfrac{\partial w}{\partial z} + \lambda \mathrm{div}(\bold{u})
-		\right] +
-		S_{Mz}
-	\end{aligned}
-\end{equation}
+	\dfrac{\partial u_z}{\partial t} + u_r \dfrac{\partial u_z}{\partial r} + \dfrac{u_\Theta}{ r} \dfrac{\partial u_z}{\partial \Theta} + u_z \dfrac{\partial u_z}{\partial z} = \\ \nonumber
+	-\dfrac{1}{\rho} \dfrac{\partial p}{\partial z} + \dfrac{\mu}{\rho} \left[
+	\dfrac{1}{r} \dfrac{\partial}{\partial r} \left( r \cdot \dfrac{\partial u_z}{\partial r} \right) +
+	\dfrac{1}{r^2} \dfrac{\partial^2 u_z}{\partial \Theta^2} + \dfrac{\partial^2 u_z}{\partial z^2}
+	\right] + g_z
+\end{gather}
 
-in addition to the incompressible continuity equation.
+These three equations can be narrowed down for a axisymmetric case, which is used here. For this case the tangential velocity $u_\Theta = 0$. The other quantities are also not dependant of the angular position $\Theta$. Using this only two equation remain which can be written as \cite{vitturi2016navier}:
 
 \begin{equation}
-	\label{eqn:continuity}
-	\mathrm{div}(\bold{u}) = 0
+	\dfrac{\partial u_r}{\partial t} + u_r \dfrac{\partial u_r}{\partial r}+ u_z \dfrac{\partial u_r}{\partial z} = - \dfrac{1}{\rho} \dfrac{\partial p}{\partial r} +  \dfrac{\mu}{\rho} \left[ -\dfrac{u_r}{r^2} + \dfrac{1}{r} \dfrac{\partial}{\partial r} \left( r \dfrac{\partial u_r}{\partial r} \right) + \dfrac{\partial^2 u_r}{\partial z^2} \right]	+ g_r
 \end{equation}
 
-These four equations form a system of non-linear partial differential equations. These have to be solved numerically because there is no analytical solution to this problem including it's boundary conditions. The solution is generated by splitting the domain into small elements and solving the set of equations for each element to obtain a solution for the hole geometry. This method known as Finite Volume Method is described in greater detail within the following section.
+\begin{equation}
+	\dfrac{\partial u_z}{\partial t} + u_r \dfrac{\partial u_z}{\partial r}+ u_z \dfrac{\partial u_z}{\partial z} = - \dfrac{1}{\rho} \dfrac{\partial p}{\partial z} + \dfrac{\mu}{\rho} \left[ \dfrac{1}{r} \dfrac{\partial}{\partial r} \left( r \dfrac{\partial u_z}{\partial r} \right) + \dfrac{\partial^2 u_z}{\partial z^2} \right]	+ g_z
+\end{equation} 
+
+In Addition to these two equations the continuity equation is given by \cite{vitturi2016navier}:
+
+\begin{equation}
+	\dfrac{1}{r} \dfrac{\partial}{\partial r}(r u_r) + \dfrac{\partial u_z}{\partial z} = 0
+\end{equation}
+
+These three equations form a system of non-linear partial differential equations. These have to be solved numerically because there is no analytical solution to this problem including given boundary conditions. The solution is generated by splitting the domain into small elements and solving the set of equations for each element to obtain a solution for the hole geometry. This method known as Finite Volume Method is described in greater detail within the following section.
 
 \section{Finite Volume Method}
 
@@ -117,7 +103,7 @@ As already stated this equation is integrated over the control volume shown in \
 	\int_{V_C} \nabla \cdot (\rho \bold{u} \Phi) dV = \int_{V_C} \nabla \cdot (\Gamma_\Phi \nabla \Phi) dV + \int_{V_C} S_\Phi dV
 \end{equation}
 
-The volume integrals, within the convective and diffusive term, can be replaced by surface integrals due to the divergence theorem. That leads to the semi-discretized \autoref{eqn:FVM_Aint}.
+The volume integrals, within the convective and diffusive term, can be replaced by surface integrals using the divergence theorem. That leads to the semi-discretized \autoref{eqn:FVM_Aint}.
 
 \begin{equation}
 	\label{eqn:FVM_Aint}
@@ -128,7 +114,7 @@ The variable $ \bold{S}$ is the surface vector, the operator ($\cdot$) is the do
 
 \subsection{Surface Integration}
 
-As seen in \autoref{eqn:FVM_Aint} surface integrals are needed to calculate the value of the property $\Phi$ for the control volume. Theses surface integrals can be split into a summation over each cell surface. This step can be done for each the convective shown in \autoref{eqn:conv_sint} and the diffusion term shown in \autoref{eqn:diffu_sint}.
+As seen in \autoref{eqn:FVM_Aint} surface integrals are needed to calculate the value of the property $\Phi$ for the control volume. Theses surface integrals can be split into a summation over each cell surface. This step can be done for the convective term shown in \autoref{eqn:conv_sint} as well as for the diffusion term shown in \autoref{eqn:diffu_sint}.
 
 \begin{equation}
 	\label{eqn:conv_sint}
@@ -147,8 +133,56 @@ As seen in \autoref{eqn:FVM_Aint} surface integrals are needed to calculate the 
 	\label{fig:FVM_CV}
 \end{figure}
 
+From this point on it can be seen that the values of $\Phi$ at each cells surface are needed. The solution algorithm used calculates and stores the results only at the cells centre. To obtain values at the cell's surfaces the neighbouring cell's values are used as well. The method used here is called Quadratic upwind differencing scheme (QUICK) and is explained in greater detail within the following section.
+
+\subsection{Quadratic upwind differencing scheme}
+\label{sec:QUICK}
+
+As shown in \autoref{fig:FVM_CV} each cell in a 2D case has 4 neighbouring cells that are labelled N for north, S for south, E for east and W for West. The QUICK method uses the 2 neighbouring cells upward the flow direction. A schematic is shown in \autoref{fig:QUICK}. The cell westward to the W cell is called WW and using the same naming scheme the cell eastward to E is named EE.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[scale=0.6]{QUICK}
+	\caption{QUICK method cell scheme}
+	\label{fig:QUICK}
+\end{figure}
+
+With a flow from west to east through the Cell with it's centre C the cells surface values $\Phi_w$ for the west facing surface and $\Phi_e$ for the east facing surface are calculated as follows \cite{versteeg2007introduction}:
+
+\begin{equation}
+	\Phi_w = \dfrac{6}{8} \Phi_W + \dfrac{3}{8} \Phi_P - \dfrac{1}{8} \Phi_{WW}
+\end{equation}
+\begin{equation}
+	\Phi_e = \dfrac{6}{8} \Phi_P + \dfrac{3}{8} \Phi_E - \dfrac{1}{8} \Phi_{W}
+\end{equation}
+
+If the flow is reverse in direction the method stays the same but the cells the values are used from do change.
+
+\begin{equation}
+	\Phi_w = \dfrac{6}{8} \Phi_P + \dfrac{3}{8} \Phi_W - \dfrac{1}{8} \Phi_{E}
+\end{equation}
+\begin{equation}
+	\Phi_e = \dfrac{6}{8} \Phi_E + \dfrac{3}{8} \Phi_P - \dfrac{1}{8} \Phi_{EE}
+\end{equation}
+
 \section{Solution Method}
 
+The solution method used in this case is called PISO algorithm which stands for Pressure Implicit with Splitting Operation algorithm. A general overview of the method's procedure can bes seen in \autoref{fig:PISO}.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[scale=1.0]{PISO}
+	\caption{PISO algorithm}
+	\label{fig:PISO}
+\end{figure}
+
+At first all fields have to be initialized with some values by the user. With this initial values the method starts it's calculation. The first step within the calculation is to get the results of the momentum equations for each cell within the mesh. The results gained are, a 2D case given, the velocity fields $v^*$ and $u^*$. After this step is finished the gained velocity fields are used to calculate the pressure correction $p'$. This is done by setting the pressure offset to a value that satisfies the continuity equation for the cell. With this offset $p'$ a new pressure field $p^{**}$ can be calculated that is then used to correct the velocity fields $u^*$ and $v^*$. This correction is done in a way similar to the already described method in \autoref{sec:QUICK} using the values of the neighbouring cells. After the new velocity fields $u^{**}$ and $v^{**}$ have been gained the PISO algorithm performs a second pressure correction. This yields the pressure field $p^{***}$. Now a second velocity field correction takes place in the same manner as the first one. After that is done all other transport equations are solved using the latest fields for the velocities $u^{***}$, $v^{***}$ and the pressure $p^{***}$. Finally a convergence check is performed and if success full the algorithm stops. The convergence is a criterium that does a comparison of the fields that are given as input and the ones yielded as output. If the difference is bellow a certain threshold the solution has converged. The threshold as to be given by the user for each variable of interest or the default ones are used. If the resulting fields have not converged the latest output is used as new input and the solving and corrections steps take place again. This iterative approach is done as long as the convergence criterium is not fulfilled or the maximum amount of iterations is reached.
+
+
 \section{Fluid Phenomena}
+
+Within a developing reaction-diffusion-advection front some specific phenomena take place. The main ones are looked at in this section.
+
+\subsection{Taylor-Dispersion}
 
 \end{document}

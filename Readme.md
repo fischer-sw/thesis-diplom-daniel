@@ -44,6 +44,8 @@ diplom thesis on numerical simulation of reaction-diffusion-advection fronts
         - adding fluids
         - adding reaction
         - mesh gird dependency
+    - model implementation
+        - parallel computing etc
 - validation
     - design studies (parametric)
     - experimental setup
@@ -51,6 +53,9 @@ diplom thesis on numerical simulation of reaction-diffusion-advection fronts
 - parameter variation
     - Pe number
     - Sc number
+    - front width
+    - total amount of product formed
+    - (production rate)
 - limitations and errors
 - outlook/conculsion
 

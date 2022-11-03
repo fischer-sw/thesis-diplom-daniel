@@ -3,12 +3,10 @@ import os
 import sys
 import logging
 import glob
-from contourpy import contour_generator
 import cv2
 import math
 
 from PIL import Image
-from cv2 import sqrt
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -385,7 +383,7 @@ class flowfield:
             var = "velocity-field"
 
             if config["hpc_calculation"]:
-                folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "vel_field", cas)
+                folder_path = os.path.join(*hpc_cases_dir, cas ,*config["hpc_results_path"], "fields")
             else:
                 path = sys.path[0]
                 path = os.path.join(path, "assets", cas, "fields")
