@@ -710,7 +710,10 @@ class flowfield:
                 continue
             
             if len(config["cases"]) == 1:
-                exps = ["ground", "PF"]          
+                if data["exp"] == {}:
+                    exps = ["ground", "PF"]
+                else:
+                    exps = []          
                 title = "total_product_" + cas
                 fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6.5,4.5))
                 fig.suptitle(title)
@@ -724,7 +727,7 @@ class flowfield:
                         legend.append(f"exp_data {exp}")
                 cax = axs.plot(data["sim"][cas]["time [s]"], data["sim"][cas]["product [kmol]"]*1e3*2*math.pi, f"{cols[i]}x")
                 legend.append("sim_data")
-                axs.set_xlim(0, 380)
+                # axs.set_xlim(0, 380)
                 axs.legend(legend)
                 axs.set_xlabel("time [s]")
                 axs.set_ylabel("product [mol]")
@@ -734,7 +737,7 @@ class flowfield:
                 return
             else:
                 if config["hpc_calculation"]:
-                    folder_path = os.path.join(*hpc_cases_dir, "..", "Results" ,"plots")
+                    folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "plots")
                 else:
                     path = sys.path[0]
                     path = os.path.join(path, "assets", "plots")
@@ -768,7 +771,6 @@ class flowfield:
         """
         Function to plot front position
         """
-
         hpc_cases_dir = config["cases_dir_path"][1:]
         hpc_cases_dir[0] = "/" + hpc_cases_dir[0]
 
@@ -788,7 +790,13 @@ class flowfield:
 
             for exp in exps:
 
-                image_name = f"front_{exp}_{str(self.front_threshhold).replace('.', ',')}" + "." + config["plot_file_type"]
+                if exp_data[cas] != {}:
+                    legend = ["sim_front_data", "sim_max_data", "exp_front_data", "exp_max_data"]
+                    image_name = f"front_{exp}_{str(self.front_threshhold).replace('.', ',')}" + "." + config["plot_file_type"]
+                else:
+                    legend = ["sim_front_data", "sim_max_data"]
+                    image_name = f"front_{str(self.front_threshhold).replace('.', ',')}" + "." + config["plot_file_type"]
+                
                 image_path = os.path.join(folder_path, image_name)
 
                 if os.path.exists(image_path) and config["ignore_exsisting"]:
@@ -796,49 +804,52 @@ class flowfield:
                     continue
 
                 title = "front_" + cas
-
                 fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6.5,3.5))
 
                 fig.suptitle(title)
-
-                legend = ["sim_front_data", "sim_max_data", "exp_front_data", "exp_max_data"]
-
-                
                 tmp_exp = exp_data[cas]
 
-                match exp:
-                    case 'ground':
-                        tmp_front_exp = exp_data[cas]['r_f_ground']
-                        tmp_max_exp = exp_data[cas]['r_c_ground']
-                        time_front_name = 'r_f_ground t [s]'
-                        time_max_name = 'r_c_ground t [s]'
+                if exp_data[cas] != {}:
+                    match exp:
+                        case 'ground':
+                            tmp_front_exp = exp_data[cas]['r_f_ground']
+                            tmp_max_exp = exp_data[cas]['r_c_ground']
+                            time_front_name = 'r_f_ground t [s]'
+                            time_max_name = 'r_c_ground t [s]'
 
-                    case 'PF':
-                        tmp_front_exp = exp_data[cas]['r_f_PF']
-                        tmp_max_exp = exp_data[cas]['r_c_PF']
-
+                        case 'PF':
+                            tmp_front_exp = exp_data[cas]['r_f_PF']
+                            tmp_max_exp = exp_data[cas]['r_c_PF']
+                
                 sim_data = pd.DataFrame(front_data[cas])
-                front_exp_t = list(tmp_front_exp[f"r_f_{exp} t [s]"].round(0))
-                front_exp_r = list(tmp_front_exp[f"r_f_{exp} r [mm]"])
-                sim_matched = sim_data[sim_data["times [s]"].isin(front_exp_t)]
-
-                if sim_matched.empty:
-                    logging.warning(f"No matching times between experiment {exp} and simulation found.")
-
                 mx_data = pd.DataFrame(max_data[cas])
-                max_matched = mx_data[mx_data["times [s]"].isin(list(tmp_max_exp[f"r_c_{exp} t [s]"].round(0)))]
-                max_exp_t = list(tmp_max_exp[f"r_c_{exp} t [s]"].round(0))
-                max_exp_r = list(tmp_max_exp[f"r_c_{exp} r [mm]"])
 
-                cax = axs.plot(sim_matched["times [s]"], sim_matched["r_s [m]"]*1e3, "bd")
-                cax = axs.plot(max_matched["times [s]"], max_matched["r_s [m]"]*1e3, "yd")
+                if exp_data[cas] != {}:
+                    front_exp_t = list(tmp_front_exp[f"r_f_{exp} t [s]"].round(0))
+                    front_exp_r = list(tmp_front_exp[f"r_f_{exp} r [mm]"])
+                    sim_matched = sim_data[sim_data["times [s]"].isin(front_exp_t)]
 
-                cax = axs.plot(front_exp_t, front_exp_r, "rx")
-                cax = axs.plot(max_exp_t, max_exp_r, "gx")
+                    if sim_matched.empty:
+                        logging.warning(f"No matching times between experiment {exp} and simulation found.")
+
+                    
+                    max_matched = mx_data[mx_data["times [s]"].isin(list(tmp_max_exp[f"r_c_{exp} t [s]"].round(0)))]
+                    max_exp_t = list(tmp_max_exp[f"r_c_{exp} t [s]"].round(0))
+                    max_exp_r = list(tmp_max_exp[f"r_c_{exp} r [mm]"])
+
+                    cax = axs.plot(sim_matched["times [s]"], sim_matched["r_s [m]"]*1e3, "bd")
+                    cax = axs.plot(max_matched["times [s]"], max_matched["r_s [m]"]*1e3, "yd")
+
+                    cax = axs.plot(front_exp_t, front_exp_r, "rx")
+                    cax = axs.plot(max_exp_t, max_exp_r, "gx")
+                else:
+                    logging.info(f"sim_data {sim_data.keys()}, max_data {max_data.keys()}")
+                    cax = axs.plot(sim_data["times [s]"], sim_data["r_s [m]"]*1e3, "bd")
+                    cax = axs.plot(mx_data["times [s]"], mx_data["r_s [m]"]*1e3, "rd")
 
                 axs.set_xlabel("time [s]")
                 axs.set_ylabel("radius [mm]")
-                axs.set_xlim(225, 380)
+                # axs.set_xlim(225, 380)
                 axs.legend(legend)
 
                 plt.savefig(image_path, dpi=600)
@@ -1062,8 +1073,7 @@ class flowfield:
                     path = os.path.join(path, "assets", cas ,"fields")
                     folder_path = os.path.join(path, var)
         
-                if os.path.exists(folder_path) == False:
-                    os.makedirs(folder_path)
+                
 
                 if "image_file_name" in config.keys():
                     image_name = config["image_file_name"]
@@ -1079,6 +1089,9 @@ class flowfield:
                     image_name = "field_" + cas + "_" + var + "." + config["image_file_type"]
 
                 image_path = os.path.join(folder_path, image_name)
+                
+                if os.path.exists(folder_path) == False:
+                    os.makedirs(folder_path)
 
                 if os.path.exists(image_path) and config["ignore_exsisting"] == True:
                     logging.info(f"{var} field for case {cas} already exsists.")
@@ -1421,19 +1434,6 @@ def do_plots():
         config = json.load(f)
 
     field = flowfield(config, cases_cfg)
-    
-    if config["create_image"]:
-        field.multi_field(config, cases_cfg)
-    
-    if config["create_plot"]:
-        field.multi_plot(config, cases_cfg)
-
-    if config["create_gif"]:
-        field.create_gif(config, cases_cfg)
-
-    if config["create_resi_plot"]:
-        field.resi_plot(config)
-
     if config["create_front"]:
         field.reaction_front(config, cases_cfg)
     
@@ -1442,6 +1442,15 @@ def do_plots():
     
     if config["create_prod"]:
         field.formed_product(config, cases_cfg)
+
+    if config["create_image"]:
+        field.multi_field(config, cases_cfg)
+    
+    if config["create_plot"]:
+        field.multi_plot(config, cases_cfg)
+
+    if config["create_resi_plot"]:
+        field.resi_plot(config)
 
     if config["plot_front"]:
         field.front_threshhold = 1e-6
@@ -1455,6 +1464,9 @@ def do_plots():
 
     if config["plot_width"]:
         field.plot_width(config)
+
+    if config["create_gif"]:
+        field.create_gif(config, cases_cfg)
     
 if __name__ == "__main__":
 

@@ -16,13 +16,13 @@
     "cases": [
         "h4r3_P1500_S1219_gs"
     ],
-    "ignore_exsisting": false,
+    "ignore_exsisting": true,
     "plots": [
     ],
     "create_resi_plot": false,
-    "create_image": true,
+    "create_image": false,
     "create_plot": false,
-    "create_gif": false,
+    "create_gif": true,
     "create_front": false,
     "create_prod": false,
     "create_widths": false,
@@ -116,7 +116,7 @@
             "concentration-fluid_c": "$c_C$"
         }
     },
-    "animation_field_vars": [
+    "animation_vars": [
         "concentration-fluid_c"
     ],
     "animation_plot_vars": [
@@ -132,7 +132,7 @@
         },
         "keep_images": true,
         "videos": true,
-        "gif_plot": true,
+        "gif_plot": false,
         "gif_image": true,
         "loop": 0,
         "frame_duration": 200

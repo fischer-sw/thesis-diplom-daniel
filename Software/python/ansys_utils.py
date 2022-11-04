@@ -71,6 +71,8 @@ def read_front_data(config):
     res["sim"] = {}
     res["exp"] = {}
     found_exp = False
+    hpc_cases_dir = config["cases_dir_path"][1:]
+    hpc_cases_dir[0] = "/" + hpc_cases_dir[0]
 
     for cas in config["cases"]:
 
@@ -107,12 +109,15 @@ def read_front_data(config):
 
         # read sim data
         res["sim"][cas] = {}
-        cases_path = os.path.join(*config["cases_dir_path"])
-
-        case_path = os.path.join(cases_path, cas)
+        if config["hpc_calculation"]:
+            case_path = os.path.join(*hpc_cases_dir, cas)
+        else:
+            cases_path = os.path.join(*config["cases_dir_path"])
+            case_path = os.path.join(cases_path, cas)
 
         if os.path.exists(case_path) == False:
             logging.info(f"Case path {case_path} doesn't exsist for case {cas}")
+            continue
 
         file = glob.glob("*front*", root_dir=case_path)[0]
 
@@ -129,6 +134,8 @@ def read_width_data(config):
     res["sim"] = {}
     res["exp"] = {}
     found_exp = False
+    hpc_cases_dir = config["cases_dir_path"][1:]
+    hpc_cases_dir[0] = "/" + hpc_cases_dir[0]
 
     for cas in config["cases"]:
 
@@ -136,7 +143,10 @@ def read_width_data(config):
         experiment = cas[:2]
         name = ""
         path = os.path.join(sys.path[0], "../..", "Experimente")
-        files = glob.glob("*width*.csv", root_dir=path)
+        if os.path.exists(path):
+            files = glob.glob("*width*.csv", root_dir=path)
+        else:
+            files = []
         for file in files:
             if experiment in file:
                 name = file
@@ -165,13 +175,16 @@ def read_width_data(config):
 
         # read sim data
         res["sim"][cas] = {}
-        cases_path = os.path.join(*config["cases_dir_path"])
 
-        case_path = os.path.join(cases_path, cas)
+        if config["hpc_calculation"]:
+            case_path = os.path.join(*hpc_cases_dir, cas)
+        else:
+            cases_path = os.path.join(*config["cases_dir_path"])
+            case_path = os.path.join(cases_path, cas)
 
         if os.path.exists(case_path) == False:
             logging.info(f"Case path {case_path} doesn't exsist for case {cas}")
-
+            continue
         file = glob.glob("*width*", root_dir=case_path)[0]
 
         data = pd.read_csv(os.path.join(case_path, file))
@@ -192,6 +205,8 @@ def read_prod_data(config):
     res["sim"] = {}
     res["exp"] = {}
     found_exp = False
+    hpc_cases_dir = config["cases_dir_path"][1:]
+    hpc_cases_dir[0] = "/" + hpc_cases_dir[0]
 
     for cas in config["cases"]:
 
@@ -200,7 +215,10 @@ def read_prod_data(config):
         name = ""
 
         path = os.path.join(sys.path[0], "../..", "Experimente")
-        files = glob.glob("*prod*.csv", root_dir=path)
+        if os.path.exists(path):
+            files = glob.glob("*prod*.csv", root_dir=path)
+        else:
+            files = []
         for file in files:
             if experiment in file:
                 name = file
@@ -226,17 +244,20 @@ def read_prod_data(config):
 
 
         # read sim_data
-        cases_path = os.path.join(*config["cases_dir_path"])
 
-        case_path = os.path.join(cases_path, cas)
+        if config["hpc_calculation"]:
+            case_path = os.path.join(*hpc_cases_dir, cas)
+        else:
+            cases_path = os.path.join(*config["cases_dir_path"])
+            case_path = os.path.join(cases_path, cas)
 
         if os.path.exists(case_path) == False:
-            print(f"Case path {case_path} doesn't exsist for case {cas}")
-
-        file = glob.glob("*prod*", root_dir=case_path)[0]
-
-        data = pd.read_csv(os.path.join(case_path, file))
-        res["sim"][cas] = data
+            logging.info(f"Case path {case_path} doesn't exsist for case {cas}")
+            continue
+        else:
+            file = glob.glob("*prod*", root_dir=case_path)[0]
+            data = pd.read_csv(os.path.join(case_path, file))
+            res["sim"][cas] = data
 
     return res
 
