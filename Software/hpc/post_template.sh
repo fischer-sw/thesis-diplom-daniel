@@ -5,7 +5,7 @@
 #SBATCH --nodes=1
 
 # Set max wallclock time
-#SBATCH --time=%post_walltime%
+#SBATCH --time=%post_wall_time%
 
 # Use partition defq|intel (the latter the includes former hydra nodes)
 #SBATCH -p defq

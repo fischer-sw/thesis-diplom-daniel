@@ -394,8 +394,10 @@ class flowfield:
                 
                 if config["hpc_calculation"] == False:
                     path = sys.path[0]
-                    folder_path = os.path.join(path, "assets", "fields", "animation_images",cas, var)
+                    folder_path = os.path.join(path, "assets", "fields", "animation_images", cas, var)
                     image_name = config["image_file_name"] + "." + config["image_file_type"]
+                else:
+                    folder_path = os.path.join(*hpc_cases_dir, cas ,*config["hpc_results_path"], "fields", "animation_images", var)
 
             else:
                 if config["hpc_calculation"]:

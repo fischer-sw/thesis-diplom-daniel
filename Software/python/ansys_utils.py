@@ -567,10 +567,10 @@ def build_journal(config, cases_cfg, end_exit=False, mode="cmd", update_exsistin
         val["export_path"] = export_path
         val["case_export_path"] = case_export_path
         tmp_keys = list(cases_cfg[key].keys())
-        if "post_walltime" in tmp_keys:
-            val["post_walltime"] = cases_cfg[key]["post_walltime"]
+        if "post_wall_time" in tmp_keys:
+            val["post_wall_time"] = cases_cfg[key]["post_wall_time"]
         else:
-            val["post_walltime"] = "24:00:00"
+            val["post_wall_time"] = "24:00:00"
 
         if not "job_name" in val.keys():
             val["job_name"] = key
@@ -698,7 +698,7 @@ def add_post_proc(config, cases_cfg, cas, post_file, case_file):
     logging.info(f"Creating cases.json at hpc destination")
     cases_path = os.path.join(*cases_dir_windows_path, cas, "cases.json")
     with open(cases_path, "w") as f:
-        json.dump(cases_cfg, f, ensure_ascii=False, indent=4)
+        json.dump({cas : cases_cfg[cas]}, f, ensure_ascii=False, indent=4)
 
     for file in copy_files:
         dest_path = os.path.join(*cases_dir_windows_path, cas, file)

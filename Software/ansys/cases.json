@@ -686,5 +686,41 @@
         "tasks_p_node" : 40,
         "wall_time" : "36:00:00",
         "case": "h6_r3_middle.cas.gz"
+    },
+    "h6r3_P2081_S1219_fs": {
+        "export_times" : "flow_time",
+        "total_time" : 30,
+        "fixed_timesteps" : 1,
+        "timestep_min" : 1.0e-4,
+        "data_export_interval": 0.1,
+        "input_vel": 2.844e-3,
+        "inlet_xA": 5.4e-4,
+        "init_phiB" : 7.2e-3,
+        "viscosity" : 1e-6, 
+        "diffusion": 8.2e-10,
+        "iterations":30,
+        "queue": "defq",
+        "tasks_p_node" : 40,
+        "wall_time" : "96:00:00",
+        "post_wall_time" : "72:00:00",
+        "case": "h6_r3_4e-6.cas.gz"
+    },
+    "h6r3_P2081_S1-2e5_fs": {
+        "export_times" : "flow_time",
+        "total_time" : 30,
+        "fixed_timesteps" : 1,
+        "timestep_min" : 1.0e-4,
+        "data_export_interval": 0.1,
+        "input_vel": 2.844e-3,
+        "inlet_xA": 5.4e-4,
+        "init_phiB" : 7.2e-3,
+        "viscosity" : 1.2e-6, 
+        "diffusion": 1.0e-11,
+        "iterations":30,
+        "queue": "defq",
+        "tasks_p_node" : 40,
+        "wall_time" : "96:00:00",
+        "post_wall_time" : "72:00:00",
+        "case": "h6_r3_4e-6.cas.gz"
     }
 }
