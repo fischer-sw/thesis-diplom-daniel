@@ -388,12 +388,24 @@ class flowfield:
                 path = sys.path[0]
                 path = os.path.join(path, "assets", cas, "fields")
                 folder_path = os.path.join(path, var)
+
+            if "image_file_name" in config.keys():
+                image_name = config["image_file_name"]
+                
+                if config["hpc_calculation"] == False:
+                    path = sys.path[0]
+                    folder_path = os.path.join(path, "assets", "fields", "animation_images",cas, var)
+                    image_name = config["image_file_name"] + "." + config["image_file_type"]
+
+            else:
+                if config["hpc_calculation"]:
+                    folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "fields")
+                image_name = "field_" + cas + "_" + var + "." + config["image_file_type"]
+
+            image_path = os.path.join(folder_path, image_name)
     
             if os.path.exists(folder_path) == False:
                 os.makedirs(folder_path)
-
-            image_name = "field_" + cas + "_" + var + "." + config["image_file_type"]
-            image_path = os.path.join(folder_path, image_name)
 
             if os.path.exists(image_path) and config["ignore_exsisting"] == True:
                 logging.info(f"{var} field for case {cas} already exsists.")
@@ -893,7 +905,7 @@ class flowfield:
                 image_name = config["plot_file_name"]
                 if config["hpc_calculation"] == False:
                     path = sys.path[0]
-                    folder_path = os.path.join(path, "assets", cas, "plots", "animation_images")
+                    folder_path = os.path.join(path, "assets", "plots", "animation_images", cas)
                     image_name = config["plot_file_name"] + "." + config["plot_file_type"]
             else:
                 image_name = "plot_" + cas + "_" + "_".join(plot_vars) + "." + config["plot_file_type"]
@@ -1073,14 +1085,12 @@ class flowfield:
                     path = os.path.join(path, "assets", cas ,"fields")
                     folder_path = os.path.join(path, var)
         
-                
-
                 if "image_file_name" in config.keys():
                     image_name = config["image_file_name"]
                     
                     if config["hpc_calculation"] == False:
                         path = sys.path[0]
-                        folder_path = os.path.join(path, "assets", cas , "fields", "animation_images" ,var)
+                        folder_path = os.path.join(path, "assets", "fields", "animation_images",cas, var)
                         image_name = config["image_file_name"] + "." + config["image_file_type"]
 
                 else:
@@ -1208,18 +1218,31 @@ class flowfield:
             field_vars = config["field_var"]
             gif_conf = config["gif_conf"]
             config["cases"] = [cas]
+            
+            cases_tmp = []
 
             for var in config["animation_vars"]:
+
 
                 if config["hpc_calculation"]:
                     img_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "fields", "animation_images", var)
                     plot_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "plots", "animation_images")
                     folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "animations", var)
+                    tmp_dir = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "fields", "animation_images")
                 else:
                     path = sys.path[0]
                     img_path = os.path.join(path, "assets" , "fields", "animation_images", cas, var)
                     plot_path = os.path.join(path, "assets", "plots", "animation_images", cas)    
                     folder_path = os.path.join(path, "animations", var)
+                    tmp_dir = os.path.join(*config["cases_dir_path"], cas, *config["hpc_results_path"], "fields", "animation_images")
+
+                # deleting empty folders
+                
+                img_folders = [x.split(os.sep)[0] for x in glob.glob("*" + os.sep, root_dir=tmp_dir)]
+                for folder in img_folders:
+                    path = os.path.join(tmp_dir, folder)
+                    if os.listdir(path) == []:
+                        os.removedirs(path)
 
                 if os.path.exists(folder_path) == False:
                     os.makedirs(folder_path)
@@ -1227,11 +1250,11 @@ class flowfield:
                     os.makedirs(img_path)
                 if os.path.exists(plot_path) == False:
                     os.makedirs(plot_path)
-                
+
                 logging.info("Creating images for .gif ...")
                 # create plots
-
-                cases_tmp = get_cases(config, cas)
+                if cases_tmp == []:
+                    cases_tmp = get_cases(config, cas)
 
                 # raw_cases = list(range(int(gif_conf["cases_tmp"]["start"]), int(gif_conf["cases_tmp"]["end"]) + 1, int(gif_conf["cases_tmp"]["step"])))
                 start = float(gif_conf["cases"]["start"])
@@ -1239,12 +1262,12 @@ class flowfield:
                 steps = int((gif_conf["cases"]["end"] - gif_conf["cases"]["start"])/gif_conf["cases"]["step"] +1)
                 raw_cases = list(np.linspace(start, end, steps))
 
-                if raw_cases != []:
+                if raw_cases != [] and cases_tmp == []:
                     start_end = get_closest_plots(config, cases_conf, cas)
                     cases_tmp = list(set(start_end))
                     cases_tmp.sort()
 
-                digits = len(str(max(cases_tmp)))
+                digits = len(str(max(cases_tmp))) - 1
                 plot_images = []
                 field_images = []
 
@@ -1392,7 +1415,13 @@ class flowfield:
                         logging.info(f"Video created for var {var} for cas {cas}.")
 
                 if gif_conf["keep_images"] == False:
-                    self.delete_gif_imgs(config)    
+                    self.delete_gif_imgs(config)
+
+
+            
+
+
+                
 
 def parse_log_file(case, config):
 
