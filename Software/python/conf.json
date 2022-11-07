@@ -117,7 +117,8 @@
         }
     },
     "animation_vars": [
-        "concentration-fluid_c"
+        "concentration-fluid_c",
+        "velocity-field"
     ],
     "animation_plot_vars": [
         "concentration-fluid_a",
@@ -132,7 +133,7 @@
         },
         "keep_images": true,
         "videos": true,
-        "gif_plot": false,
+        "gif_plot": true,
         "gif_image": true,
         "loop": 0,
         "frame_duration": 200

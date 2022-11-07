@@ -1226,18 +1226,15 @@ class flowfield:
 
                 if config["hpc_calculation"]:
                     img_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "fields", "animation_images", var)
-                    plot_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "plots", "animation_images")
                     folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "animations", var)
                     tmp_dir = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "fields", "animation_images")
                 else:
                     path = sys.path[0]
                     img_path = os.path.join(path, "assets" , "fields", "animation_images", cas, var)
-                    plot_path = os.path.join(path, "assets", "plots", "animation_images", cas)    
                     folder_path = os.path.join(path, "animations", var)
                     tmp_dir = os.path.join(*config["cases_dir_path"], cas, *config["hpc_results_path"], "fields", "animation_images")
 
                 # deleting empty folders
-                
                 img_folders = [x.split(os.sep)[0] for x in glob.glob("*" + os.sep, root_dir=tmp_dir)]
                 for folder in img_folders:
                     path = os.path.join(tmp_dir, folder)
@@ -1248,10 +1245,8 @@ class flowfield:
                     os.makedirs(folder_path)
                 if os.path.exists(img_path) == False:
                     os.makedirs(img_path)
-                if os.path.exists(plot_path) == False:
-                    os.makedirs(plot_path)
-
-                logging.info("Creating images for .gif ...")
+                
+                logging.info("Creating images for field .gif ...")
                 # create plots
                 if cases_tmp == []:
                     cases_tmp = get_cases(config, cas)
@@ -1278,32 +1273,15 @@ class flowfield:
                 for tmp_cas in raw_cases:
                     config["plots"] = [tmp_cas]
 
-                    plot_name = "_".join(["plot_gif", cas, f"{tmp_cas:0>{digits}}".replace(".", ",")])
-                    
-                    config["plot_file_name"] = plot_name
                     field_name = "_".join(["img_gif", cas, f"{tmp_cas:0>{digits}}".replace(".", ",")])
                     
                     config["image_file_name"] = field_name
-
-                    if gif_conf["gif_plot"] and os.path.exists(os.path.join(plot_path, plot_name + ".png")) == False:
-                        raw_plots.append(tmp_cas)
-                    else:
-                        
-                        logging.info(f"Plot {plot_name} already created")
-                    plot_images.append(plot_name + ".png")
 
                     if gif_conf["gif_image"] and os.path.exists(os.path.join(img_path, field_name + ".png")) == False:
                         raw_imgs.append(tmp_cas)
                     else:
                         logging.info(f"Field {field_name} already created")
                     field_images.append(field_name + ".png")
-
-                for tmp_cas in raw_plots:
-                    config["plots"] = [tmp_cas]
-                    plot_name = "_".join(["plot_gif", cas, f"{tmp_cas:0>{digits}}".replace(".", ",")])
-                    config["plot_file_name"] = plot_name
-                    config["plot_vars"] = config["animation_plot_vars"]
-                    self.multi_plot(config, cases_conf)
 
                 for tmp_cas in raw_imgs:
 
@@ -1315,53 +1293,7 @@ class flowfield:
                     self.multi_field(config, cases_conf)
 
                 # create Images
-                if gif_conf["gif_plot"]:
-
-                    plot_vars = config["plot_vars"]
-                    gif_name = "_".join([cas, *plot_vars, "plot"]) + ".gif"
-                    gif_path = os.path.join(folder_path, gif_name)
-
-                    video_name = "_".join([cas, *plot_vars, "plot"]) + ".avi"
-                    video_path = os.path.join(folder_path, video_name)
-
-                    if os.path.exists(gif_path):
-                        logging.info(f"Deleting existing gif {gif_name}")
-                    if os.path.exists(video_path):
-                        logging.info(f"Deleting existing video {video_name}")
-                    
-                    logging.info(f"Plot imgs 1 to 3 = {plot_images[0:3]}, Amount={len(plot_images)}")
-                    logging.info(f"Plot path={plot_path}")
-                    imgs = None
-                    imgs = (Image.open(os.path.join(plot_path, f)) for f in plot_images)
-                    img = next(imgs)  # extract first image from iterator
-                    img.save(gif_path, format="GIF", append_images=imgs,
-                            save_all=True, duration=gif_conf["frame_duration"], loop=gif_conf["loop"])
-                    logging.info(f"Created gif for variable {plot_vars} for cas {cas}")
-
-                    if gif_conf["videos"]:
-
-                        logging.info(f"Creating plot video for cas {cas}")
-                    
-                        images = plot_images
-                        frame_path = os.path.join(plot_path, images[0])
-                        logging.debug(f"Image Path={frame_path}")
-                        frame = cv2.imread(frame_path)
-
-
-                        height, width, layers = frame.shape
-                        fps = 1000/gif_conf["frame_duration"]
-                        out = cv2.VideoWriter(video_path, cv2.VideoWriter_fourcc(*'DIVX'), fps, (width, height))
-                        
-
-                        for image in images:
-                            img = cv2.imread(os.path.join(plot_path, image))
-                            out.write(img)
-
-                        cv2.destroyAllWindows()
-                        out.release()
-                        logging.info(f"Video created for var {plot_vars} for cas {cas}.")
-
-
+                
                 if gif_conf["gif_image"]:
 
                     logging.info(f"Creating field video for cas {cas}")
@@ -1418,7 +1350,114 @@ class flowfield:
                     self.delete_gif_imgs(config)
 
 
-            
+            if gif_conf["gif_plot"]:
+
+
+                if config["hpc_calculation"]:
+                    plot_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "plots", "animation_images")
+                    folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "animations", "plots")
+                else:
+                    path = sys.path[0]
+                    plot_path = os.path.join(path, "assets", "plots", "animation_images", cas)    
+                    folder_path = os.path.join(path, "animations", "plots")
+
+                if os.path.exists(folder_path) == False:
+                    os.makedirs(folder_path)
+                if os.path.exists(plot_path) == False:
+                    os.makedirs(plot_path)
+
+                logging.info("Creating images for plot .gif ...")
+                # create plots
+                if cases_tmp == []:
+                    cases_tmp = get_cases(config, cas)
+
+                # raw_cases = list(range(int(gif_conf["cases_tmp"]["start"]), int(gif_conf["cases_tmp"]["end"]) + 1, int(gif_conf["cases_tmp"]["step"])))
+                start = float(gif_conf["cases"]["start"])
+                end = float(gif_conf["cases"]["end"])
+                steps = int((gif_conf["cases"]["end"] - gif_conf["cases"]["start"])/gif_conf["cases"]["step"] +1)
+                raw_cases = list(np.linspace(start, end, steps))
+
+                if raw_cases != [] and cases_tmp == []:
+                    start_end = get_closest_plots(config, cases_conf, cas)
+                    cases_tmp = list(set(start_end))
+                    cases_tmp.sort()
+
+                digits = len(str(max(cases_tmp))) - 1
+                plot_images = []
+
+                # Check for exsisting images
+                raw_plots = []
+
+                for tmp_cas in raw_cases:
+                    config["plots"] = [tmp_cas]
+
+                    plot_name = "_".join(["plot_gif", cas, f"{tmp_cas:0>{digits}}".replace(".", ",")])
+                    
+                    config["plot_file_name"] = plot_name
+
+                    if gif_conf["gif_plot"] and os.path.exists(os.path.join(plot_path, plot_name + ".png")) == False:
+                        raw_plots.append(tmp_cas)
+                    else:
+                        
+                        logging.info(f"Plot {plot_name} already created")
+                    plot_images.append(plot_name + ".png")
+
+                for tmp_cas in raw_plots:
+                    config["plots"] = [tmp_cas]
+                    plot_name = "_".join(["plot_gif", cas, f"{tmp_cas:0>{digits}}".replace(".", ",")])
+                    config["plot_file_name"] = plot_name
+                    config["plot_vars"] = config["animation_plot_vars"]
+                    self.multi_plot(config, cases_conf)
+
+                # create Images
+                
+
+                plot_vars = config["plot_vars"]
+                gif_name = "_".join([cas, *plot_vars, "plot"]) + ".gif"
+                gif_path = os.path.join(folder_path, gif_name)
+
+                video_name = "_".join([cas, *plot_vars, "plot"]) + ".avi"
+                video_path = os.path.join(folder_path, video_name)
+
+                if os.path.exists(gif_path):
+                    logging.info(f"Deleting existing gif {gif_name}")
+                if os.path.exists(video_path):
+                    logging.info(f"Deleting existing video {video_name}")
+                
+                logging.info(f"Plot imgs 1 to 3 = {plot_images[0:3]}, Amount={len(plot_images)}")
+                logging.info(f"Plot path={plot_path}")
+                imgs = None
+                imgs = (Image.open(os.path.join(plot_path, f)) for f in plot_images)
+                img = next(imgs)  # extract first image from iterator
+                img.save(gif_path, format="GIF", append_images=imgs,
+                        save_all=True, duration=gif_conf["frame_duration"], loop=gif_conf["loop"])
+                logging.info(f"Created gif for variable {plot_vars} for cas {cas}")
+
+                if gif_conf["videos"]:
+
+                    logging.info(f"Creating plot video for cas {cas}")
+                
+                    images = plot_images
+                    frame_path = os.path.join(plot_path, images[0])
+                    logging.debug(f"Image Path={frame_path}")
+                    frame = cv2.imread(frame_path)
+
+
+                    height, width, layers = frame.shape
+                    fps = 1000/gif_conf["frame_duration"]
+                    out = cv2.VideoWriter(video_path, cv2.VideoWriter_fourcc(*'DIVX'), fps, (width, height))
+                    
+
+                    for image in images:
+                        img = cv2.imread(os.path.join(plot_path, image))
+                        out.write(img)
+
+                    cv2.destroyAllWindows()
+                    out.release()
+                    logging.info(f"Video created for var {plot_vars} for cas {cas}.")
+
+                if gif_conf["keep_images"] == False:
+                    self.delete_gif_imgs(config)
 
 
                 
