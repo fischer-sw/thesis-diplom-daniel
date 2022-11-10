@@ -45,7 +45,7 @@ if __name__ == "__main__":
     # mode = "gui"
     mode = "cmd"
 
-    run_jour = False
+    run_jour = True
     create_journals(exit=True, mode=mode, update_exsisting=True)
     
     if run_jour:

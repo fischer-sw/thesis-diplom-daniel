@@ -4,8 +4,8 @@
 \chapter{Theory}
 \label{chp:theory}
 
-Within this chapter the theory needed to solve a CFD case is shown.
-
+Within this chapter the theory and procedures needed to solve a CFD case are shown. At first a broad overview is given and the generic equations are laid out. That is then followed by the explanation of the solution algorithm that is used in this work.
+ 
 \section{Computational Fluid Dynamics}
 
 Computational fluid dynamics or CFD in short is the computer based solving of problems regarding fluid flow, heat transfer, chemical reactions or other phenomena. The concept is used in a large variety of applications within the fields of engineering and science for at least the last 60 years \cite{versteeg2007introduction}.
@@ -28,7 +28,14 @@ All in all solving a CFD case is an iterative process that needs to be gone thro
 
 \section{Navier-Stokes-Equations}
 
-In this thesis the chemical reaction diffusion advection front within a radial reactor is solved using Ansys FLUENT. The program solves the incompressible Navier-Stokes equation in cylindrical coordinates (\autoref{eqn:Navier-r} - \autoref{eqn:Navier-z}) \cite{vitturi2016navier}. The coordinates used here are the radius $r$, the height $z$ and the angle $\Theta$. $\mu$ is the viscosity and $\rho$ describes the density.
+In this thesis the chemical reaction diffusion advection front within a radial reactor is solved using Ansys FLUENT. The basis for all this is the Lagrangian form of Newton's second law. 
+\begin{equation}
+	\rho \dfrac{D \textbf{u}}{D t} = - \dfrac{1}{\rho} \nabla \cdot \boldsymbol{\sigma} + \textbf{g}
+\end{equation}
+
+Within this equation $\rho$ describes the density, $\textbf{u}$ is the velocity vector, $\boldsymbol{\sigma}$ is the stress tensor and $\textbf{g}$ contains all body forces e.g. the gravity force.
+With some approach to the stress vector $\boldsymbol{\sigma}$ and some coordinate transformation the Navier-Stokes-Equations in cylindrical coordinates can be derived.
+The program solves the incompressible Navier-Stokes equation in cylindrical coordinates (\autoref{eqn:Navier-r} - \autoref{eqn:Navier-z}) \cite{vitturi2016navier}. The coordinates used here are the radius $r$, the height $z$ and the angle $\Theta$. $\mu$ is the viscosity and $\rho$ describes the density.
 
 \begin{gather}
 	\label{eqn:Navier-r}
@@ -184,5 +191,16 @@ At first all fields have to be initialized with some values by the user. With th
 Within a developing reaction-diffusion-advection front some specific phenomena take place. The main ones are looked at in this section.
 
 \subsection{Taylor-Dispersion}
+
+The first phenomenon taking place within a reaction-diffusion-advection front is called Taylor-Dispersion. This was first discovered by G.I. Taylor\cite{aris1956dispersion} in 1956. The discovered phenomenon describes the spreading of the front over time as it can be seen within \autoref{fig:taylor-disp} \cite{levenspiel1998chemical}. 
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[scale=0.8]{taylor-dispersion}
+	\caption{Taylor dispersion}
+	\label{fig:taylor-disp}
+\end{figure}
+
+As shown the front's concentration distribution changes along the flow direction $x$ within time $t$. The peak lowers and the distribution widens as time passes. How quickly this effect takes place and which parameters have a significant influence is discussed within \autoref{chp:}. Within this work the front's width as well as the height averaged concentration distribution are the results looked at when checking this phenomenon.
 
 \end{document}

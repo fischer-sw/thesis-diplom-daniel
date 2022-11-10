@@ -598,7 +598,7 @@ class flowfield:
         legend = []
         msg = True
 
-        cols = ["r", "g", "b", "y"]
+        cols = ["r", "g", "b", "y", ""]
 
         title = "front_width"
         fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6.5,4.5))
@@ -642,7 +642,7 @@ class flowfield:
                         i +=1
                         legend.append(f"exp_data {exp}")
                 # plot FWHM
-                cax = axs.plot(data["sim"][cas]["time [s]"], data["sim"][cas]["FWHM [mm]"], f"{cols[i]}x")
+                cax = axs.plot(data["sim"][cas]["time [s]"], data["sim"][cas]["FWHM [mm]"], f"{cols[i+1]}x")
                 legend.append("FWHM")
                 cax = axs.plot(data["sim"][cas]["time [s]"], data["sim"][cas][data["sim"][cas].keys()[-1]], f"{cols[i]}d")
                 legend.append("middle width")
@@ -823,6 +823,7 @@ class flowfield:
                 fig.suptitle(title)
                 tmp_exp = exp_data[cas]
 
+                exp_data[cas] = {}
                 if exp_data[cas] != {}:
                     match exp:
                         case 'ground':

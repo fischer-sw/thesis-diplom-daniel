@@ -14,7 +14,7 @@
         "Jobs"
     ],
     "cases": [
-        "h4r3_P1500_S1219_gs"
+        "h4r3_P931_S1219_ms"
     ],
     "ignore_exsisting": true,
     "plots": [
@@ -22,13 +22,13 @@
     "create_resi_plot": false,
     "create_image": false,
     "create_plot": false,
-    "create_gif": true,
+    "create_gif": false,
     "create_front": false,
     "create_prod": false,
-    "create_widths": false,
-    "plot_front" : false,
-    "plot_prod" : false,
-    "plot_width" : false,
+    "create_widths": true,
+    "plot_front" : true,
+    "plot_prod" : true,
+    "plot_width" : true,
     "field_var": [
         "velocity-magnitude",
         "concentration-fluid_a",
@@ -45,19 +45,19 @@
             "set_custom_range": true,
             "min": 0.0,
             "max": 0.03,
-            "c_bar": "c [mol/l]"
+            "c_bar": "$c_A$ [mol/l]"
         },
         "concentration-fluid_b" : {
             "set_custom_range": true,
             "min": 0.0,
             "max": 0.03,
-            "c_bar": "c [mol/l]"
+            "c_bar": "$c_B$ [mol/l]"
         },
         "concentration-fluid_c" : {
             "set_custom_range": true,
             "min": 0.0,
             "max": 0.03,
-            "c_bar": "c [mol/l]"
+            "c_bar": "$c_C$ [mol/l]"
         },
         "cell-reynolds-number" : {
             "set_custom_range": false,
