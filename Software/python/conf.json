@@ -16,7 +16,7 @@
     "cases": [
         "h4r3_P931_S1219_ms"
     ],
-    "ignore_exsisting": true,
+    "ignore_exsisting": false,
     "plots": [
     ],
     "create_resi_plot": false,
@@ -26,8 +26,8 @@
     "create_front": false,
     "create_prod": false,
     "create_widths": true,
-    "plot_front" : true,
-    "plot_prod" : true,
+    "plot_front" : false,
+    "plot_prod" : false,
     "plot_width" : true,
     "field_var": [
         "velocity-magnitude",

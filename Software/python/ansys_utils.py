@@ -307,8 +307,8 @@ def calc_front(data, pct_threshold, use_max=False):
 
         res[cas] = {}
         res[cas]["times [s]"] = times
-        res[cas]["r_s [m]"] = r_s - 5e-3 # account for inlet offset
-        # res[cas]["r_s [m]"] = r_s
+        # res[cas]["r_s [m]"] = r_s - 5e-3 # account for inlet offset
+        res[cas]["r_s [m]"] = r_s
         res[cas]["values [mol/l]"] = vals
     return res
 
