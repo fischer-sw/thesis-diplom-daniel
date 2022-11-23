@@ -8,7 +8,7 @@
 #SBATCH --time=%post_wall_time%
 
 # Use partition defq|intel (the latter the includes former hydra nodes)
-#SBATCH -p defq
+#SBATCH -p milan
 
 # Set account for accessing a specific cpu time contingent
 # Options: default, fwd

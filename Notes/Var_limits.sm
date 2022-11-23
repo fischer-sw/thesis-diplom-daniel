@@ -4,7 +4,7 @@
   <settings ppi="96">
     <identity>
       <id>390948a1-83e5-4a42-a9d0-ff29322d1faf</id>
-      <revision>36</revision>
+      <revision>37</revision>
     </identity>
     <calculation>
       <precision>4</precision>
@@ -1033,11 +1033,11 @@
         </input>
       </math>
     </region>
-    <region left="576" top="1683" width="134" height="41" color="#000000" fontSize="10">
+    <region left="576" top="1683" width="110" height="41" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">M_A</e>
-          <e type="operand">97.181</e>
+          <e type="operand">100</e>
           <e type="operand" style="unit">g</e>
           <e type="operand" style="unit">mol</e>
           <e type="operator" args="2">/</e>
@@ -1072,11 +1072,11 @@
         </input>
       </math>
     </region>
-    <region left="576" top="1737" width="134" height="41" color="#000000" fontSize="10">
+    <region left="576" top="1737" width="110" height="41" color="#000000" fontSize="10">
       <math>
         <input>
           <e type="operand">M_B</e>
-          <e type="operand">241.86</e>
+          <e type="operand">100</e>
           <e type="operand" style="unit">g</e>
           <e type="operand" style="unit">mol</e>
           <e type="operator" args="2">/</e>
@@ -1218,6 +1218,18 @@
         </result>
       </math>
     </region>
+    <region left="414" top="2052" width="152" height="24" color="#000000" fontSize="10">
+      <math decimalPlaces="5">
+        <input>
+          <e type="operand">x_A</e>
+          <e type="operand">x_B</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <result action="numeric">
+          <e type="operand">0.00054</e>
+        </result>
+      </math>
+    </region>
     <region left="306" top="2079" width="404" height="41" color="#000000" fontSize="10">
       <math decimalPlaces="6">
         <input>
@@ -1236,7 +1248,7 @@
           <e type="operator" args="2">:</e>
         </input>
         <result action="numeric">
-          <e type="operand">0.007204</e>
+          <e type="operand">0.002991</e>
         </result>
       </math>
     </region>

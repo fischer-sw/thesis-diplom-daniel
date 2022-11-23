@@ -15,7 +15,6 @@ from ansys_utils import *
 # setup logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(filename)s - %(funcName)s - %(message)s")
 
-
 class flowfield:
 
     def __init__(self, config=None, cases_cfg=None):
@@ -177,9 +176,11 @@ class flowfield:
             if config["hpc_calculation"]:
                 tmp_path = cases_dir_path[1:]
                 tmp_path[0] = "/" + tmp_path[0]
-                data_path = os.path.join(*tmp_path, cas, "widths_" + ".csv")
+                data_path = os.path.join(*tmp_path, cas, "front_widths" + ".csv")
+                input_path = os.path.join(*tmp_path, cas, "h_avg_concentration-fluid_c.csv")
             else:
-                data_path = os.path.join(*cases_dir_path, cas, "widths_" + ".csv")
+                data_path = os.path.join(*cases_dir_path, cas, "front_widths" + ".csv")
+                input_path = os.path.join(*cases_dir_path, cas, "h_avg_concentration-fluid_c.csv")
             if os.path.exists(data_path):
                 logging.info(f"Already created front for case {cas}. Continuing with next case")
                 continue
@@ -188,6 +189,7 @@ class flowfield:
 
             times = get_cases(config, cas)
             times.sort()
+            inp_data = pd.read_csv(input_path)
 
             for idx, time in enumerate(times):
 
@@ -198,31 +200,28 @@ class flowfield:
                 
                 X, Y, res = self.convert2field(data[time], [var])
 
-                # mirror across diagonal
+                # # mirror across diagonal
                 Vals = res[var]
                 logging.debug("Size X = {}, Size Y = {}, Size Vals = {}".format(len(X), len(Y), Vals.shape))
                 Vals = np.rot90(np.fliplr(Vals))
 
-                Vals_tmp = np.rot90(np.fliplr(Vals))
-                avg_fluid_c_vals = []
+                # Vals_tmp = np.rot90(np.fliplr(Vals))
+                # avg_fluid_c_vals = []
 
                 # calculating FWHM
-                for idx, ele in enumerate(Y):
-                    avg_fluid_c_vals.append(np.mean(Vals_tmp[idx]))
-                fwhm_threshold = max(avg_fluid_c_vals)/2
-                positions = np.array(np.where(avg_fluid_c_vals >= fwhm_threshold))
-                if positions.size != 0:
-                    front = positions[0][-1]
-                    back = positions[0][0]
-                    r_front = Y[front]
-                    r_back = Y[back]
-                    width = abs(r_front - r_back)*1e3 # mm
+                tmp_data = inp_data[["r [m]", f"t= {time} [s]"]]
+                fwhm_threshold = max(inp_data[f't= {time} [s]'])/2
+                width_pos = tmp_data[tmp_data[f"t= {time} [s]"] >= fwhm_threshold]
+                if width_pos.size != 0:
+                    tmp_width = abs(width_pos["r [m]"].iloc[-1] - width_pos["r [m]"].iloc[0]) * 1e3
                 else:
-                    width = math.nan
-                widths["FWHM [mm]"].append(width)
+                    tmp_width = math.nan
+
+                widths["FWHM [mm]"].append(tmp_width)
                 
                 # calculating widths
                 for id, ele in enumerate(X):
+
                     row_name = "w [mm] (h=" + str(ele * 1e3).replace(".", ",") + "mm)"
                     if not row_name in widths.keys():
                         widths[row_name]  = []
@@ -247,7 +246,7 @@ class flowfield:
             df.to_csv(data_path, index=False)
             logging.info(f"Saved width data for case {cas}")
 
-    def reaction_front(self, config=None, cases_conf=None):
+    def h_avg_data(self, config=None, cases_conf=None):
         """
         Function calculates reaction front data and stores it in front.csv file within case directory
         """
@@ -261,60 +260,60 @@ class flowfield:
         cases_dir_path = config["cases_dir_path"]
 
         for cas in cases:
-            
-            front = {}
-            var = "concentration-fluid_c"
-            if config["hpc_calculation"]:
-                tmp_path = cases_dir_path[1:]
-                tmp_path[0] = "/" + tmp_path[0]
-                data_path = os.path.join(*tmp_path, cas, "front_" + var + ".csv")
-            else:
-                data_path = os.path.join(*cases_dir_path, cas, "front_" + var + ".csv")
-            
-            if os.path.exists(data_path):
-                logging.info(f"Already created front for case {cas}. Continuing with next case")
-                continue
-
-            logging.info(f"Creating reaction front data for case {cas}")
-            
-            times = get_cases(config, cas)
-            times.sort()
-            
-            for id, time in enumerate(times):
-
-                config["plots"] = [time]
-                config["field_var"] = [var]
-
-                data = read_transient_data(config, cas)
+            vars = list(set(config["plot_vars"] + config["animation_plot_vars"]))
+            for var in vars:
+                front = {}
+                if config["hpc_calculation"]:
+                    tmp_path = cases_dir_path[1:]
+                    tmp_path[0] = "/" + tmp_path[0]
+                    data_path = os.path.join(*tmp_path, cas, "h_avg_" + var + ".csv")
+                else:
+                    data_path = os.path.join(*cases_dir_path, cas, "h_avg_" + var + ".csv")
                 
-                X, Y, res = self.convert2field(data[time], [var])
-                data_tmp = {}
+                if os.path.exists(data_path):
+                    logging.info(f"Already created front for case {cas}. Continuing with next case")
+                    continue
+
+                logging.info(f"Creating reaction front data for case {cas}")
                 
-                # mirror across diagonal
-                x_tmp = Y
-                y_tmp = X
-                Vals = res[var]
-                logging.debug("Size X = {}, Size Y = {}, Size Vals = {}".format(len(X), len(Y), Vals.shape))
-                Vals = np.rot90(np.fliplr(Vals))
+                times = get_cases(config, cas)
+                times.sort()
+                
+                for id, time in enumerate(times):
 
-                tmp = np.array([])
-                for i in range(Vals.shape[1]):
-                    tmp = np.append(tmp, np.mean(Vals[:,i]))
-                data_tmp[var] = tmp
+                    config["plots"] = [time]
+                    config["field_var"] = [var]
 
-                if "r [m]" not in front.keys():
-                    front["r [m]"] = Y
+                    data = read_transient_data(config, cas)
+                    
+                    X, Y, res = self.convert2field(data[time], [var])
+                    data_tmp = {}
+                    
+                    # mirror across diagonal
+                    x_tmp = Y
+                    y_tmp = X
+                    Vals = res[var]
+                    logging.debug("Size X = {}, Size Y = {}, Size Vals = {}".format(len(X), len(Y), Vals.shape))
+                    Vals = np.rot90(np.fliplr(Vals))
 
-                front["t= " + str(time) +" [s]"] = tmp
+                    tmp = np.array([])
+                    for i in range(Vals.shape[1]):
+                        tmp = np.append(tmp, np.mean(Vals[:,i]))
+                    data_tmp[var] = tmp
 
-                pct = round((id+ 1)/len(times) * 100.0, 1)
-                logging.info(f"Added time {time} to front data. {pct} % done.")
+                    if "r [m]" not in front.keys():
+                        front["r [m]"] = Y
 
-            df = pd.DataFrame(front)
+                    front["t= " + str(time) +" [s]"] = tmp
+
+                    pct = round((id+ 1)/len(times) * 100.0, 1)
+                    logging.info(f"Added time {time} to front data for var {var}. {pct} % done.")
+
+                df = pd.DataFrame(front)
 
 
-            df.to_csv(data_path, index=False)
-            logging.info(f"Saved front data for case {cas}")
+                df.to_csv(data_path, index=False)
+                logging.info(f"Saved h_avg data for case {cas}")
 
     def formed_product(self, config, cases_cfg):
         """
@@ -529,7 +528,7 @@ class flowfield:
             else:
                 path = sys.path[0]
                 path = os.path.join(path, "assets")
-                folder_path = os.path.join(path, "residuals", cas)
+                folder_path = os.path.join(path, cas, "plots")
             
             
             if os.path.exists(folder_path) == False:
@@ -567,7 +566,7 @@ class flowfield:
             plot_vars.remove("time/iter")
             plot_vars.remove("iter")
 
-            fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6.5,4))
+            fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6.5,4.5))
 
             l_style = "solid"
 
@@ -596,6 +595,7 @@ class flowfield:
         hpc_cases_dir = config["cases_dir_path"][1:]
         hpc_cases_dir[0] = "/" + hpc_cases_dir[0]
 
+        data_points = 60
         i = 0
         legend = []
         msg = True
@@ -607,12 +607,16 @@ class flowfield:
         fig.suptitle(title)
 
         for cas in config["cases"]:
+
+            n_cases = len(get_cases(config, cas))
+
+            dat_ele = int(round(n_cases/data_points, 0))
             
             if config["hpc_calculation"]:
                 folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "plots")
             else:
                 path = sys.path[0]
-                path = os.path.join(path, "assets", "plots", cas)
+                path = os.path.join(path, "assets", cas, "plots")
                 folder_path = os.path.join(path)
     
             if os.path.exists(folder_path) == False:
@@ -631,8 +635,8 @@ class flowfield:
                     logging.info(f"Already created front_width image for case {cas}")
                     continue
                 
-                exps = ["ground", "PF"]          
-                title = "front_width_" + cas
+                exps = ["ground", "PF"]      
+                title = "front_width" 
                 fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6.5,4.5))
                 fig.suptitle(title)
 
@@ -644,10 +648,15 @@ class flowfield:
                         i +=1
                         legend.append(f"exp_data {exp}")
                 # plot FWHM
-                cax = axs.plot(data["sim"][cas]["time [s]"], data["sim"][cas]["FWHM [mm]"], f"{cols[i+1]}x")
-                legend.append("FWHM")
-                cax = axs.plot(data["sim"][cas]["time [s]"], data["sim"][cas][data["sim"][cas].keys()[-1]], f"{cols[i]}d")
-                legend.append("middle width")
+                cax = axs.plot(data["sim"][cas]["time [s]"][::dat_ele], data["sim"][cas]["FWHM [mm]"][::dat_ele], f"{cols[i]}x")
+                # cax = axs.plot(data["sim"][cas]["time [s]"][::dat_ele], data["sim"][cas]["FWHM [mm]"][::dat_ele], f"{cols[i+1]}x")
+
+                Pe = "Pe" + str(int(float(cas[6]+"."+ cas[7:9])*10**int(cas[10])))
+                Sc = "Sc" + str(int(float(cas[13]+"."+ cas[14:16])*10**int(cas[17])))
+                
+                legend.append(f"FWHM {Pe} {Sc}")
+                cax = axs.plot(data["sim"][cas]["time [s]"][::dat_ele], data["sim"][cas][data["sim"][cas].keys()[-1]][::dat_ele], f"{cols[i]}d")
+                legend.append(f"middle width {Pe} {Sc}")
                 # axs.set_xlim(0, 380)
                 axs.legend(legend)
                 axs.set_xlabel("time [s]")
@@ -672,10 +681,9 @@ class flowfield:
                     os.makedirs(folder_path)
 
                 image_path = os.path.join(folder_path, image_name)
-            rows = 15
-            cax = axs.plot(data["sim"][cas]["time [s]"].iloc[::rows], data["sim"][cas]["FWHM [mm]"].iloc[::rows], f"{cols[i]}x")
+            cax = axs.plot(data["sim"][cas]["time [s]"].iloc[::dat_ele], data["sim"][cas]["FWHM [mm]"].iloc[::dat_ele], f"{cols[i]}x")
             legend.append(f"FWHM {cas}")
-            cax = axs.plot(data["sim"][cas]["time [s]"].iloc[::rows], data["sim"][cas][data["sim"][cas].keys()[-1]].iloc[::rows], f"{cols[i]}d")
+            cax = axs.plot(data["sim"][cas]["time [s]"].iloc[::dat_ele], data["sim"][cas][data["sim"][cas].keys()[-1]].iloc[::dat_ele], f"{cols[i]}d")
             legend.append(f"middle width {cas}")
                 
             i += 1
@@ -699,6 +707,7 @@ class flowfield:
 
         i = 0
         legend = []
+        logged = False
 
         cols = ["r", "g", "b", "y"]
 
@@ -707,12 +716,12 @@ class flowfield:
         fig.suptitle(title)
 
         for cas in config["cases"]:
-            logging.info(f"Creating total_product image for case {cas}")
+            
             if config["hpc_calculation"]:
                 folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "plots")
             else:
                 path = sys.path[0]
-                path = os.path.join(path, "assets", "plots", cas)
+                path = os.path.join(path, "assets", cas, "plots")
                 folder_path = os.path.join(path)
     
             if os.path.exists(folder_path) == False:
@@ -724,15 +733,20 @@ class flowfield:
             if os.path.exists(image_path) and config["ignore_exsisting"]:
                 logging.info(f"Already created total_product image for case {cas}")
                 continue
+
+            Pe = "Pe" + str(int(float(cas[6]+"."+ cas[7:9])*10**int(cas[10])))
+            Sc = "Sc" + str(int(float(cas[13]+"."+ cas[14:16])*10**int(cas[17])))
             
             if len(config["cases"]) == 1:
+                logging.info(f"Creating total_product image for case {cas}")
                 if data["exp"] == {}:
                     exps = ["ground", "PF"]
                 else:
                     exps = []          
-                title = "total_product_" + cas
+                title = "total_product"
                 fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6.5,4.5))
                 fig.suptitle(title)
+                
 
                 if use_exp:
                     image_name = f"total_product_sim_vs_{exps}" + "." + config["plot_file_type"]
@@ -740,9 +754,10 @@ class flowfield:
                         image_path = os.path.join(folder_path, image_name)
                         cax = axs.plot(data["exp"][cas][exp][f"{exp} t [s]"], data["exp"][cas][exp][f"{exp} n_C [mol]"], f"{cols[i]}d")
                         i +=1
+                        
                         legend.append(f"exp_data {exp}")
                 cax = axs.plot(data["sim"][cas]["time [s]"], data["sim"][cas]["product [kmol]"]*1e3*2*math.pi, f"{cols[i]}x")
-                legend.append("sim_data")
+                legend.append(f"prod {Pe} {Sc}")
                 # axs.set_xlim(0, 380)
                 axs.legend(legend)
                 axs.set_xlabel("time [s]")
@@ -752,6 +767,9 @@ class flowfield:
                 logging.info(f"saved image {image_name} at {image_path}.")
                 return
             else:
+                if logged == False:
+                    logging.info(f"Creating total_product image for cases {config['cases']}")
+                    logged = True
                 if config["hpc_calculation"]:
                     folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "plots")
                 else:
@@ -765,10 +783,10 @@ class flowfield:
 
                 image_path = os.path.join(folder_path, image_name)
                 
-            cax = axs.plot(data["sim"][cas]["time [s]"], data["sim"][cas]["product [kmol]"]*1e3*2*math.pi, f"{cols[i]}x")
+            cax = axs.plot(data["sim"][cas]["time [s]"][::5], data["sim"][cas]["product [kmol]"][::5]*1e3*2*math.pi, f"{cols[i]}x")
             i += 1
             
-            legend.append(cas)
+            legend.append(f"prod {Pe} {Sc}")
         
         if os.path.exists(image_path) and config["ignore_exsisting"]:
             cases = config["cases"]
@@ -789,89 +807,132 @@ class flowfield:
         """
         hpc_cases_dir = config["cases_dir_path"][1:]
         hpc_cases_dir[0] = "/" + hpc_cases_dir[0]
+        i = 0
+        legend = []
+        data_points= 60
+        logged = False
+
+        cols = ["r", "g", "b", "y"]
+
+        fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6.5,4.5))
 
         for cas in list(front_data.keys()):
-            logging.info(f"Creating front image for case {cas}")
+            Pe = "Pe" + str(int(float(cas[6]+"."+ cas[7:9])*10**int(cas[10])))
+            Sc = "Sc" + str(int(float(cas[13]+"."+ cas[14:16])*10**int(cas[17])))
+            
             if config["hpc_calculation"]:
                 folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "plots")
             else:
                 path = sys.path[0]
-                path = os.path.join(path, "assets", "plots", cas)
+                path = os.path.join(path, "assets", cas, "plots")
                 folder_path = os.path.join(path)
     
             if os.path.exists(folder_path) == False:
                 os.makedirs(folder_path)
 
             exps = ['ground', 'PF']
+            Pe = "Pe" + str(int(float(cas[6]+"."+ cas[7:9])*10**int(cas[10])))
+            Sc = "Sc" + str(int(float(cas[13]+"."+ cas[14:16])*10**int(cas[17])))
 
-            for exp in exps:
 
-                if exp_data[cas] != {}:
-                    legend = ["sim_front_data", "sim_max_data", "exp_front_data", "exp_max_data"]
-                    image_name = f"front_{exp}_{str(self.front_threshhold).replace('.', ',')}" + "." + config["plot_file_type"]
+            if len(config["cases"]) > 1:
+                if logged == False:
+                    logging.info(f"Creating front image for cases {config['cases']}")
+                    logged = True
+
+                if config["hpc_calculation"]:
+                    folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "plots")
                 else:
-                    legend = ["sim_front_data", "sim_max_data"]
-                    image_name = f"front_{str(self.front_threshhold).replace('.', ',')}" + "." + config["plot_file_type"]
-                
-                image_path = os.path.join(folder_path, image_name)
+                    path = sys.path[0]
+                    path = os.path.join(path, "assets", "plots")
+                    folder_path = os.path.join(path)
 
-                if os.path.exists(image_path) and config["ignore_exsisting"]:
-                    logging.info(f"Already created front image for {exp} for case {cas}")
-                    continue
-
-                title = "front_" + cas
-                fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6.5,3.5))
-
+                title = "front_positions"
                 fig.suptitle(title)
-                tmp_exp = exp_data[cas]
-
-                exp_data[cas] = {}
-                if exp_data[cas] != {}:
-                    match exp:
-                        case 'ground':
-                            tmp_front_exp = exp_data[cas]['r_f_ground']
-                            tmp_max_exp = exp_data[cas]['r_c_ground']
-                            time_front_name = 'r_f_ground t [s]'
-                            time_max_name = 'r_c_ground t [s]'
-
-                        case 'PF':
-                            tmp_front_exp = exp_data[cas]['r_f_PF']
-                            tmp_max_exp = exp_data[cas]['r_c_PF']
                 
                 sim_data = pd.DataFrame(front_data[cas])
                 mx_data = pd.DataFrame(max_data[cas])
+                sim_step = int(round(len(sim_data["times [s]"])/data_points, 0))
+                mx_step = int(round(len(mx_data["times [s]"])/data_points, 0))
 
-                if exp_data[cas] != {}:
-                    front_exp_t = list(tmp_front_exp[f"r_f_{exp} t [s]"].round(0))
-                    front_exp_r = list(tmp_front_exp[f"r_f_{exp} r [mm]"])
-                    sim_matched = sim_data[sim_data["times [s]"].isin(front_exp_t)]
+                cax = axs.plot(sim_data["times [s]"][::sim_step], sim_data["r_s [m]"][::sim_step]*1e3, f"{cols[i]}d")
+                legend.append(f"front {Pe} {Sc}")
+                cax = axs.plot(mx_data["times [s]"][::mx_step], mx_data["r_s [m]"][::mx_step]*1e3, f"{cols[i]}x")
+                legend.append(f"max {Pe} {Sc}")
+                image_name = "front_pos" + "." + config["plot_file_type"]
+                i += 1
 
-                    if sim_matched.empty:
-                        logging.warning(f"No matching times between experiment {exp} and simulation found.")
 
+            else:
+                logging.info(f"Creating front image for case {cas}")
+                for exp in exps:
+
+                    if exp_data[cas] != {}:
+                        legend = ["sim_front_data", "sim_max_data", "exp_front_data", "exp_max_data"]
+                        image_name = f"front_{exp}_{str(self.front_threshhold).replace('.', ',')}" + "." + config["plot_file_type"]
+                    else:
+                        legend = [f"front {Pe} {Sc}", f"max {Pe} {Sc}"]
+                        image_name = f"front_{str(self.front_threshhold).replace('.', ',')}" + "." + config["plot_file_type"]
                     
-                    max_matched = mx_data[mx_data["times [s]"].isin(list(tmp_max_exp[f"r_c_{exp} t [s]"].round(0)))]
-                    max_exp_t = list(tmp_max_exp[f"r_c_{exp} t [s]"].round(0))
-                    max_exp_r = list(tmp_max_exp[f"r_c_{exp} r [mm]"])
+                    
 
-                    cax = axs.plot(sim_matched["times [s]"], sim_matched["r_s [m]"]*1e3, "bd")
-                    cax = axs.plot(max_matched["times [s]"], max_matched["r_s [m]"]*1e3, "yd")
+                    if os.path.exists(image_path) and config["ignore_exsisting"]:
+                        logging.info(f"Already created front image for {exp} for case {cas}")
+                        continue
 
-                    cax = axs.plot(front_exp_t, front_exp_r, "rx")
-                    cax = axs.plot(max_exp_t, max_exp_r, "gx")
-                else:
-                    logging.info(f"sim_data {sim_data.keys()}, max_data {max_data.keys()}")
-                    cax = axs.plot(sim_data["times [s]"], sim_data["r_s [m]"]*1e3, "bd")
-                    cax = axs.plot(mx_data["times [s]"], mx_data["r_s [m]"]*1e3, "rd")
+                    title = "front_" + cas
 
-                axs.set_xlabel("time [s]")
-                axs.set_ylabel("radius [mm]")
-                # axs.set_xlim(225, 380)
-                axs.legend(legend)
+                    fig.suptitle(title)
+                    tmp_exp = exp_data[cas]
 
-                plt.savefig(image_path, dpi=600)
-                plt.close(fig)
-                logging.info(f"saved image {image_name}.")
+                    exp_data[cas] = {}
+                    if exp_data[cas] != {}:
+                        match exp:
+                            case 'ground':
+                                tmp_front_exp = exp_data[cas]['r_f_ground']
+                                tmp_max_exp = exp_data[cas]['r_c_ground']
+                                time_front_name = 'r_f_ground t [s]'
+                                time_max_name = 'r_c_ground t [s]'
+
+                            case 'PF':
+                                tmp_front_exp = exp_data[cas]['r_f_PF']
+                                tmp_max_exp = exp_data[cas]['r_c_PF']
+                    
+                    sim_data = pd.DataFrame(front_data[cas])
+                    mx_data = pd.DataFrame(max_data[cas])
+
+                    if exp_data[cas] != {}:
+                        front_exp_t = list(tmp_front_exp[f"r_f_{exp} t [s]"].round(0))
+                        front_exp_r = list(tmp_front_exp[f"r_f_{exp} r [mm]"])
+                        sim_matched = sim_data[sim_data["times [s]"].isin(front_exp_t)]
+
+                        if sim_matched.empty:
+                            logging.warning(f"No matching times between experiment {exp} and simulation found.")
+
+                        
+                        max_matched = mx_data[mx_data["times [s]"].isin(list(tmp_max_exp[f"r_c_{exp} t [s]"].round(0)))]
+                        max_exp_t = list(tmp_max_exp[f"r_c_{exp} t [s]"].round(0))
+                        max_exp_r = list(tmp_max_exp[f"r_c_{exp} r [mm]"])
+
+                        cax = axs.plot(sim_matched["times [s]"], sim_matched["r_s [m]"]*1e3, "bd")
+                        cax = axs.plot(max_matched["times [s]"], max_matched["r_s [m]"]*1e3, "yd")
+
+                        cax = axs.plot(front_exp_t, front_exp_r, "rx")
+                        cax = axs.plot(max_exp_t, max_exp_r, "gx")
+                    else:
+                        logging.info(f"sim_data {sim_data.keys()}, max_data {max_data.keys()}")
+                        cax = axs.plot(sim_data["times [s]"], sim_data["r_s [m]"]*1e3, "bd")
+                        cax = axs.plot(mx_data["times [s]"], mx_data["r_s [m]"]*1e3, "rd")
+
+        image_path = os.path.join(folder_path, image_name)
+        axs.set_xlabel("time [s]")
+        axs.set_ylabel("radius [mm]")
+        # axs.set_xlim(225, 380)
+        axs.legend(legend)
+
+        plt.savefig(image_path, dpi=600)
+        plt.close(fig)
+        logging.info(f"saved image {image_name}.")
 
 
     def multi_plot(self, config=None, cases_cfg=None):
@@ -897,14 +958,25 @@ class flowfield:
 
             if config["hpc_calculation"]:
                 folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "plots", "animation_images")
+                data_path = os.path.join(*hpc_cases_dir, cas)
             else:
                 path = sys.path[0]
                 path = os.path.join(path, "assets", cas, "plots")
                 folder_path = os.path.join(path)
-    
+                data_path = os.path.join(*config["cases_dir_path"], cas)
+
             if os.path.exists(folder_path) == False:
                 os.makedirs(folder_path)
 
+            input_data = {}
+            for var in plot_vars:
+                tmp_path = os.path.join(data_path, f"h_avg_{var}.csv")
+                if os.path.exists(tmp_path):
+                    input_data[var] = pd.read_csv(tmp_path)
+                else:
+                    logging.warning(f"No csv file for {var} exists. Creating csv file")
+                    config["animation_plot_vars"] = [var]
+                    self.h_avg_data(config, cases_cfg)
 
             if "plot_file_name" in config.keys():
                 image_name = config["plot_file_name"]
@@ -922,7 +994,7 @@ class flowfield:
                 logging.info(f"{plot_vars} plot for case {cas} already created")
                 continue
             
-            data = read_transient_data(config, cas)
+            # data = read_transient_data(config, cas)
             if one_plot == False:
                 
                 title = cas
@@ -939,31 +1011,32 @@ class flowfield:
 
                 for idx, ele in enumerate(plots):
 
-                    X, Y, res = self.convert2field(data[ele], plot_vars)
+                    # X, Y, res = self.convert2field(data[ele], plot_vars)
                     data_tmp = {}
 
                     for var in plot_vars:
                         
-                        # mirror across diagonal
-                        x_tmp = Y
-                        y_tmp = X
-                        Vals = res[var]
-                        logging.debug("Size X = {}, Size Y = {}, Size Vals = {}".format(len(X), len(Y), Vals.shape))
-                        Vals = np.rot90(np.fliplr(Vals))
+                        # # mirror across diagonal
+                        # x_tmp = Y
+                        # y_tmp = X
+                        # Vals = res[var]
+                        # logging.debug("Size X = {}, Size Y = {}, Size Vals = {}".format(len(X), len(Y), Vals.shape))
+                        # Vals = np.rot90(np.fliplr(Vals))
 
-                        tmp = np.array([])
-                        for i in range(Vals.shape[1]):
-                            tmp = np.append(tmp, np.mean(Vals[:,i]))
-                        data_tmp[var] = tmp
+                        # tmp = np.array([])
+                        # for i in range(Vals.shape[1]):
+                        #     tmp = np.append(tmp, np.mean(Vals[:,i]))
+                        # data_tmp[var] = tmp
                         legend.append(plot_cfg["legend"][var])
 
                     # plot n
 
                     if len(plots) != 1:
 
-                        for tmp_var in data_tmp.keys():
+                        for tmp_var in plot_vars:
                             col = plot_cfg["colors"][tmp_var]
-                            cax = axs[idx].plot(x_tmp, data_tmp[tmp_var], color=col)
+                            tmp_data = input_data[tmp_var]
+                            cax = axs[idx].plot(tmp_data["r [m]"], tmp_data[f"t= {ele} [s]"], color=col)
                             # add axis description
                         if idx == len(plots)-1 :
                             axs[idx].set_xlabel("radius r [m]")
@@ -978,9 +1051,10 @@ class flowfield:
 
                     else:
                         export_times = cases_cfg[cas]["export_times"]
-                        for tmp_var in data_tmp.keys():
+                        for tmp_var in plot_vars:
                             col = plot_cfg["colors"][tmp_var]
-                            cax = axs.plot(x_tmp, data_tmp[tmp_var], color=col)
+                            tmp_data = input_data[tmp_var]   
+                            cax = axs.plot(tmp_data["r [m]"], tmp_data[f"t= {ele} [s]"], color=col)
                             # add axis description
 
                         axs.set_xlabel("radius r [m]")
@@ -997,31 +1071,31 @@ class flowfield:
                 l_conf = []
                 for idx, ele in enumerate(plots):
 
-                    X, Y, res = self.convert2field(data[ele], plot_vars)
-                    data_tmp = {}
+                    # X, Y, res = self.convert2field(data[ele], plot_vars)
+                    # data_tmp = {}
                     
-                    for var in plot_vars:
+                    # for var in plot_vars:
                         
-                        # mirror across diagonal
-                        x_tmp = Y
-                        y_tmp = X
-                        Vals = res[var]
-                        logging.debug("Size X = {}, Size Y = {}, Size Vals = {}".format(len(X), len(Y), Vals.shape))
-                        Vals = np.rot90(np.fliplr(Vals))
+                    #     # mirror across diagonal
+                    #     x_tmp = Y
+                    #     y_tmp = X
+                    #     Vals = res[var]
+                    #     logging.debug("Size X = {}, Size Y = {}, Size Vals = {}".format(len(X), len(Y), Vals.shape))
+                    #     Vals = np.rot90(np.fliplr(Vals))
 
-                        tmp = np.array([])
-                        for i in range(Vals.shape[1]):
-                            tmp = np.append(tmp, np.mean(Vals[:,i]))
-                        data_tmp[var] = tmp 
+                    #     tmp = np.array([])
+                    #     for i in range(Vals.shape[1]):
+                    #         tmp = np.append(tmp, np.mean(Vals[:,i]))
+                    #     data_tmp[var] = tmp 
 
                     # plot n
                     
                     if len(plots) != 1:
                         
-                        for tmp_var in data_tmp.keys():
-                            l_style = plot_cfg["linestyles"]["t" + str(idx + 1)]
+                        for tmp_var in plot_vars:
                             col = plot_cfg["colors"][tmp_var]
-                            cax = axs.plot(x_tmp, data_tmp[tmp_var], linestyle=l_style, color=col)
+                            tmp_data = input_data[tmp_var]
+                            cax = axs[idx].plot(tmp_data["r [m]"], tmp_data[f"t= {ele} [s]"], color=col)
                             if self.export_times != "flow_time":
                                 l_conf.append(plot_cfg["legend"][tmp_var] + ", t={}s".format(round(ele * cases_cfg["timestep"],1)))
                             else:
@@ -1035,9 +1109,10 @@ class flowfield:
                         axs.legend(l_conf)
 
                     else:
-                        for tmp_var in data_tmp.keys():
+                        for tmp_var in plot_vars:
                             col = plot_cfg["colors"][tmp_var]
-                            cax = axs.plot(x_tmp, data_tmp[tmp_var], color=col)
+                            tmp_data = input_data[tmp_var]
+                            cax = axs[idx].plot(tmp_data["r [m]"], tmp_data[f"t= {ele} [s]"], color=col)
                             l_conf.append(plot_cfg["legend"][tmp_var])
                             # add axis description
 
@@ -1507,14 +1582,17 @@ def do_plots():
         config = json.load(f)
 
     field = flowfield(config, cases_cfg)
-    if config["create_front"]:
-        field.reaction_front(config, cases_cfg)
+    if config["create_avg"]:
+        field.h_avg_data(config, cases_cfg)
     
     if config["create_widths"]:
         field.front_width(config, cases_cfg)
     
     if config["create_prod"]:
         field.formed_product(config, cases_cfg)
+
+    with open(cfg_path) as f:
+        config = json.load(f)
 
     if config["create_image"]:
         field.multi_field(config, cases_cfg)

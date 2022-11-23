@@ -24,7 +24,7 @@
     "create_image": true,
     "create_plot": true,
     "create_gif": true,
-    "create_front": true,
+    "create_avg": true,
     "create_prod": true,
     "plot_front" : true,
     "plot_prod" : true,
@@ -118,8 +118,7 @@
         }
     },
     "animation_vars" : [
-        "concentration-fluid_c",
-        "velocity-field"
+        "concentration-fluid_c"
     ],
     "animation_plot_vars" : [
         "concentration-fluid_a",

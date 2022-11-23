@@ -80,7 +80,7 @@ def read_front_data(config):
         experiment = cas[:2]
         name = ""
         path = os.path.join(sys.path[0], "../..", "Experimente")
-        files = glob.glob("*front*.csv", root_dir=path)
+        files = glob.glob(f"{experiment}*.csv", root_dir=path)
         for file in files:
             if experiment in file:
                 name = file
@@ -91,6 +91,7 @@ def read_front_data(config):
             logging.warning(f"No file containing {name} found")
         
         dat = {}
+        found_exp = False
         if found_exp:
 
             data_path = os.path.join(path, name)
@@ -108,6 +109,7 @@ def read_front_data(config):
 
 
         # read sim data
+        data = {}
         res["sim"][cas] = {}
         if config["hpc_calculation"]:
             case_path = os.path.join(*hpc_cases_dir, cas)
@@ -119,7 +121,7 @@ def read_front_data(config):
             logging.info(f"Case path {case_path} doesn't exsist for case {cas}")
             continue
 
-        file = glob.glob("*front*", root_dir=case_path)[0]
+        file = glob.glob("h_avg*fluid_c.csv", root_dir=case_path)[0]
 
         data = pd.read_csv(os.path.join(case_path, file))
         res["sim"][cas] = data
@@ -194,6 +196,7 @@ def read_width_data(config):
         dist_heights = abs(np.array(heights) - middle_height)
         target_height = min(dist_heights) + middle_height
         res["sim"][cas] = data[["time [s]", "FWHM [mm]", f"w [mm] (h={str(target_height).replace('.', ',')}mm)"]]
+        # res["sim"][cas] = data[["time [s]", "FWHM [mm]"]]
 
     return res
 
