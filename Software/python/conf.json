@@ -1,146 +1,151 @@
 {
-    "hpc_calculation": false,
-    "data_path": [
-        "Data"
-    ],
-    "hpc_results_path": [
-        "Results"
-    ],
-    "cases_dir_path": [
-        "\\\\gssnas",
-        "bigdata",
-        "FWDT",
-        "DFischer",
-        "Jobs"
-    ],
-    "cases": [
-        "h2r3_P500E2_S122E3",
-        "h2r3_P931E2_S122E3"
-    ],
-    "ignore_exsisting": false,
-    "plots": [
-        -1
-    ],
-    "create_resi_plot": false,
-    "create_image": false,
-    "create_plot": false,
-    "create_gif": false,
-    "create_avg": false,
-    "create_prod": false,
-    "create_widths": false,
-    "plot_front" : true,
-    "plot_prod" : false,
-    "plot_width" : false,
-    "field_var_tmp": [
-        "velocity-magnitude",
-        "concentration-fluid_a",
-        "concentration-fluid_b",
-        "concentration-fluid_c",
-        "cell-reynolds-number",
-        "cell-convective-courant-number",
-        "velocity-field"
-    ],
-    "field_var": [
-        "concentration-fluid_c",
-        "cell-convective-courant-number"
-    ],
-    "c_bar": "c [mol/l]",
-    "image_file_type": "png",
-    "image_conf": {
-        "concentration-fluid_a" : {
-            "set_custom_range": true,
-            "min": 0.0,
-            "max": 0.03,
-            "c_bar": "$c_A$ [mol/l]"
-        },
-        "concentration-fluid_b" : {
-            "set_custom_range": true,
-            "min": 0.0,
-            "max": 0.03,
-            "c_bar": "$c_B$ [mol/l]"
-        },
-        "concentration-fluid_c" : {
-            "set_custom_range": true,
-            "min": 0.0,
-            "max": 0.03,
-            "c_bar": "$c_C$ [mol/l]"
-        },
-        "cell-reynolds-number" : {
-            "set_custom_range": false,
-            "min": 0.0,
-            "max": 0.03,
-            "c_bar": "reynolds-number"
-        },
-        "cell-convective-courant-number" : {
-            "set_custom_range": false,
-            "min": 0.0,
-            "max": 0.03,
-            "c_bar": "courant-number"
-        },
-        "velocity-magnitude" : {
-            "set_custom_range": false,
-            "min": 0.0,
-            "max": 0.03,
-            "c_bar": "v [m/s]"
-        },
-        "velocity-field" : {
-            "set_custom_range": false,
-            "min": 0.0,
-            "max": 0.03,
-            "c_bar": "v [m/s]"
-        }
-        
-    },
-    "one_plot": false,
-    "plot_vars": [
-        "concentration-fluid_a",
-        "concentration-fluid_b",
+    "animation_plot_vars": [
+        "concentration-fluid_a", 
+        "concentration-fluid_b", 
         "concentration-fluid_c"
-    ],
-    "plot_file_type": "png",
-    "plot_conf": {
-        "y_label" : "c [mol/l]",
-        "colors": {
-            "molef-fluid_a": "b",
-            "molef-fluid_b": "g",
-            "molef-fluid_c": "r",
-            "concentration-fluid_a": "b",
-            "concentration-fluid_b": "g",
-            "concentration-fluid_c": "r"
-        },
-        "linestyles": {
-            "t1": "solid",
-            "t2": "dotted",
-            "t3": "dashed"
-        },
-        "legend": {
-            "molef-fluid_a": "fluid a",
-            "molef-fluid_b": "fluid b",
-            "molef-fluid_c": "fluid c",
-            "concentration-fluid_a": "$c_A$",
-            "concentration-fluid_b": "$c_B$",
-            "concentration-fluid_c": "$c_C$"
-        }
-    },
+    ], 
     "animation_vars": [
         "concentration-fluid_c"
-    ],
-    "animation_plot_vars": [
-        "concentration-fluid_a",
-        "concentration-fluid_b",
-        "concentration-fluid_c"
-    ],
+    ], 
+    "c_bar": "c [mol/l]", 
+    "cases": [
+        "h4r3_P931E2_S120E4", 
+        "h2r3_P205E3_S120E4", 
+        "h6r3_P205E3_S120E4", 
+        "h4r3_P205E3_S120E4", 
+        "h2r3_P931E2_S120E4", 
+        "h6r3_P500E2_S120E4", 
+        "h2r3_P500E2_S120E4", 
+        "h4r3_P500E2_S120E4", 
+        "h6r3_P931E2_S120E4"
+    ], 
+    "cases_dir_path": [
+        "\\\\gssnas", 
+        "bigdata", 
+        "FWDT", 
+        "DFischer", 
+        "Jobs"
+    ], 
+    "create_avg_file": false, 
+    "create_gif": false, 
+    "create_image": true, 
+    "create_new_files": false, 
+    "create_plot": false, 
+    "create_plot_front": false, 
+    "create_plot_prod": false, 
+    "create_plot_width": false, 
+    "create_prod_file": false, 
+    "create_resi_plot": false, 
+    "create_widths_file": false, 
+    "data_path": [
+        "Data"
+    ], 
+    "field_var": [
+        "concentration-fluid_c", 
+        "cell-convective-courant-number"
+    ], 
+    "field_var_tmp": [
+        "velocity-magnitude", 
+        "concentration-fluid_a", 
+        "concentration-fluid_b", 
+        "concentration-fluid_c", 
+        "cell-reynolds-number", 
+        "cell-convective-courant-number", 
+        "velocity-field"
+    ], 
     "gif_conf": {
         "cases": {
-            "start": 0,
-            "end": 5,
+            "end": 5, 
+            "start": 0, 
             "step": 1
-        },
-        "keep_images": true,
-        "videos": true,
-        "gif_plot": true,
-        "gif_image": true,
-        "loop": 0,
-        "frame_duration": 200
-    }
+        }, 
+        "frame_duration": 200, 
+        "gif_image": true, 
+        "gif_plot": true, 
+        "keep_images": true, 
+        "loop": 0, 
+        "videos": true
+    }, 
+    "hpc_calculation": false, 
+    "hpc_results_path": [
+        "Results"
+    ], 
+    "image_conf": {
+        "cell-convective-courant-number": {
+            "c_bar": "courant-number", 
+            "max": 0.03, 
+            "min": 0.0, 
+            "set_custom_range": false
+        }, 
+        "cell-reynolds-number": {
+            "c_bar": "reynolds-number", 
+            "max": 0.03, 
+            "min": 0.0, 
+            "set_custom_range": false
+        }, 
+        "concentration-fluid_a": {
+            "c_bar": "$c_A$ [mol/l]", 
+            "max": 0.03, 
+            "min": 0.0, 
+            "set_custom_range": true
+        }, 
+        "concentration-fluid_b": {
+            "c_bar": "$c_B$ [mol/l]", 
+            "max": 0.03, 
+            "min": 0.0, 
+            "set_custom_range": true
+        }, 
+        "concentration-fluid_c": {
+            "c_bar": "$c_C$ [mol/l]", 
+            "max": 0.03, 
+            "min": 0.0, 
+            "set_custom_range": true
+        }, 
+        "velocity-field": {
+            "c_bar": "v [m/s]", 
+            "max": 0.03, 
+            "min": 0.0, 
+            "set_custom_range": false
+        }, 
+        "velocity-magnitude": {
+            "c_bar": "v [m/s]", 
+            "max": 0.03, 
+            "min": 0.0, 
+            "set_custom_range": false
+        }
+    }, 
+    "image_file_type": "png", 
+    "one_plot": false, 
+    "plot_conf": {
+        "colors": {
+            "concentration-fluid_a": "b", 
+            "concentration-fluid_b": "g", 
+            "concentration-fluid_c": "r", 
+            "molef-fluid_a": "b", 
+            "molef-fluid_b": "g", 
+            "molef-fluid_c": "r"
+        }, 
+        "legend": {
+            "concentration-fluid_a": "$c_A$", 
+            "concentration-fluid_b": "$c_B$", 
+            "concentration-fluid_c": "$c_C$", 
+            "molef-fluid_a": "fluid a", 
+            "molef-fluid_b": "fluid b", 
+            "molef-fluid_c": "fluid c"
+        }, 
+        "linestyles": {
+            "t1": "solid", 
+            "t2": "dotted", 
+            "t3": "dashed"
+        }, 
+        "y_label": "c [mol/l]"
+    }, 
+    "plot_file_type": "png", 
+    "plot_vars": [
+        "concentration-fluid_a", 
+        "concentration-fluid_b", 
+        "concentration-fluid_c"
+    ], 
+    "plots": [
+    ]
 }

@@ -410,7 +410,7 @@ class flowfield:
             if os.path.exists(folder_path) == False:
                 os.makedirs(folder_path)
 
-            if os.path.exists(image_path) and config["ignore_exsisting"] == True:
+            if os.path.exists(image_path) and config["create_new_files"] == False:
                 logging.info(f"{var} field for case {cas} already exsists.")
                 continue
 
@@ -631,7 +631,7 @@ class flowfield:
                     logging.info(f"Creating front_width image for case {cas}")
                     msg = False
 
-                if os.path.exists(image_path) and config["ignore_exsisting"]:
+                if os.path.exists(image_path) and config["create_new_files"] == False:
                     logging.info(f"Already created front_width image for case {cas}")
                     continue
                 
@@ -730,7 +730,7 @@ class flowfield:
             image_name = f"total_product" + "." + config["plot_file_type"]
             image_path = os.path.join(folder_path, image_name)
 
-            if os.path.exists(image_path) and config["ignore_exsisting"]:
+            if os.path.exists(image_path) and config["create_new_files"] == False:
                 logging.info(f"Already created total_product image for case {cas}")
                 continue
 
@@ -788,7 +788,7 @@ class flowfield:
             
             legend.append(f"prod {Pe} {Sc}")
         
-        if os.path.exists(image_path) and config["ignore_exsisting"]:
+        if os.path.exists(image_path) and config["create_new_files"] == False:
             cases = config["cases"]
             logging.info(f"Already created total_product image for cases {cases}")
         else:    
@@ -876,7 +876,7 @@ class flowfield:
                     
                     
 
-                    if os.path.exists(image_path) and config["ignore_exsisting"]:
+                    if os.path.exists(image_path) and config["create_new_files"] == False:
                         logging.info(f"Already created front image for {exp} for case {cas}")
                         continue
 
@@ -990,7 +990,7 @@ class flowfield:
                     folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "plots")
             image_path = os.path.join(folder_path, image_name)
 
-            if os.path.exists(image_path) and config["ignore_exsisting"]:
+            if os.path.exists(image_path) and config["create_new_files"] == False:
                 logging.info(f"{plot_vars} plot for case {cas} already created")
                 continue
             
@@ -1183,7 +1183,7 @@ class flowfield:
                 if os.path.exists(folder_path) == False:
                     os.makedirs(folder_path)
 
-                if os.path.exists(image_path) and config["ignore_exsisting"] == True:
+                if os.path.exists(image_path) and config["create_new_files"] == False:
                     logging.info(f"{var} field for case {cas} already exsists.")
                     continue
 
@@ -1582,13 +1582,13 @@ def do_plots():
         config = json.load(f)
 
     field = flowfield(config, cases_cfg)
-    if config["create_avg"]:
+    if config["create_avg_file"]:
         field.h_avg_data(config, cases_cfg)
     
-    if config["create_widths"]:
+    if config["create_widths_file"]:
         field.front_width(config, cases_cfg)
     
-    if config["create_prod"]:
+    if config["create_prod_file"]:
         field.formed_product(config, cases_cfg)
 
     with open(cfg_path) as f:
@@ -1603,17 +1603,17 @@ def do_plots():
     if config["create_resi_plot"]:
         field.resi_plot(config)
 
-    if config["plot_front"]:
+    if config["create_plot_front"]:
         field.front_threshhold = 1e-6
         data = read_front_data(config)
         front = calc_front(data["sim"], field.front_threshhold, False)
         mx = calc_front(data["sim"], 0.0, True)
         field.plot_front(config, front, mx, data["exp"])
 
-    if config["plot_prod"]:
+    if config["create_plot_prod"]:
         field.plot_prod(config)
 
-    if config["plot_width"]:
+    if config["create_plot_width"]:
         field.plot_width(config)
 
     if config["create_gif"]:

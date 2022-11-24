@@ -17,12 +17,23 @@ fi
 while [ -n "$1" ]; do # while loop starts
 	case "$1" in
 	-j) do_jobs_info ;;
-	-q) do_queue_info defq ; do_queue_info rome; do_queue_info intel; do_queue_info intel_16; do_queue_info intel_32; do_queue_info mem768 ;;
+	-q) do_queue_info defq ; do_queue_info rome; do_queue_info intel; do_queue_info intel_32; do_queue_info mem768; do_queue_info milan ;;
 	*) echo "Option $1 not recognized. -j and -q are allowed." ;; # In case you typed a different option other than a,b,c
 	esac
 	shift
 done
 
+}
+
+
+function get_job_run_time {
+	cd $1
+	FLUENT_LOG=$(ls | grep .trn)
+	JOB_RUN_TIME=$(squeue -u $USER -h -t r --format="%j %M" | sort -k2 | grep $1 | cut -d" " -f2)
+	FLOW_TIME=$(tail -n50 ./${FLUENT_LOG} | grep "Flow" | tail -n1 | cut -d "=" -f2 | cut -d"s" -f1)
+	awk "BEGIN {print ${FLOW_TIME} * ${TOTAL_TIME} / ${JOB_RUN_TIME}}"
+	awk "BEGIN {print -8.4 - -8}"
+	cd ..	
 }
 
 function do_jobs_info {
