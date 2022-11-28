@@ -600,10 +600,11 @@ class flowfield:
         legend = []
         msg = True
 
-        cols = ["r", "g", "b", "y", ""]
+        cols = ["red", "green", "blue", "yellow", "orange", "lawngreen", "cyan", "blueviolet", "navy"]
 
         title = "front_width"
         fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6.5,4.5))
+
         fig.suptitle(title)
 
         for cas in config["cases"]:
@@ -666,6 +667,8 @@ class flowfield:
                 logging.info(f"saved image {image_name} at {image_path}.")
                 return
             else:
+                Pe = "Pe" + str(int(float(cas[6]+"."+ cas[7:9])*10**int(cas[10])))
+                Sc = "Sc" + str(int(float(cas[13]+"."+ cas[14:16])*10**int(cas[17])))
                 if msg:
                     logging.info(f"Creating front_width image for cases {config['cases']}")
                     msg = False
@@ -681,14 +684,15 @@ class flowfield:
                     os.makedirs(folder_path)
 
                 image_path = os.path.join(folder_path, image_name)
-            cax = axs.plot(data["sim"][cas]["time [s]"].iloc[::dat_ele], data["sim"][cas]["FWHM [mm]"].iloc[::dat_ele], f"{cols[i]}x")
-            legend.append(f"FWHM {cas}")
-            cax = axs.plot(data["sim"][cas]["time [s]"].iloc[::dat_ele], data["sim"][cas][data["sim"][cas].keys()[-1]].iloc[::dat_ele], f"{cols[i]}d")
-            legend.append(f"middle width {cas}")
+            cax = axs.plot(data["sim"][cas]["time [s]"].iloc[::dat_ele], data["sim"][cas]["FWHM [mm]"].iloc[::dat_ele], color = cols[i], marker=".")
+            legend.append(f"FWHM {Pe} {Sc}")
+            cax = axs.plot(data["sim"][cas]["time [s]"].iloc[::dat_ele], data["sim"][cas][data["sim"][cas].keys()[-1]].iloc[::dat_ele], color=cols[i], marker="x")
+            legend.append(f"middle width {Pe} {Sc}")
                 
             i += 1
-    
+
         axs.legend(legend)
+        # axs.legend(legend, loc='center left', bbox_to_anchor=(1, 0.5))
         axs.set_xlabel("time [s]")
         axs.set_ylabel("width [mm]")
         plt.savefig(image_path, dpi=600)
@@ -875,7 +879,7 @@ class flowfield:
                         image_name = f"front_{str(self.front_threshhold).replace('.', ',')}" + "." + config["plot_file_type"]
                     
                     
-
+                    image_path = os.path.join(folder_path, image_name)
                     if os.path.exists(image_path) and config["create_new_files"] == False:
                         logging.info(f"Already created front image for {exp} for case {cas}")
                         continue

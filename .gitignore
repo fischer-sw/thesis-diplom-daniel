@@ -26,6 +26,7 @@
 *.db
 *.txt
 *.jou
+plots/*
 Software/python/bla.py
 !Software/ansys/journals/gui_template.jou
 !Software/ansys/journals/cmd_template.jou

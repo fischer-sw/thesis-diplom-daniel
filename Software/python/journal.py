@@ -46,7 +46,7 @@ if __name__ == "__main__":
     mode = "cmd"
 
     run_jour = True
-    create_journals(exit=True, mode=mode, update_exsisting=False)
+    create_journals(exit=True, mode=mode, update_exsisting=True)
     
     if run_jour:
         if mode == "cmd":
