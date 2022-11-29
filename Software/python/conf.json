@@ -9,8 +9,6 @@
     ], 
     "c_bar": "c [mol/l]", 
     "cases": [
-        "h2r3_P500E2_S122E3", 
-        "h2r3_P931E2_S122E3",
         "h2r3_P205E3_S122E3"
     ], 
     "cases_dir_path": [
@@ -23,7 +21,7 @@
     "create_avg_file": false,
     "create_gif": false,
     "create_image": false,
-    "create_new_files": false,
+    "create_new_files": true,
     "create_plot": false, 
     "create_plot_front": true, 
     "create_plot_prod": true, 
@@ -141,5 +139,6 @@
         "concentration-fluid_c"
     ], 
     "plots": [
+        -1
     ]
 }

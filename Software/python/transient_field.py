@@ -610,8 +610,9 @@ class flowfield:
         for cas in config["cases"]:
 
             n_cases = len(get_cases(config, cas))
+            height = cas[:2]
 
-            dat_ele = int(round(n_cases/data_points, 0))
+            dat_ele = math.ceil(n_cases/data_points)
             
             if config["hpc_calculation"]:
                 folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "plots")
@@ -645,19 +646,19 @@ class flowfield:
                     image_name = f"front_width_sim_vs_{exps}" + "." + config["plot_file_type"]
                     for exp in exps:
                         image_path = os.path.join(folder_path, image_name)
-                        cax = axs.plot(data["exp"][cas][exp][f"{exp} t [s]"], data["exp"][cas][exp][f"{exp} n_C [mol]"], f"{cols[i]}d")
+                        cax = axs.scatter(data["exp"][cas][exp][f"{exp} t [s]"], data["exp"][cas][exp][f"{exp} n_C [mol]"], color=cols[i], marker=".")
                         i +=1
                         legend.append(f"exp_data {exp}")
                 # plot FWHM
-                cax = axs.plot(data["sim"][cas]["time [s]"][::dat_ele], data["sim"][cas]["FWHM [mm]"][::dat_ele], f"{cols[i]}x")
-                # cax = axs.plot(data["sim"][cas]["time [s]"][::dat_ele], data["sim"][cas]["FWHM [mm]"][::dat_ele], f"{cols[i+1]}x")
+                cax = axs.scatter(data["sim"][cas]["time [s]"][::dat_ele], data["sim"][cas]["FWHM [mm]"][::dat_ele], color=cols[i], marker="x")
+                # cax = axs.scatter(data["sim"][cas]["time [s]"][::dat_ele], data["sim"][cas]["FWHM [mm]"][::dat_ele], f"{cols[i+1]}x")
 
                 Pe = "Pe" + str(int(float(cas[6]+"."+ cas[7:9])*10**int(cas[10])))
                 Sc = "Sc" + str(int(float(cas[13]+"."+ cas[14:16])*10**int(cas[17])))
                 
-                legend.append(f"FWHM {Pe} {Sc}")
-                cax = axs.plot(data["sim"][cas]["time [s]"][::dat_ele], data["sim"][cas][data["sim"][cas].keys()[-1]][::dat_ele], f"{cols[i]}d")
-                legend.append(f"middle width {Pe} {Sc}")
+                legend.append(f"FWHM {height} {Pe} {Sc}")
+                cax = axs.scatter(data["sim"][cas]["time [s]"][::dat_ele], data["sim"][cas][data["sim"][cas].keys()[-1]][::dat_ele], color=cols[i], marker=".")
+                legend.append(f"middle width {height} {Pe} {Sc}")
                 # axs.set_xlim(0, 380)
                 axs.legend(legend)
                 axs.set_xlabel("time [s]")
@@ -684,10 +685,10 @@ class flowfield:
                     os.makedirs(folder_path)
 
                 image_path = os.path.join(folder_path, image_name)
-            cax = axs.plot(data["sim"][cas]["time [s]"].iloc[::dat_ele], data["sim"][cas]["FWHM [mm]"].iloc[::dat_ele], color = cols[i], marker=".")
-            legend.append(f"FWHM {Pe} {Sc}")
-            cax = axs.plot(data["sim"][cas]["time [s]"].iloc[::dat_ele], data["sim"][cas][data["sim"][cas].keys()[-1]].iloc[::dat_ele], color=cols[i], marker="x")
-            legend.append(f"middle width {Pe} {Sc}")
+            cax = axs.scatter(data["sim"][cas]["time [s]"].iloc[::dat_ele], data["sim"][cas]["FWHM [mm]"].iloc[::dat_ele], color = cols[i], marker=".")
+            legend.append(f"FWHM {height} {Pe} {Sc}")
+            cax = axs.scatter(data["sim"][cas]["time [s]"].iloc[::dat_ele], data["sim"][cas][data["sim"][cas].keys()[-1]].iloc[::dat_ele], color=cols[i], marker="x")
+            legend.append(f"middle width {height} {Pe} {Sc}")
                 
             i += 1
 
@@ -709,17 +710,24 @@ class flowfield:
         hpc_cases_dir = config["cases_dir_path"][1:]
         hpc_cases_dir[0] = "/" + hpc_cases_dir[0]
 
+        
+        data_points = 60
+        
         i = 0
         legend = []
         logged = False
 
-        cols = ["r", "g", "b", "y"]
+        # cols = ["r", "g", "b", "y"]
+        cols = ["red", "green", "blue", "yellow", "orange", "lawngreen", "cyan", "blueviolet", "navy"]
 
         title = "total_product"
         fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6.5,4.5))
         fig.suptitle(title)
 
         for cas in config["cases"]:
+
+            n_cases = len(get_cases(config, cas))
+            dat_ele = math.ceil(n_cases/data_points)
             
             if config["hpc_calculation"]:
                 folder_path = os.path.join(*hpc_cases_dir, cas, *config["hpc_results_path"], "plots")
@@ -738,6 +746,7 @@ class flowfield:
                 logging.info(f"Already created total_product image for case {cas}")
                 continue
 
+            height = cas[:2]
             Pe = "Pe" + str(int(float(cas[6]+"."+ cas[7:9])*10**int(cas[10])))
             Sc = "Sc" + str(int(float(cas[13]+"."+ cas[14:16])*10**int(cas[17])))
             
@@ -756,12 +765,12 @@ class flowfield:
                     image_name = f"total_product_sim_vs_{exps}" + "." + config["plot_file_type"]
                     for exp in exps:
                         image_path = os.path.join(folder_path, image_name)
-                        cax = axs.plot(data["exp"][cas][exp][f"{exp} t [s]"], data["exp"][cas][exp][f"{exp} n_C [mol]"], f"{cols[i]}d")
+                        cax = axs.scatter(data["exp"][cas][exp][f"{exp} t [s]"], data["exp"][cas][exp][f"{exp} n_C [mol]"], color = cols[i], marker=".")
                         i +=1
                         
                         legend.append(f"exp_data {exp}")
-                cax = axs.plot(data["sim"][cas]["time [s]"], data["sim"][cas]["product [kmol]"]*1e3*2*math.pi, f"{cols[i]}x")
-                legend.append(f"prod {Pe} {Sc}")
+                cax = axs.scatter(data["sim"][cas]["time [s]"][::dat_ele], data["sim"][cas]["product [kmol]"][::dat_ele]*1e3*2*math.pi, color = cols[i], marker="x")
+                legend.append(f"prod {height} {Pe} {Sc}")
                 # axs.set_xlim(0, 380)
                 axs.legend(legend)
                 axs.set_xlabel("time [s]")
@@ -787,10 +796,10 @@ class flowfield:
 
                 image_path = os.path.join(folder_path, image_name)
                 
-            cax = axs.plot(data["sim"][cas]["time [s]"][::5], data["sim"][cas]["product [kmol]"][::5]*1e3*2*math.pi, f"{cols[i]}x")
+            cax = axs.scatter(data["sim"][cas]["time [s]"][::dat_ele], data["sim"][cas]["product [kmol]"][::dat_ele]*1e3*2*math.pi, color = cols[i], marker="x")
             i += 1
             
-            legend.append(f"prod {Pe} {Sc}")
+            legend.append(f"prod {height} {Pe} {Sc}")
         
         if os.path.exists(image_path) and config["create_new_files"] == False:
             cases = config["cases"]
@@ -816,7 +825,9 @@ class flowfield:
         data_points= 60
         logged = False
 
-        cols = ["r", "g", "b", "y"]
+        # cols = ["r", "g", "b", "y"]
+        cols = ["red", "green", "blue", "yellow", "orange", "lawngreen", "cyan", "blueviolet", "navy"]
+
 
         fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6.5,4.5))
 
@@ -835,8 +846,15 @@ class flowfield:
                 os.makedirs(folder_path)
 
             exps = ['ground', 'PF']
+            exps = ['ground']
+            height = cas[:2]
             Pe = "Pe" + str(int(float(cas[6]+"."+ cas[7:9])*10**int(cas[10])))
             Sc = "Sc" + str(int(float(cas[13]+"."+ cas[14:16])*10**int(cas[17])))
+
+            sim_data = pd.DataFrame(front_data[cas])
+            mx_data = pd.DataFrame(max_data[cas])
+            sim_step = math.ceil(len(sim_data["times [s]"])/data_points)
+            mx_step = math.ceil(len(mx_data["times [s]"])/data_points)
 
 
             if len(config["cases"]) > 1:
@@ -854,15 +872,12 @@ class flowfield:
                 title = "front_positions"
                 fig.suptitle(title)
                 
-                sim_data = pd.DataFrame(front_data[cas])
-                mx_data = pd.DataFrame(max_data[cas])
-                sim_step = int(round(len(sim_data["times [s]"])/data_points, 0))
-                mx_step = int(round(len(mx_data["times [s]"])/data_points, 0))
+                
 
-                cax = axs.plot(sim_data["times [s]"][::sim_step], sim_data["r_s [m]"][::sim_step]*1e3, f"{cols[i]}d")
-                legend.append(f"front {Pe} {Sc}")
-                cax = axs.plot(mx_data["times [s]"][::mx_step], mx_data["r_s [m]"][::mx_step]*1e3, f"{cols[i]}x")
-                legend.append(f"max {Pe} {Sc}")
+                cax = axs.scatter(sim_data["times [s]"][::sim_step], sim_data["r_s [m]"][::sim_step]*1e3, color = cols[i], marker="x")
+                legend.append(f"front {height} {Pe} {Sc}")
+                cax = axs.scatter(mx_data["times [s]"][::mx_step], mx_data["r_s [m]"][::mx_step]*1e3, color = cols[i], marker=".")
+                legend.append(f"max {height} {Pe} {Sc}")
                 image_name = "front_pos" + "." + config["plot_file_type"]
                 i += 1
 
@@ -875,7 +890,7 @@ class flowfield:
                         legend = ["sim_front_data", "sim_max_data", "exp_front_data", "exp_max_data"]
                         image_name = f"front_{exp}_{str(self.front_threshhold).replace('.', ',')}" + "." + config["plot_file_type"]
                     else:
-                        legend = [f"front {Pe} {Sc}", f"max {Pe} {Sc}"]
+                        legend = [f"front {height} {Pe} {Sc}", f"max {height} {Pe} {Sc}"]
                         image_name = f"front_{str(self.front_threshhold).replace('.', ',')}" + "." + config["plot_file_type"]
                     
                     
@@ -918,15 +933,17 @@ class flowfield:
                         max_exp_t = list(tmp_max_exp[f"r_c_{exp} t [s]"].round(0))
                         max_exp_r = list(tmp_max_exp[f"r_c_{exp} r [mm]"])
 
-                        cax = axs.plot(sim_matched["times [s]"], sim_matched["r_s [m]"]*1e3, "bd")
-                        cax = axs.plot(max_matched["times [s]"], max_matched["r_s [m]"]*1e3, "yd")
+                        cax = axs.scatter(sim_matched["times [s]"], sim_matched["r_s [m]"]*1e3, color = cols[i], marker=".")
+                        cax = axs.scatter(max_matched["times [s]"], max_matched["r_s [m]"]*1e3, color = cols[i], marker="x")
 
-                        cax = axs.plot(front_exp_t, front_exp_r, "rx")
-                        cax = axs.plot(max_exp_t, max_exp_r, "gx")
+                        cax = axs.scatter(front_exp_t, front_exp_r, "rx")
+                        cax = axs.scatter(max_exp_t, max_exp_r, "gx")
                     else:
                         logging.info(f"sim_data {sim_data.keys()}, max_data {max_data.keys()}")
-                        cax = axs.plot(sim_data["times [s]"], sim_data["r_s [m]"]*1e3, "bd")
-                        cax = axs.plot(mx_data["times [s]"], mx_data["r_s [m]"]*1e3, "rd")
+                        cax = axs.scatter(sim_data["times [s]"][::sim_step], sim_data["r_s [m]"][::sim_step]*1e3, color = cols[i], marker=".")
+                        legend.append(f"front {height} {Pe} {Sc}")
+                        cax = axs.scatter(mx_data["times [s]"][::mx_step], mx_data["r_s [m]"][::mx_step]*1e3, color = cols[i], marker="x")
+                        legend.append(f"max {height} {Pe} {Sc}")
 
         image_path = os.path.join(folder_path, image_name)
         axs.set_xlabel("time [s]")
