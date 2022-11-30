@@ -47,8 +47,12 @@ def get_closest_plots(config, cases_cfg, case, export_times="flow_time"):
     """
 
     plots = np.array(config["plots"])
+    tmp = np.array([])
     cases = get_cases(config, case)
     cases.sort()
+    if cases == []:
+        logging.warning(f"No data found for cases {case}")
+        exit()
     logging.debug("Cases = {}".format(cases))
 
     if export_times == "timestep":
@@ -61,7 +65,9 @@ def get_closest_plots(config, cases_cfg, case, export_times="flow_time"):
         else:
             case = min(cases, key=lambda x:abs(x-ele))
         plots[id] = case
-    return list(plots)
+        tmp = np.append(tmp, case)
+    # return list(plots)
+    return list(tmp)
 
 def read_front_data(config):
     """
@@ -232,7 +238,7 @@ def read_prod_data(config):
             logging.warning(f"No file containing {experiment} found for case {cas}")
         
         dat = {}
-        if found_exp:
+        if found_exp and name != "":
 
             data_path = os.path.join(path, name)
 

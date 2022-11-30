@@ -9,7 +9,7 @@
     ], 
     "c_bar": "c [mol/l]", 
     "cases": [
-        "h2r3_P205E3_S122E3"
+        "h2r3_P205E3_S243E3"
     ], 
     "cases_dir_path": [
         "\\\\gssnas", 
@@ -18,14 +18,14 @@
         "DFischer", 
         "Jobs"
     ], 
-    "create_avg_file": false,
-    "create_gif": false,
-    "create_image": false,
-    "create_new_files": true,
+    "create_avg_file": false, 
+    "create_gif": false, 
+    "create_image": true, 
+    "create_new_files": true, 
     "create_plot": false, 
-    "create_plot_front": true, 
-    "create_plot_prod": true, 
-    "create_plot_width": true, 
+    "create_plot_front": false, 
+    "create_plot_prod": false, 
+    "create_plot_width": false, 
     "create_prod_file": false, 
     "create_resi_plot": false, 
     "create_widths_file": false, 

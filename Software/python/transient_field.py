@@ -869,6 +869,9 @@ class flowfield:
                     path = os.path.join(path, "assets", "plots")
                     folder_path = os.path.join(path)
 
+                if os.path.exists(folder_path) == False:
+                    os.makedirs(folder_path)
+
                 title = "front_positions"
                 fig.suptitle(title)
                 
