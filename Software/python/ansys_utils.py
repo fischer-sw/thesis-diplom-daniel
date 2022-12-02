@@ -125,7 +125,7 @@ def read_front_data(config):
 
         if os.path.exists(case_path) == False:
             logging.info(f"Case path {case_path} doesn't exsist for case {cas}")
-            continue
+            exit()
 
         file = glob.glob("h_avg*fluid_c.csv", root_dir=case_path)[0]
 

@@ -49,10 +49,13 @@ function do_post {
     		NAME=$(grep "^#SBATCH -J" ./case.sh | cut -d" "  -f3)
     		JOB_ID=$(get_job_id $NAME)
     	if [ "$JOB_ID" = "" ]; then
-        	echo "Removing dependency"
-        	grep -v "dependency" ./post.sh > post_tmp.sh
-        	mv ./post_tmp.sh ./post.sh
-        	sbatch post.sh
+		CSV=$(ls | grep .csv | wc -l)
+		if [ $CSV !=  6 ]; then
+        		echo "Removing dependency"
+        		grep -v "dependency" ./post.sh > post_tmp.sh
+        		mv ./post_tmp.sh ./post.sh
+        		sbatch post.sh
+		fi
     	else
        		echo "Host Job ${NAME} ${JOB_ID} is still running"     
     	fi

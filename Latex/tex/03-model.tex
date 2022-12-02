@@ -1,0 +1,104 @@
+\documentclass[../thesis.tex]{subfiles}
+\begin{document}
+
+\chapter{Simulation model}
+\label{chp:model}
+
+Within this part the creation process of the simulation model will be explained in greater detail. At first the three basic equations the software solves will be given followed by a brief overview of the steps taken to create the model. Then the model's results are explained and compared to already done experiments for validation.
+
+\section{governing equations}
+\label{sec:gov_eqn}
+To obtain the results of interest the model needs to solve three different equations that are linked to each other.
+
+\subsection{mass conservation}
+To gain information about the velocity field the mass conservation equations for mass and momentum needs to solved. For 2D axisymmetric case as used here the equations looks like this \cite{manual2009ansys}:
+
+\begin{equation}
+	\label{eqn:ansys_conti}
+	\dfrac{\partial \rho}{\partial t} + \dfrac{\partial}{\partial x} (\rho u_x) + \dfrac{\partial }{\partial r} (\rho u_r)
+	+ \dfrac{\rho u_r}{r} = S_m
+\end{equation}
+
+This is the continuity equation where $r$ is the radial coordinate, $u_x$ is the axial velocity, $u_r$ is the radial velocity, $\rho$ is the density and $S_m$ is the source term. In addition to the shown continuity equation the radial and axial momentum equations need to be solved.
+
+%\begin{equation}
+%	\dfrac{\partial}{\partial t}(\rho u_x) + \dfrac{1}{r} \dfrac{\partial}{\partial x}(r \rho u_x^2)
+%	+ \dfrac{1}{r} \dfrac{\partial}{\partial r}(r \rho u_r u_x) = 
+%	- \dfrac{\partial p}{\partial x} + \dfrac{1}{r} \dfrac{\partial }{\partial x} \left[ 
+%		r \mu \left( 2 \dfrac{\partial u_x}{\partial x} - \dfrac{2}{3}(\nabla \cdot \mathbf{u}) \right)
+%	\right] + \dfrac{1}{r} \dfrac{\partial }{\partial r} \left[ 
+%	r \mu \left( \dfrac{\partial u_x}{\partial r} - \dfrac{\partial u_r}{\partial x} \right)
+%	\right]
+%\end{equation}
+
+\begin{gather}
+	\dfrac{\partial}{\partial t}(\rho u_x) + \dfrac{1}{r} \dfrac{\partial}{\partial x}(r \rho u_x^2)
+	+ \dfrac{1}{r} \dfrac{\partial}{\partial r}(r \rho u_r u_x) = 
+	- \dfrac{\partial p}{\partial x} + \dfrac{1}{r} \dfrac{\partial }{\partial x} \left[ 
+	r \mu \left( 2 \dfrac{\partial u_x}{\partial x} - \dfrac{2}{3}(\nabla \cdot \mathbf{u}) \right)
+	\right] + \\ \nonumber
+	\dfrac{1}{r} \dfrac{\partial }{\partial r} \left[ 
+	r \mu \left( \dfrac{\partial u_x}{\partial r} - \dfrac{\partial u_r}{\partial x} \right)
+	\right]	
+\end{gather}
+
+%\begin{equation}
+%	\dfrac{\partial}{\partial t}(\rho u_r) + \dfrac{1}{x} \dfrac{\partial}{\partial r}(r \rho u_x u_r)
+%	+ \dfrac{1}{r} \dfrac{\partial}{\partial x}(r \rho u_r^2) = 
+%	- \dfrac{\partial p}{\partial r} + \dfrac{1}{r} \dfrac{\partial }{\partial x} \left[ 
+%	r \mu \left( \dfrac{\partial u_r}{\partial x} - \dfrac{\partial u_x}{\partial r} \right)
+%	\right]
+%	+ \dfrac{1}{r} \dfrac{\partial }{\partial r} \left[ 
+%	r \mu \left( 2 \dfrac{\partial u_r}{\partial r} - \dfrac{2}{3}(\nabla \cdot \mathbf{u}) \right)
+%	\right] -
+%	2 \mu \dfrac{u_r}{r^2}+ \dfrac{2}{3} \dfrac{\mu}{r}(\nabla \cdot \mathbf{u}) + \rho \dfrac{u_z^2}{r} + %F_r
+%\end{equation}
+
+\begin{gather}
+	\dfrac{\partial}{\partial t}(\rho u_r) + \dfrac{1}{x} \dfrac{\partial}{\partial r}(r \rho u_x u_r)
+	+ \dfrac{1}{r} \dfrac{\partial}{\partial x}(r \rho u_r^2) = 
+	- \dfrac{\partial p}{\partial r} + \dfrac{1}{r} \dfrac{\partial }{\partial x} \left[ 
+	r \mu \left( \dfrac{\partial u_r}{\partial x} - \dfrac{\partial u_x}{\partial r} \right)
+	\right] \\ \nonumber
+	+ \dfrac{1}{r} \dfrac{\partial }{\partial r} \left[ 
+	r \mu \left( 2 \dfrac{\partial u_r}{\partial r} - \dfrac{2}{3}(\nabla \cdot \mathbf{u}) \right)
+	\right] -
+	2 \mu \dfrac{u_r}{r^2}+ \dfrac{2}{3} \dfrac{\mu}{r}(\nabla \cdot \mathbf{u}) + \rho \dfrac{u_z^2}{r} + F_r
+\end{gather}
+In addition to the known variables from \autoref{eqn:ansys_conti} the viscosity $\mu$ and the swirl velocity $u_z$ play a role within the momentum equations.
+Within all previous stated equations the product of $\nabla$ and $\mathbf{u}$ can be written as:
+
+\begin{equation}
+	\nabla \cdot \mathbf{u} = \dfrac{\partial u_x}{\partial x} + \dfrac{\partial u_r}{\partial r}+ \dfrac{u_r}{r}
+\end{equation}
+ 
+
+\subsection{energy equation}
+
+\subsection{reaction equation}
+
+\section{model setup}
+\label{sec:mod_setup}
+
+\subsection{geometry creation}
+
+\subsection{meshing}
+
+\subsection{setup}
+
+\subsection{model evolution and refinement}
+
+\subsection{model implementation}
+
+\chapter{validation}
+\label{chp:validation}
+
+\section{experimental setup}
+
+\section{experimental results}
+
+\section{model results}
+
+\section{comparison}
+
+\end{document}

@@ -1,15 +1,16 @@
 {
     "animation_plot_vars": [
-        "concentration-fluid_a", 
-        "concentration-fluid_b", 
+        "concentration-fluid_a",
+        "concentration-fluid_b",
         "concentration-fluid_c"
     ], 
     "animation_vars": [
         "concentration-fluid_c"
-    ], 
+    ],
     "c_bar": "c [mol/l]", 
     "cases": [
-        "h2r3_P205E3_S243E3"
+        "h6r3_P500E2_S122E3",
+        "h6r3_P931E2_S122E3"
     ], 
     "cases_dir_path": [
         "\\\\gssnas", 
@@ -20,12 +21,12 @@
     ], 
     "create_avg_file": false, 
     "create_gif": false, 
-    "create_image": true, 
+    "create_image": false, 
     "create_new_files": true, 
     "create_plot": false, 
-    "create_plot_front": false, 
-    "create_plot_prod": false, 
-    "create_plot_width": false, 
+    "create_plot_front": true, 
+    "create_plot_prod": true, 
+    "create_plot_width": true, 
     "create_prod_file": false, 
     "create_resi_plot": false, 
     "create_widths_file": false, 
@@ -139,6 +140,5 @@
         "concentration-fluid_c"
     ], 
     "plots": [
-        -1
     ]
 }
