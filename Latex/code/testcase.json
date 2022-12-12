@@ -1,0 +1,20 @@
+{
+    "h2r3_P346E2_S122E3": {
+        "export_times": "flow_time",
+        "total_time": 360.0,
+        "fixed_timesteps": 1,
+        "timestep_min": 0.001,
+        "data_export_interval": 1.0,
+        "input_vel": 0.00142206,
+        "inlet_xA": 0.00054,
+        "init_phiB": 0.003,
+        "viscosity": 1e-06,
+        "diffusion": 8.22e-10,
+        "iterations": 30,
+        "queue": "milan",
+        "tasks_p_node": 32,
+        "wall_time": "96:00:00",
+        "post_wall_time": "48:00:00",
+        "case": "h2_r3_6e-6.cas.gz"
+    }
+}

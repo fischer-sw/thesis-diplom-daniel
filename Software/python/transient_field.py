@@ -226,8 +226,8 @@ class flowfield:
                     if not row_name in widths.keys():
                         widths[row_name]  = []
                     tmp_front = Vals[id]
-                    # threshold = max(tmp_front) * 1e-6
-                    threshold = fwhm_threshold
+                    threshold = max(tmp_front) * 0.5
+                    # threshold = fwhm_threshold
                     positions = np.array(np.where(tmp_front >= threshold))
                     if positions.size != 0:
                         front = positions[0][-1]
