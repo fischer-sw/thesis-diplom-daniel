@@ -636,19 +636,20 @@ class flowfield:
                 if os.path.exists(image_path) and config["create_new_files"] == False:
                     logging.info(f"Already created front_width image for case {cas}")
                     continue
-                
-                exps = ["ground", "PF"]      
+                  
                 title = "front_width" 
                 fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6.5,4.5))
                 fig.suptitle(title)
+                Pe = "Pe" + str(int(float(cas[6]+"."+ cas[7:9])*10**int(cas[10])))
+                Sc = "Sc" + str(int(float(cas[13]+"."+ cas[14:16])*10**int(cas[17])))
 
                 if use_exp:
-                    image_name = f"front_width_sim_vs_{exps}" + "." + config["plot_file_type"]
-                    for exp in exps:
-                        image_path = os.path.join(folder_path, image_name)
-                        cax = axs.scatter(data["exp"][cas][exp][f"{exp} t [s]"], data["exp"][cas][exp][f"{exp} n_C [mol]"], color=cols[i], marker=".")
-                        i +=1
-                        legend.append(f"exp_data {exp}")
+                    image_name = f"front_width_sim_vs_SRL3" + "." + config["plot_file_type"]
+                    
+                    image_path = os.path.join(folder_path, image_name)
+                    cax = axs.scatter(data["exp"][cas]["t (s)"], data["exp"][cas][" WC (mm)"], color=cols[i], marker=".")
+                    i +=1
+                    legend.append(f"exp_data Pe{Pe} Sc{Sc}")
                 # plot FWHM
                 cax = axs.scatter(data["sim"][cas]["time [s]"][::dat_ele], data["sim"][cas]["FWHM [mm]"][::dat_ele], color=cols[i], marker="x")
                 # cax = axs.scatter(data["sim"][cas]["time [s]"][::dat_ele], data["sim"][cas]["FWHM [mm]"][::dat_ele], f"{cols[i+1]}x")
@@ -845,8 +846,6 @@ class flowfield:
             if os.path.exists(folder_path) == False:
                 os.makedirs(folder_path)
 
-            exps = ['ground', 'PF']
-            exps = ['ground']
             height = cas[:2]
             Pe = "Pe" + str(int(float(cas[6]+"."+ cas[7:9])*10**int(cas[10])))
             Sc = "Sc" + str(int(float(cas[13]+"."+ cas[14:16])*10**int(cas[17])))
@@ -887,66 +886,64 @@ class flowfield:
 
             else:
                 logging.info(f"Creating front image for case {cas}")
-                for exp in exps:
+                
 
-                    if exp_data[cas] != {}:
-                        legend = ["sim_front_data", "sim_max_data", "exp_front_data", "exp_max_data"]
-                        image_name = f"front_{exp}_{str(self.front_threshhold).replace('.', ',')}" + "." + config["plot_file_type"]
-                    else:
-                        legend = [f"front {height} {Pe} {Sc}", f"max {height} {Pe} {Sc}"]
-                        image_name = f"front_{str(self.front_threshhold).replace('.', ',')}" + "." + config["plot_file_type"]
+                if type(exp_data[cas]) == type(pd.DataFrame({})):
+                    legend = ["sim_front_data", "sim_max_data", "exp_front_data", "exp_max_data"]
+                    image_name = f"front_{str(self.front_threshhold).replace('.', ',')}" + "." + config["plot_file_type"]
+                else:
+                    legend = [f"front {height} {Pe} {Sc}", f"max {height} {Pe} {Sc}"]
+                    image_name = f"front_{str(self.front_threshhold).replace('.', ',')}" + "." + config["plot_file_type"]
+                
+                
+                image_path = os.path.join(folder_path, image_name)
+                if os.path.exists(image_path) and config["create_new_files"] == False:
+                    logging.info(f"Already created front image for case {cas}")
+                    continue
+
+                title = "front_" + cas
+
+                fig.suptitle(title)
+                tmp_exp = exp_data[cas]
+
+        
+                if type(exp_data[cas]) == type(pd.DataFrame({})):
+                    tmp_front_exp = exp_data[cas][" Rf (mm)"]
+                    tmp_max_exp = exp_data[cas][" RC (mm)"]
                     
-                    
-                    image_path = os.path.join(folder_path, image_name)
-                    if os.path.exists(image_path) and config["create_new_files"] == False:
-                        logging.info(f"Already created front image for {exp} for case {cas}")
+                
+                sim_data = pd.DataFrame(front_data[cas])
+                mx_data = pd.DataFrame(max_data[cas])
+
+                if type(exp_data[cas]) == type(pd.DataFrame({})):
+                    front_exp_t = list(exp_data[cas]["t (s)"].round(0))
+                    front_exp_r = list(exp_data[cas][" Rf (mm)"])
+                    sim_matched = sim_data[sim_data["times [s]"].isin(front_exp_t)]
+
+                    if sim_matched.empty:
+                        logging.warning(f"No matching times between experiment data and simulation for case {cas} found.")
                         continue
-
-                    title = "front_" + cas
-
-                    fig.suptitle(title)
-                    tmp_exp = exp_data[cas]
-
-                    exp_data[cas] = {}
-                    if exp_data[cas] != {}:
-                        match exp:
-                            case 'ground':
-                                tmp_front_exp = exp_data[cas]['r_f_ground']
-                                tmp_max_exp = exp_data[cas]['r_c_ground']
-                                time_front_name = 'r_f_ground t [s]'
-                                time_max_name = 'r_c_ground t [s]'
-
-                            case 'PF':
-                                tmp_front_exp = exp_data[cas]['r_f_PF']
-                                tmp_max_exp = exp_data[cas]['r_c_PF']
+                    matched_times = list(sim_matched["times [s]"])
+                    tmp_exp_fr_dat = tmp_exp[tmp_exp["t (s)"].isin(matched_times)]
                     
-                    sim_data = pd.DataFrame(front_data[cas])
-                    mx_data = pd.DataFrame(max_data[cas])
+                    max_matched = mx_data[mx_data["times [s]"].isin(list(exp_data[cas]["t (s)"].round(0)))]
+                    matched_times = list(max_matched["times [s]"])
+                    tmp_exp_mx_dat = tmp_exp[tmp_exp["t (s)"].isin(matched_times)]
 
-                    if exp_data[cas] != {}:
-                        front_exp_t = list(tmp_front_exp[f"r_f_{exp} t [s]"].round(0))
-                        front_exp_r = list(tmp_front_exp[f"r_f_{exp} r [mm]"])
-                        sim_matched = sim_data[sim_data["times [s]"].isin(front_exp_t)]
+                    max_exp_t = list(exp_data[cas]["t (s)"].round(0))
+                    max_exp_r = list(exp_data[cas][" RC (mm)"])
 
-                        if sim_matched.empty:
-                            logging.warning(f"No matching times between experiment {exp} and simulation found.")
+                    cax = axs.scatter(sim_matched["times [s]"], sim_matched["r_s [m]"]*1e3-0.5, color = cols[i], marker=".")
+                    cax = axs.scatter(max_matched["times [s]"], max_matched["r_s [m]"]*1e3-0.5, color = cols[i], marker="x")
 
-                        
-                        max_matched = mx_data[mx_data["times [s]"].isin(list(tmp_max_exp[f"r_c_{exp} t [s]"].round(0)))]
-                        max_exp_t = list(tmp_max_exp[f"r_c_{exp} t [s]"].round(0))
-                        max_exp_r = list(tmp_max_exp[f"r_c_{exp} r [mm]"])
-
-                        cax = axs.scatter(sim_matched["times [s]"], sim_matched["r_s [m]"]*1e3, color = cols[i], marker=".")
-                        cax = axs.scatter(max_matched["times [s]"], max_matched["r_s [m]"]*1e3, color = cols[i], marker="x")
-
-                        cax = axs.scatter(front_exp_t, front_exp_r, "rx")
-                        cax = axs.scatter(max_exp_t, max_exp_r, "gx")
-                    else:
-                        logging.info(f"sim_data {sim_data.keys()}, max_data {max_data.keys()}")
-                        cax = axs.scatter(sim_data["times [s]"][::sim_step], sim_data["r_s [m]"][::sim_step]*1e3, color = cols[i], marker=".")
-                        legend.append(f"front {height} {Pe} {Sc}")
-                        cax = axs.scatter(mx_data["times [s]"][::mx_step], mx_data["r_s [m]"][::mx_step]*1e3, color = cols[i], marker="x")
-                        legend.append(f"max {height} {Pe} {Sc}")
+                    cax = axs.scatter(tmp_exp_fr_dat["t (s)"], tmp_exp_fr_dat[" Rf (mm)"], color="green", marker=".")
+                    cax = axs.scatter(tmp_exp_mx_dat["t (s)"], tmp_exp_mx_dat[" RC (mm)"], color="green", marker="x")
+                else:
+                    logging.info(f"sim_data {sim_data.keys()}, max_data {max_data.keys()}")
+                    cax = axs.scatter(sim_data["times [s]"][::sim_step], sim_data["r_s [m]"][::sim_step]*1e3, color = cols[i], marker=".")
+                    legend.append(f"front {height} {Pe} {Sc}")
+                    cax = axs.scatter(mx_data["times [s]"][::mx_step], mx_data["r_s [m]"][::mx_step]*1e3, color = cols[i], marker="x")
+                    legend.append(f"max {height} {Pe} {Sc}")
 
         image_path = os.path.join(folder_path, image_name)
         axs.set_xlabel("time [s]")

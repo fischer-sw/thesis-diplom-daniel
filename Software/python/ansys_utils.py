@@ -4,6 +4,7 @@ import sys
 import glob
 import time
 import logging
+import math
 from cv2 import threshold
 import pandas as pd
 import json
@@ -83,10 +84,10 @@ def read_front_data(config):
     for cas in config["cases"]:
 
         # read exp data
-        experiment = cas[:2]
+        experiment = cas[:2]+ cas[4:]
         name = ""
         path = os.path.join(sys.path[0], "../..", "Experimente")
-        files = glob.glob(f"{experiment}*.csv", root_dir=path)
+        files = glob.glob("*fronts*.csv", root_dir=path)
         for file in files:
             if experiment in file:
                 name = file
@@ -96,22 +97,15 @@ def read_front_data(config):
         if name == "":
             logging.warning(f"No file containing {name} found")
         
-        dat = {}
-        found_exp = False
+        data = {}
         if found_exp:
 
             data_path = os.path.join(path, name)
 
             data = pd.read_csv(data_path)
-            exps = list(set([ele.split(" ")[0] for ele in list(data.columns)]))
-            
+            data = data[["t (s)", " RC (mm)", " Rf (mm)"]]
 
-            for ele in exps:
-                tmp = pd.DataFrame(data[[ele+ " t [s]", ele+ " r [mm]"]], copy=True)
-                tmp.dropna(inplace=True)
-                dat[ele] = tmp
-
-        res["exp"][cas] = dat
+        res["exp"][cas] = data
 
 
         # read sim data
@@ -152,7 +146,7 @@ def read_width_data(config):
         name = ""
         path = os.path.join(sys.path[0], "../..", "Experimente")
         if os.path.exists(path):
-            files = glob.glob("*width*.csv", root_dir=path)
+            files = glob.glob("*fronts*.csv", root_dir=path)
         else:
             files = []
         for file in files:
@@ -164,21 +158,15 @@ def read_width_data(config):
         if name == "":
            logging.warning(f"No file containing {experiment} found for case {cas}")
         
-        dat = {}
+        data = {}
         if found_exp:
 
             data_path = os.path.join(path, name)
 
             data = pd.read_csv(data_path)
-            exps = list(set([ele.split(" ")[0] for ele in list(data.columns)]))
-            
+            data = data[["t (s)", " WC (mm)"]]
 
-            for ele in exps:
-                tmp = pd.DataFrame(data[[ele+ " t [s]", ele+ " r [mm]"]], copy=True)
-                tmp.dropna(inplace=True)
-                dat[ele] = tmp
-
-        res["exp"][cas] = dat
+        res["exp"][cas] = data
 
 
         # read sim data
@@ -220,12 +208,12 @@ def read_prod_data(config):
     for cas in config["cases"]:
 
         # read exp data
-        experiment = cas[:2]
+        experiment = cas[:2]+ cas[4:]
         name = ""
 
         path = os.path.join(sys.path[0], "../..", "Experimente")
         if os.path.exists(path):
-            files = glob.glob("*prod*.csv", root_dir=path)
+            files = glob.glob("*product*.csv", root_dir=path)
         else:
             files = []
         for file in files:
@@ -243,6 +231,11 @@ def read_prod_data(config):
             data_path = os.path.join(path, name)
 
             data = pd.read_csv(data_path)
+            data["Q [ml/min]"] = 0.0536
+            data["t [s]"] = round((data['Volume injected (mL)']/data["Q [ml/min]"])*60, 1)
+            data["V_Reactor [ml]"] = math.pi/4*8**2*0.02
+
+
             exps = list(set([ele.split(" ")[0] for ele in list(data.columns)]))
             for ele in exps:
                 tmp = pd.DataFrame(data[[ele+ " t [s]", ele+ " n_C [mol]"]], copy=True)

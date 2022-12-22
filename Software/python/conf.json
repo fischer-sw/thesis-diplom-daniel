@@ -9,8 +9,7 @@
     ],
     "c_bar": "c [mol/l]", 
     "cases": [
-        "h6r3_P500E2_S122E3",
-        "h6r3_P931E2_S122E3"
+        "h2r3_P346E2_S122E3"
     ], 
     "cases_dir_path": [
         "\\\\gssnas", 
@@ -20,12 +19,12 @@
         "Jobs"
     ], 
     "create_avg_file": false, 
-    "create_gif": false, 
+    "create_gif": true, 
     "create_image": false, 
     "create_new_files": true, 
     "create_plot": false, 
     "create_plot_front": true, 
-    "create_plot_prod": true, 
+    "create_plot_prod": false, 
     "create_plot_width": true, 
     "create_prod_file": false, 
     "create_resi_plot": false, 
@@ -48,12 +47,12 @@
     ], 
     "gif_conf": {
         "cases": {
-            "end": 5, 
+            "end": 360, 
             "start": 0, 
             "step": 1
         }, 
         "frame_duration": 200, 
-        "gif_image": true, 
+        "gif_image": false, 
         "gif_plot": true, 
         "keep_images": true, 
         "loop": 0, 
