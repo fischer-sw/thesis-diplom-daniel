@@ -1,0 +1,13 @@
+...
+; Set inlet velocity
+(cx-gui-do cx-set-expression-entry " ... (Velocity Magnitude)" '("%input_vel%" . 0))
+(cx-gui-do cx-activate-tab-index "Velocity Inlet*Frame2*Frame2" 3)
+; Set minimum/maximum timestep size
+(cx-gui-do cx-activate-item "Run Calculation*Table1*Table7(Time Advancement)*Table3(Parameters)*Table6*Table1*PushButton1(Settings)")
+(cx-gui-do cx-set-real-entry-list "... (Minimum Time Step Size)" '( %timestep_min%))
+(cx-gui-do cx-set-real-entry-list "... (Maximum Time Step Size)" '( %data_export_interval%))
+(cx-gui-do cx-activate-item "Adaptive Time Stepping*PanelButtons*PushButton1(OK)")
+...
+; Export Case & Data
+(cx-gui-do cx-activate-item "MenuBar*WriteSubMenu*Case & Data...")
+(cx-gui-do cx-set-file-dialog-entries "Select File" '( %case_export_path%) "CFF Case/Data Files (*.cas.h5 *.dat.h5 )")

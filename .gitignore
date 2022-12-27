@@ -37,6 +37,7 @@ Software/openfoam
 !Software/python/*watcher_conf.json
 !Latex/figs/*.pdf
 !Latex/figs/*.png
+!Latex/code/*
 !Notes/img/*.png
 !Latex/pdfs/*.pdf
 !Literatur/*.pdf
