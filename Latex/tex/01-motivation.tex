@@ -4,13 +4,15 @@
 \chapter{Introduction}
 \label{chp:introduction}
 
-Within the current section a short introduction to the field this work is about is given. Then the main objectives of this work are described, followed by the general structure. 
+This chapter gives a short introduction to the overall research field this work addresses. Then the main objectives are described, followed by a general outline. 
 
 \section{Motivation}
 
-Reaction-Diffusion-Advection fronts are playing a significant role in a broad variety of technical and natural systems. Fields these systems are applied in are  for example disease spreading \cite{kuto2017concentration}, population dynamics \cite{chen2018hopf, wang2019persistence} or biological applications \cite{zhao2011operator} to name a few. A common technical use case is the description of species distribution \cite{nakagaki1999reaction, von2013measurement} which is a part of chemical engineering. The chemical reaction $ A+B \rightarrow C$, which is also looked at in this work, is the most prominent case in reaction-diffusion-advection research. This reaction is an important subset of reaction-diffusion-advection fronts.
+% ein bischen breiterer Kontext zur RDA wäre hilfreich. Die fallen hier "vom" Himmel :-)
 
-Until recently, the dynamics of fronts, following the just given reaction, where studied for one-dimensional (1D) geometries \cite{PhysRevA.38.3151}. The developed approaches were then later expanded and applied to cylindrical systems by Comolli, De Wit and Brau \cite{comolli2021dynamics}.
+Reaction-Diffusion-Advection (RDA) fronts play a significant role in a broad variety of technical and natural systems. They are applied in disease spreading \cite{kuto2017concentration}, population dynamics \cite{chen2018hopf, wang2019persistence} or biological applications \cite{zhao2011operator} for example. A common technical use case is the description of species distribution \cite{nakagaki1999reaction, von2013measurement} within chemical engineering. The chemical reaction $ A+B \rightarrow C$, also being the topic in this work, is the most prominent case in reaction-diffusion-advection research. This reaction is an important subset of reaction-diffusion-advection fronts.
+
+Until recently, the dynamics of fronts, following the just given reaction, where studied for one-dimensional (1D) geometries \cite{PhysRevA.38.3151}. The developed approaches were then expanded and applied to cylindrical systems by Comolli, De Wit and Brau \cite{comolli2021dynamics}.
 
 Within this work a model for the reaction-diffusion-advection of $ A+B \rightarrow C$ is created for a cylindrical geometry. Within this model the two initially separated species A and B are transported through advection and diffusion. B is injected radially into A from the cylinder's centreline. At the points where A and B meet they react to form the product C. Special interest is in the species distribution within early stages of the developing reaction front. Experiments under $ 0g$ conditions have shown that some interesting patterns occur. To gain further knowledge on how these pattern are build and how they develop over time the theoretical model is needed. The model should describe the front dynamics from a cross-section point of view. As known from previous research the fronts curvature is dependent on the system's geometry. To validate the model the model's results are compared to experimental data. The influence of system geometry, mostly radius and height are of interest, can then be looked at. 
 
@@ -18,10 +20,12 @@ In the end the created model can be generally applied and expanded to other geom
 
 \section{Objectives}
 
-This work aims toward the creation of a numerical model for a RDA front within a radial reactor using Ansys FLUENT. To check and compare the results of the model, experimental data from \cite{stergiou2022effects} is used. After model validation a parameter study is done. The changed parameters are mostly affecting the Peclet number $Pe$ and the Schmidt number $Sc$.
+This work aims at the creation of a numerical model for a RDA front within a radial reactor using the modelling environment Ansys FLUENT \cite{}. The results of the model are checked and compared against the experimental data from \cite{stergiou2022effects}. After model validation a parameter study is done focussing on the Peclet number $Pe$ and the Schmidt number $Sc$.
+
+% Was sind Peclet number und Schmidt number und welche Rolle spielen sie?, Sollte in der Motivation idealerwise schon auftauchen.
 
 \section{Report Outline}
 
-The hole work is divided into 6 main sections. The theoretical background required for modelling is given in \autoref{chp:theory}. Following that the process of model creation is described in \autoref{chp:model}. Then in \autoref{chp:validation} the model results are shown and compared against the experimental data. Following the model validation the results of the parameter studies are shown and discussed within \autoref{chp:parameter_variation}. The limitations and errors are described in \autoref{chp:limitations}. At last within \autoref{chp:outlook} the work is summarized and an outlook for further use and development is given.
+The work is divided into 6 sections. The theoretical background required for modelling is given in \autoref{chp:theory}. Following that the process of model creation is described in \autoref{chp:model}. Then in \autoref{chp:validation} the model results are shown and compared against the experimental data. After the model validation the results of the parameter studies are shown and discussed within \autoref{chp:parameter_variation}. \autoref{chp:limitations} discusses limitations and error sources. Finally \autoref{chp:outlook} summarizes the work and provides an outlook for further use and development.
 
 \end{document}
