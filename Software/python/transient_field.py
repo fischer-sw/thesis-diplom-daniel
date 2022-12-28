@@ -975,6 +975,11 @@ class flowfield:
             plot_cfg = config["plot_conf"]
             one_plot = config["one_plot"]
 
+            height = cas[:2]
+            Pe = "Pe" + str(int(float(cas[6]+"."+ cas[7:9])*10**int(cas[10])))
+            Sc = "Sc" + str(int(float(cas[13]+"."+ cas[14:16])*10**int(cas[17])))
+
+
             logging.info(f"Creating {plot_vars} plot {plots} for case {cas}")
 
             if config["hpc_calculation"]:
@@ -1018,7 +1023,7 @@ class flowfield:
             # data = read_transient_data(config, cas)
             if one_plot == False:
                 
-                title = cas
+                title = f"{height} {Pe} {Sc}"
 
                 fig, axs = plt.subplots(len(plots), 1, sharex=True, sharey=True, figsize=(9.0,2.4*(len(plots)-1) + 4.5))
 
@@ -1208,7 +1213,10 @@ class flowfield:
                     logging.info(f"{var} field for case {cas} already exsists.")
                     continue
 
-                title = cas
+                height = cas[:2]
+                Pe = "Pe" + str(int(float(cas[6]+"."+ cas[7:9])*10**int(cas[10])))
+                Sc = "Sc" + str(int(float(cas[13]+"."+ cas[14:16])*10**int(cas[17])))
+                title = f"{height} {Pe} {Sc}"
 
                 fig, axs = plt.subplots(len(plots), 1, sharex=True, sharey=True, figsize=(9.0, 2.0*len(plots)+2.5))
                 fig.suptitle(title, size=12)
