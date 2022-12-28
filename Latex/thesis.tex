@@ -18,7 +18,10 @@
 % - 2018.0.0.2: Fixed some small typos; overhaul of the titlepage, some stuff
 %               for the inclusion of a pdf file
 % -----------------------------------------------------------------------------
+% twoside document for printing twosided
+%\documentclass[12pt,a4paper,twoside,toc=chapterentrywithdots]{scrreprt}
 
+% oneside document for reading and developing
 \documentclass[12pt,a4paper,toc=chapterentrywithdots]{scrreprt}
 
 \usepackage{tex/style} % imports the style-file which loads all the packages
@@ -65,7 +68,7 @@
 \subfile{tex/01-motivation}
 \subfile{tex/02-theory}
 \subfile{tex/03-model}
-%\subfile{tex/04-validation}
+\subfile{tex/04-validation}
 %\subfile{tex/04-parameter_study}
 %\subfile{tex/05-errors_outlook}
 

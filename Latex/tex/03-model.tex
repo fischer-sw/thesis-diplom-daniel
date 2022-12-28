@@ -140,6 +140,7 @@ The next step in model design following the procedure shown in \autoref{fig:cdf_
 The figure shows the reactor's inlet section. The goal in meshing was to create rectangular grid out of squares or rectangles. Near the walls, that begin on the left and right side of the inlet, the mesh resolution is increased using two inflation layers. That is done to resolve the boundary layer of the flow near the walls. Having a mesh consisting mostly out of squares and rectangles is advantageous because the algorithm only stores the values at the cell's centre as mentioned in \autoref{sec:QUICK}. Having a mesh that can be seen as a 2 dimensional array makes post-processing a lot easier. How the results are extracted from the model's output will be explained in \autoref{} in greater detail.
 
 \subsection{setup}
+\label{sec: setup}
 
 To setup the model at first a few basic configuration steps need to done. The Settings that need to be applied are listed in \autoref{tab:ansys_setup_general}.
 
@@ -296,7 +297,7 @@ The last settings that need to done before the model can be run are the time set
 	\label{eqn:cfl}
 	c = \dfrac{u \cdot \Delta t}{\Delta x}
 \end{equation}
-In this model the Courant number is set to 1 and the initial time step size is set to 0.01 seconds to get a compromise between simulation stability and calculation time. The time step size is updated after every calculation. The factor for time step changes are limited to 0.5 on the lower and 2 at the upper end. The time step algorithm decides for a time step change based on the Courant number. 
+In this model the Courant number is set to 1 and the initial time step size is set to 0.01 seconds to get a compromise between simulation stability and calculation time. The time step size is updated after every calculation. The factor for time step changes are limited to 0.5 on the lower and 2 at the upper end. The time step algorithm decides for a time step change based on the Courant number. In addition to the model's time settings the interval the results are exported at need to be set. This in addition to the exported variables of interest can be set under $\texttt{Solution} \rightarrow \texttt{Activities} \rightarrow \texttt{Manage...}$.
 
 \begin{table} [htb]
 	\centering
