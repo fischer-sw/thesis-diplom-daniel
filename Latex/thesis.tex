@@ -18,11 +18,11 @@
 % - 2018.0.0.2: Fixed some small typos; overhaul of the titlepage, some stuff
 %               for the inclusion of a pdf file
 % -----------------------------------------------------------------------------
-% twoside document for printing twosided
-%\documentclass[12pt,a4paper,twoside,toc=chapterentrywithdots]{scrreprt}
-
-% oneside document for reading and developing
+%one sided for reading and developing
 \documentclass[12pt,a4paper,toc=chapterentrywithdots]{scrreprt}
+
+%tow sided for printing
+%\documentclass[12pt,a4paper,twoside,toc=chapterentrywithdots]{scrreprt}
 
 \usepackage{tex/style} % imports the style-file which loads all the packages
 \graphicspath{ {./figs/} }
@@ -34,6 +34,7 @@
 \pagenumbering{gobble}  % disables page numbering
 \subfile{tex/titlepage}
 \newpage
+
 \includepdf[pages=-]{pdfs/Aufgabenstellung_DA_Daniel_Fischer.pdf}
 \newpage % this is needed for the page numbering to work properly. It is not
          % creating a blank page!
@@ -44,8 +45,6 @@
 \pagenumbering{Roman} % page numbering is done with uppercase roman numbers
 % put something like a symbol or figure directory here
 \tableofcontents
-\listoffigures
-\listoftables
 \newpage % this is needed for the page numbering to work properly. It is not
          % creating a blank page!
 \hypersetup{pageanchor=true}
@@ -76,7 +75,9 @@
 %\subfile{tex/appendix}
 
 %\nocite{*}
-\bibliographystyle{plain}
+%\bibliographystyle{ieeetr}
+%\bibliographystyle{plain}
+\bibliographystyle{unsrt}
 % \bibliographystyle{apacite}
 \bibliography{References}
 \includepdf[pages=-]{pdfs/Selbststaendigkeitserklaerung.pdf}

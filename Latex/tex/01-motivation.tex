@@ -1,30 +1,58 @@
 \documentclass[../thesis.tex]{subfiles}
 \begin{document}
 
-\chapter{Introduction}
+\chapter{introduction}
 \label{chp:introduction}
 
 This chapter gives a short introduction to the overall research field this work addresses. Then the main objectives are described, followed by a general outline. 
 
-\section{Motivation}
+\section{motivation}
 
 % ein bischen breiterer Kontext zur RDA wäre hilfreich. Die fallen hier "vom" Himmel :-)
 
-Reaction-Diffusion-Advection (RDA) fronts play a significant role in a broad variety of technical and natural systems. They are applied in disease spreading \cite{kuto2017concentration}, population dynamics \cite{chen2018hopf, wang2019persistence} or biological applications \cite{zhao2011operator} for example. A common technical use case is the description of species distribution \cite{nakagaki1999reaction, von2013measurement} within chemical engineering. The chemical reaction $ A+B \rightarrow C$, also being the topic in this work, is the most prominent case in reaction-diffusion-advection research. This reaction is an important subset of reaction-diffusion-advection fronts.
+With the development towards higher resource efficiency and sustainability new materials and chemicals have to be developed to replace the fossil based ones used today. With demand of materials constantly changing and new developments in need for industrial scale-up the research in microfluidic reactors has gained more and more significance in recent history. When looking into such small systems the evolution of a reaction's appearance in space and time is of high interest. Having a deeper knowledge can be used to further improve the reaction's yield or heat transfer in case of needed heating or cooling. An example of such an microfluidic system is shown in \autoref{fig: reactor_examp} \cite{corning}. These systems have the advantages of being easily customizeable by changing different micro flow elements together and having the capability of dealing with toxic or explosive materials due to their low reaction volume. 
+\begin{figure}[htb]
+	\centering
+	\subfloat[\centering micro fluidic reactor]{{\includegraphics[scale=0.3]{reactor_example} }}%
+	\qquad
+	\subfloat[\centering micro flow element]{{\includegraphics[scale=0.7]{reactor_element} }}%
+	\caption{microfluidic system}%
+	\label{fig: reactor_examp}%
+\end{figure}
+Reactions taking place under these conditions are affected by Advection as a result of the moving fluid and diffusion as a result of concentration gradients. Therefor the hole moving system is called Reaction-Diffusion-Advection front or RDA front as an abbreviation.
+These fronts play a significant role in a broad variety of technical and natural systems. They are applied, besides the already shown example from chemical engineering, in disease spreading \cite{kuto2017concentration}, population dynamics \cite{chen2018hopf, wang2019persistence} or biological applications \cite{zhao2011operator}. A common technical use case is the description of species distribution \cite{nakagaki1999reaction, von2013measurement}.
 
-Until recently, the dynamics of fronts, following the just given reaction, where studied for one-dimensional (1D) geometries \cite{PhysRevA.38.3151}. The developed approaches were then expanded and applied to cylindrical systems by Comolli, De Wit and Brau \cite{comolli2021dynamics}.
+Until recently, the dynamics of fronts were studied for one-dimensional (1D) geometries \cite{PhysRevA.38.3151}. These 1D cases were carried out in a tubular system which is also a prominent reactor type within the industry. These studies were done for the chemical reaction $ A+B \rightarrow C$. This reaction is chosen because it is a simple reaction that can be investigated experimentally very well. The system contains only a forward reaction so the product that is build can be tracked. Ideally the reaction is a very fast one, so that the product is nearly instantly created where the species $A$ and $B$ meet. The developed approaches in tubes were later expanded and applied to cylindrical systems by Comolli, De Wit and Brau \cite{comolli2021dynamics}. Further experiments where carried out under $0g$ conditions \cite{stergiou2022effects} to get rid of the gravitational influence.
 
-Within this work a model for the reaction-diffusion-advection of $ A+B \rightarrow C$ is created for a cylindrical geometry. Within this model the two initially separated species A and B are transported through advection and diffusion. B is injected radially into A from the cylinder's centreline. At the points where A and B meet they react to form the product C. Special interest is in the species distribution within early stages of the developing reaction front. Experiments under $ 0g$ conditions have shown that some interesting patterns occur. To gain further knowledge on how these pattern are build and how they develop over time the theoretical model is needed. The model should describe the front dynamics from a cross-section point of view. As known from previous research the fronts curvature is dependent on the system's geometry. To validate the model the model's results are compared to experimental data. The influence of system geometry, mostly radius and height are of interest, can then be looked at. 
+To gain further knowledge on how these pattern are build and how they develop over time the theoretical models are needed. These models should describe the front dynamics from a cross-section point of view as this information can not be gained by experiments. As known from previous research the fronts curvature is dependent on the system's geometry. And example of how such a front looks is shown in \autoref{fig: front_example}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[scale=0.5]{front_example}
+	\caption{RDA front example}
+	\label{fig: front_example}
+\end{figure}
+Within this work a model for the reaction-diffusion-advection system following the reaction $ A+B \rightarrow C$ is created for a cylindrical geometry. Within this model the two initially separated species $A$ and $B$ are transported through advection and diffusion. $B$ is injected radially into $A$ from the cylinder's centreline. 
+
+Special interest is in the species distribution within early stages of the developing reaction front. Experiments under $0g$ conditions have shown that some interesting patterns occur. The micro gravity experiments are needed because the two species are separating due to density differences resulting in an buoyancy effect as it can be schematically seen in \autoref{fig: 0g_example} \cite{stergiou2022effects}.
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[scale=0.5]{0g_example}
+	\caption{RDA front example}
+	\label{fig: 0g_example}
+\end{figure}
+
+
+To validate the model the model's results are compared to experimental data. The influence of system geometry, mostly radius and height are of interest, can then be looked at. 
 
 In the end the created model can be generally applied and expanded to other geometries or more complex reactions to gain a deeper understanding of reaction-diffusion-advection fronts. 
 
-\section{Objectives}
+\section{objectives}
 
-This work aims at the creation of a numerical model for a RDA front within a radial reactor using the modelling environment Ansys FLUENT \cite{}. The results of the model are checked and compared against the experimental data from \cite{stergiou2022effects}. After model validation a parameter study is done focussing on the Peclet number $Pe$ and the Schmidt number $Sc$.
+This work aims at the creation of a numerical model for a RDA front within a radial reactor using the modeling environment Ansys FLUENT \cite{}. The results of the model are checked and compared against the experimental data from \cite{stergiou2022effects}. After model validation a parameter study is done focussing on the Peclet number $Pe$ and the Schmidt number $Sc$.
 
 % Was sind Peclet number und Schmidt number und welche Rolle spielen sie?, Sollte in der Motivation idealerwise schon auftauchen.
 
-\section{Report Outline}
+\section{report outline}
 
 The work is divided into 6 sections. The theoretical background required for modelling is given in \autoref{chp:theory}. Following that the process of model creation is described in \autoref{chp:model}. Then in \autoref{chp:validation} the model results are shown and compared against the experimental data. After the model validation the results of the parameter studies are shown and discussed within \autoref{chp:parameter_variation}. \autoref{chp:limitations} discusses limitations and error sources. Finally \autoref{chp:outlook} summarizes the work and provides an outlook for further use and development.
 
