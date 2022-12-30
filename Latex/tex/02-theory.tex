@@ -114,6 +114,7 @@ In this equation $\alpha$ describes the non-dimensional Helmholtz-Energy, $h$ is
 This equation is solved under an isothermal condition so the temperature does not change during the model execution. 
 
 \subsection{reaction equation}
+\label{sec: reaction_eqn}
 
 Since the reaction $ A + B \rightarrow C$ takes place where the two educts $A$ and $B$ meet the amount of product formed needs to calculated for the hole domain. The method applied is to calculate the reaction rate, that is dependent of the temperature and species parameters. This rate is then used to calculate the formed product. Within this work the reaction takes place only in one direction so no backwards reaction constants are needed. The reaction rate can be calculated using this equation \cite{manual2009ansys}:
 
@@ -130,7 +131,7 @@ To achieve an instantaneous reaction the rate constant needs to be set to $\inft
 \section{Finite Volume Method}
 With no analytical solution available for the governing equation PDE system numerical approaches need to be applied. The approach used here relies on the method of dividing the geometry into a subset of volumes. That's way the method is call Finite Volume Method.
 
-The finite Volume Method is a discretization method. It converts the set of partial differential equations into a system of linear algebraic equations \cite{darwish2021finite}. This is done in two steps. At first the partial differential equations are integrated and so transformed into balance equations \cite{darwish2021finite}. The discretization step is explained in the next section.
+The Finite Volume Method is a discretization method. It converts the set of partial differential equations into a system of linear algebraic equations \cite{darwish2021finite}. This is done in two steps. At first the partial differential equations are integrated and so transformed into balance equations \cite{darwish2021finite}. The discretization step is explained in the next section.
 
 \subsection{Semi-Discretization}
 
@@ -232,21 +233,78 @@ The solution method used in this case is called PISO algorithm which stands for 
 At first all fields have to be initialized with some values by the user. With this initial values the method starts it's calculation. The first step within the calculation is to get the results of the momentum equations for each cell within the mesh. The results gained are, a 2D case given, the velocity fields $v^*$ and $u^*$. After this step is finished the gained velocity fields are used to calculate the pressure correction $p'$. This is done by setting the pressure offset to a value that satisfies the continuity equation for the cell. With this offset $p'$ a new pressure field $p^{**}$ can be calculated that is then used to correct the velocity fields $u^*$ and $v^*$. This correction is done in a way similar to the already described method in \autoref{sec:QUICK} using the values of the neighboring cells. After the new velocity fields $u^{**}$ and $v^{**}$ have been gained the PISO algorithm performs a second pressure correction. This yields the pressure field $p^{***}$. Now a second velocity field correction takes place in the same manner as the first one. After that is done all other transport equations are solved using the latest fields for the velocities $u^{***}$, $v^{***}$ and the pressure $p^{***}$. Finally a convergence check is performed and if success full the algorithm stops. The convergence is a criterion that does a comparison of the fields that are given as input and the ones yielded as output. If the difference is bellow a certain threshold the solution has converged. The threshold as to be given by the user for each variable of interest or the default ones are used. If the resulting fields have not converged the latest output is used as new input and the solving and corrections steps take place again. This iterative approach is done as long as the convergence criterion is not fulfilled or the maximum amount of iterations is reached.
 
 
-\section{Fluid Phenomena}
+\section{flow observations}
 
 Within a developing reaction-diffusion-advection front some specific phenomena take place. The main ones are looked at in this section.
 
 \subsection{Taylor-Dispersion}
 
-The first phenomenon taking place within a reaction-diffusion-advection front is called Taylor-Dispersion. This was first discovered by G.I. Taylor\cite{aris1956dispersion} in 1956. The discovered phenomenon describes the spreading of the front over time as it can be seen within \autoref{fig:taylor-disp} \cite{levenspiel1998chemical}. 
+The first phenomenon taking place within a reaction-diffusion-advection front is called Taylor-Dispersion. This was first discovered by G.I. Taylor\cite{aris1956dispersion} in 1956. The discovered phenomenon describes the spreading of a front over time as it can be seen within \autoref{fig:taylor_disp_pipe} . 
 
 \begin{figure}[htbp]
 	\centering
+	\includegraphics[scale=0.8]{taylor_dispersion_pipe}
+	\caption{Taylor dispersion within a pipe reactor}
+	\label{fig: taylor_disp_pipe}
+\end{figure}
+This simple example shows that the front, as marked in red within the image grows in length over time and distance. This growth process takes place due two diffusion within the front itself. Therefore the mixture's diffusion coefficient has a high influence on whether a front appears and if so how fast it grows. The hole effect is also affected by the velocity magnitude and shape. Within a tube such a poisseule flow develops if the velocity magnitude is below the critical one. This velocity can be calculated using the critical Reynolds number Re which in case of a tube has a value of $\approx 2300$. 
+\begin{equation}
+	\label{eqn: Re_crit}
+	Re_{crit} = \dfrac{u_{crit} \cdot l}{\nu} \Leftrightarrow u_{crit} = Re_{crit} \cdot \dfrac{\nu}{l}
+\end{equation}
+With \autoref{eqn: Re_crit} the critical velocity can be calculated using the viscosity $\nu$ and the characteristic length $l$ which is in case of a tube the same as the tube's diameter $d$. With a velocity lower than the critical one a laminar velocity profile appears and the effect of Taylor dispersion can be visible.
+
+Within the case of a radial reactor, that is investigated here only gap averaged concentration values are available from the experiments. Within these experiments the effect of Taylor-Dispersion is visible within the data. A schematic \cite{levenspiel1998chemical} of this effect within showing within the concentration data is displayed in \autoref{fig:taylor-disp}. The same effect can be observed within gas chromatography results for example which is a technique used in analytical chemistry.
+\begin{figure}[htbp]
+	\centering
 	\includegraphics[scale=0.8]{taylor-dispersion}
-	\caption{Taylor dispersion}
+	\caption{Taylor dispersion within a radial reactor}
 	\label{fig:taylor-disp}
 \end{figure}
 
-As shown the front's concentration distribution changes along the flow direction $x$ within time $t$. The peak lowers and the distribution widens as time passes. How quickly this effect takes place and which parameters have a significant influence is discussed within \autoref{chp:}. Within this work the front's width as well as the height averaged concentration distribution are the results looked at when checking this phenomenon.
+As shown in \autoref{fig:taylor-disp} the front's concentration distribution changes along the flow direction $x$ within time $t$. The peak lowers and the distribution widens as time passes. How quickly this effect takes place and which parameters have a significant influence is discussed within \autoref{chp: para_stud}. Within this work the front's width as well as the height averaged concentration distribution are the results looked at when checking this phenomenon.
+
+\subsection{reaction details}
+
+Within this section a closer look is taken at the reaction that is implemented in the model. The reaction can be described with \autoref{eqn: reaction_detail}.
+
+\begin{equation}
+	\label{eqn: reaction_detail}
+	A + B \xrightarrow{r} C
+\end{equation}
+
+The reaction velocity $r$ can be calculated using \autoref{eqn: reaction_vel}. From this equation it can be seen that the reaction is of second order and is dependent of the species $A$ and $B$.
+
+\begin{equation}
+	\label{eqn: reaction_vel}
+	r = k \cdot c_A \cdot c_B
+\end{equation}
+
+The reaction velocity equation uses the reaction rate $k$ which can be computed using the context of \autoref{eqn: reaction_rate_detail}.
+
+\begin{equation}
+	\label{eqn: reaction_rate_detail}
+	k = k_{\infty} \cdot e^{- \frac{E_A}{R \cdot T}}
+\end{equation}
+
+Since the reaction needs to be nearly instantaneous as mentioned in \autoref{sec: reaction_eqn} the pre-exponential factor $k_{\inf}$ is set to a high value of $10^{15}$. The reaction takes place under isothermal conditions so the rate has a constant value. The variable $E_A$ is the reaction's activation energy with a value of $10^4$, $R$ is the gas constant with a value of 8.3145 $ \frac{\text{J}}{\text{mol} \cdot \text{K}}$ and $T$ is the temperature in Kelvin. The activation energy only needs to fulfill the requirement that the reaction takes place under the given temperature conditions.
+
+\subsection{dimensionless variables}
+
+To be able to compare simulations and experiments two dimensionless variables are used. These are the Schmidt number $Sc$ and the Peclet number $Pe$. The Peclet number is calculated using \autoref{eqn: Pe} and the Schmidt number is computed using \autoref{eqn: Sc}.
+
+\begin{equation}
+	\label{eqn: Pe}
+	Pe = \dfrac{l \cdot u}{D}
+\end{equation}
+
+The Peclet number is influenced by the characteristic length $l$ as known from the Reynolds number, the input velocity $u$ and the diffusion coefficient $D$. The characteristic length within this model is equal to the gap height. The diffusion coefficient is set to be the same one as calculated from the experiments for model validation. 
+
+\begin{equation}
+	\label{eqn: Sc}
+	Sc = \dfrac{\nu}{D}
+\end{equation}
+
+The Schmidt number is only influenced by species constants. The already mentioned diffusion constant $D$ and the viscosity $\nu$ affect this variable.
 
 \end{document}
