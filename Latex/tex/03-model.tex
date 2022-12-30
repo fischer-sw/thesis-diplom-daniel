@@ -6,95 +6,6 @@
 
 Within this part the creation process of the simulation model will be explained in greater detail. At first the three basic equations the software solves will be given followed by a brief overview of the steps taken to create the model. Then the model's results are explained and compared to already done experiments for validation.
 
-\section{governing equations}
-\label{sec:gov_eqn}
-To obtain the results of interest the model needs to solve three different equations that are linked to each other.
-
-\subsection{mass conservation}
-To gain information about the velocity field the mass conservation equations for mass and momentum needs to solved. For 2D axisymmetric case as used here the equations looks like this \cite{manual2009ansys}:
-
-\begin{equation}
-	\label{eqn:ansys_conti}
-	\dfrac{\partial \rho}{\partial t} + \dfrac{\partial}{\partial x} (\rho u_x) + \dfrac{\partial }{\partial r} (\rho u_r)
-	+ \dfrac{\rho u_r}{r} = S_m
-\end{equation}
-
-This is the continuity equation where $r$ is the radial coordinate, $u_x$ is the axial velocity, $u_r$ is the radial velocity, $\rho$ is the density and $S_m$ is the source term. In addition to the shown continuity equation the radial and axial momentum equations need to be solved.
-
-%\begin{equation}
-%	\dfrac{\partial}{\partial t}(\rho u_x) + \dfrac{1}{r} \dfrac{\partial}{\partial x}(r \rho u_x^2)
-%	+ \dfrac{1}{r} \dfrac{\partial}{\partial r}(r \rho u_r u_x) = 
-%	- \dfrac{\partial p}{\partial x} + \dfrac{1}{r} \dfrac{\partial }{\partial x} \left[ 
-%		r \mu \left( 2 \dfrac{\partial u_x}{\partial x} - \dfrac{2}{3}(\nabla \cdot \mathbf{u}) \right)
-%	\right] + \dfrac{1}{r} \dfrac{\partial }{\partial r} \left[ 
-%	r \mu \left( \dfrac{\partial u_x}{\partial r} - \dfrac{\partial u_r}{\partial x} \right)
-%	\right]
-%\end{equation}
-
-\begin{gather}
-	\dfrac{\partial}{\partial t}(\rho u_x) + \dfrac{1}{r} \dfrac{\partial}{\partial x}(r \rho u_x^2)
-	+ \dfrac{1}{r} \dfrac{\partial}{\partial r}(r \rho u_r u_x) = 
-	- \dfrac{\partial p}{\partial x} + \dfrac{1}{r} \dfrac{\partial }{\partial x} \left[ 
-	r \mu \left( 2 \dfrac{\partial u_x}{\partial x} - \dfrac{2}{3}(\nabla \cdot \mathbf{u}) \right)
-	\right] + \\ \nonumber
-	\dfrac{1}{r} \dfrac{\partial }{\partial r} \left[ 
-	r \mu \left( \dfrac{\partial u_x}{\partial r} - \dfrac{\partial u_r}{\partial x} \right)
-	\right]	
-\end{gather}
-
-%\begin{equation}
-%	\dfrac{\partial}{\partial t}(\rho u_r) + \dfrac{1}{x} \dfrac{\partial}{\partial r}(r \rho u_x u_r)
-%	+ \dfrac{1}{r} \dfrac{\partial}{\partial x}(r \rho u_r^2) = 
-%	- \dfrac{\partial p}{\partial r} + \dfrac{1}{r} \dfrac{\partial }{\partial x} \left[ 
-%	r \mu \left( \dfrac{\partial u_r}{\partial x} - \dfrac{\partial u_x}{\partial r} \right)
-%	\right]
-%	+ \dfrac{1}{r} \dfrac{\partial }{\partial r} \left[ 
-%	r \mu \left( 2 \dfrac{\partial u_r}{\partial r} - \dfrac{2}{3}(\nabla \cdot \mathbf{u}) \right)
-%	\right] -
-%	2 \mu \dfrac{u_r}{r^2}+ \dfrac{2}{3} \dfrac{\mu}{r}(\nabla \cdot \mathbf{u}) + \rho \dfrac{u_z^2}{r} + %F_r
-%\end{equation}
-
-\begin{gather}
-	\dfrac{\partial}{\partial t}(\rho u_r) + \dfrac{1}{x} \dfrac{\partial}{\partial r}(r \rho u_x u_r)
-	+ \dfrac{1}{r} \dfrac{\partial}{\partial x}(r \rho u_r^2) = 
-	- \dfrac{\partial p}{\partial r} + \dfrac{1}{r} \dfrac{\partial }{\partial x} \left[ 
-	r \mu \left( \dfrac{\partial u_r}{\partial x} - \dfrac{\partial u_x}{\partial r} \right)
-	\right] \\ \nonumber
-	+ \dfrac{1}{r} \dfrac{\partial }{\partial r} \left[ 
-	r \mu \left( 2 \dfrac{\partial u_r}{\partial r} - \dfrac{2}{3}(\nabla \cdot \mathbf{u}) \right)
-	\right] -
-	2 \mu \dfrac{u_r}{r^2}+ \dfrac{2}{3} \dfrac{\mu}{r}(\nabla \cdot \mathbf{u}) + \rho \dfrac{u_z^2}{r} + F_r
-\end{gather}
-The viscosity $\mu$ and the swirl velocity $u_z$ play a role within the momentum equations in extend to the known variables from \autoref{eqn:ansys_conti}.
-Within all previous stated equations the product of $\nabla$ and $\mathbf{u}$ can be written as:
-
-\begin{equation}
-	\nabla \cdot \mathbf{u} = \dfrac{\partial u_x}{\partial x} + \dfrac{\partial u_r}{\partial r}+ \dfrac{u_r}{r}
-\end{equation}
- 
-
-\subsection{energy equation}
-
-The energy equation mostly influences the temperature and internal energy of the mixture. The equation the software solves can be written as:
-
-\begin{equation} 
-	\frac{\partial}{\partial t} (\alpha_q \rho_q h_q ) + \nabla \cdot (\alpha_q \rho_q \vec u_q h_q )   = \alpha_q \frac{\partial p_q}{\partial t} + \overline{\overline{\tau}}_q : \nabla \vec u_q - \nabla \cdot \vec q_q + S_q + \sum_{p=1}^n (Q_{pq}  + \dot{m}_{pq} h_{pq} - \dot{m}_{qp} h_{qp}) 
-\end{equation}
-
-In this equation $\alpha$ describes the non-dimensional Helmholtz-Energy, $h$ is the enthalpy, $u$ is the velocity, $\tau$ is the stress vector and $S_q$ is a enthalpy source. Enthalpy is created by a reaction for example. Additionally the heat fluxes vector $ \vec q$, the heat transfer between different phases $Q$ using the mass transfer rates between phases are used in this equation. The subscripts $q$ stand for all different species needed to be taken into account. 
-
-\subsection{reaction equation}
-
-Since the reaction $ A + B \rightarrow C$ takes place where the two educts $A$ and $B$ meet the amount of product formed needs to calculated for the hole domain. The method used is to calculate the reaction rate, that is dependent of the temperature and species parameters. This rate is then used to calculate the formed product. Within this work the reaction takes place only in one direction so no backwards reaction constants are needed. The reaction rate can be calculated using this equation \cite{manual2009ansys}:
-
-\begin{equation}
-	\label{eqn:reaction}
-	\hat{R}_{i,r} = {\Gamma} \left(\nu''_{i,r} - \nu'_{i,r} \right) \left(k_{f,r} \prod_{j=1}^{N} \left[C_{j,r} \right]^{(\eta'_{j,r} + \eta''_{j,r})} \right) 
-\end{equation}
-
-$\hat{R}_{i,r}$ is the reaction rate, $\nu''_{i,r}$ and $\nu'_{i,r}$ are the stoichiometric numbers of the product and educts, $k_{f,r}$ is the rate constant for the forward reaction, $C_{j,r}$ is the molar concentration of the species $j$ and $\eta'_{j,r} + \eta''_{j,r}$ are the rate exponents and define the reaction order. 
-The index $r$ loops through all reactions, in case there is more than one present. The index $j$ is used to distinguish between different species taking part in the reaction.
-
 \section{model setup}
 \label{sec:mod_setup}
 
@@ -325,6 +236,7 @@ In this model the Courant number is set to 1 and the initial time step size is s
 \end{table}
 
 \subsection{model evolution and refinement}
+\label{sec: mod_evol}
 
 Here the steps taken to receive the final model for each case are explained.
 
