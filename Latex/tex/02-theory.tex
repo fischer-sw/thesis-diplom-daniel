@@ -116,7 +116,7 @@ This equation is solved under an isothermal condition so the temperature does no
 \subsection{reaction equation}
 \label{sec: reaction_eqn}
 
-Since the reaction $ A + B \rightarrow C$ takes place where the two educts $A$ and $B$ meet the amount of product formed needs to calculated for the hole domain. The method applied is to calculate the reaction rate, that is dependent of the temperature and species parameters. This rate is then used to calculate the formed product. Within this work the reaction takes place only in one direction so no backwards reaction constants are needed. The reaction rate can be calculated using this equation \cite{manual2009ansys}:
+Since the reaction $ A + B \rightarrow C$ takes place where the two educts $A$ and $B$ meet the amount of product formed needs to calculated for the hole domain. The method applied is to calculate the reaction rate, that is dependent of the temperature and species parameters. This rate is then used to calculate the formed product. Within this work the reaction takes place only in one direction so no backwards reaction rates are needed. The reaction rate can be calculated using this equation \cite{manual2009ansys}:
 
 \begin{equation}
 \label{eqn:reaction}
@@ -273,21 +273,21 @@ Within this section a closer look is taken at the reaction that is implemented i
 	A + B \xrightarrow{r} C
 \end{equation}
 
-The reaction velocity $r$ can be calculated using \autoref{eqn: reaction_vel}. From this equation it can be seen that the reaction is of second order and is dependent of the species $A$ and $B$.
+The reaction rate $r$ can be calculated using \autoref{eqn: reaction_vel}. From this equation it can be seen that the reaction is of second order and is dependent of the species $A$ and $B$.
 
 \begin{equation}
 	\label{eqn: reaction_vel}
 	r = k \cdot c_A \cdot c_B
 \end{equation}
 
-The reaction velocity equation uses the reaction rate $k$ which can be computed using the context of \autoref{eqn: reaction_rate_detail}.
+The reaction velocity equation uses the rate constant $k$ which can be computed using the context of \autoref{eqn: reaction_rate_detail}.
 
 \begin{equation}
 	\label{eqn: reaction_rate_detail}
 	k = k_{\infty} \cdot e^{- \frac{E_A}{R \cdot T}}
 \end{equation}
 
-Since the reaction needs to be nearly instantaneous as mentioned in \autoref{sec: reaction_eqn} the pre-exponential factor $k_{\inf}$ is set to a high value of $10^{15}$. The reaction takes place under isothermal conditions so the rate has a constant value. The variable $E_A$ is the reaction's activation energy with a value of $10^4$, $R$ is the gas constant with a value of 8.3145 $ \frac{\text{J}}{\text{mol} \cdot \text{K}}$ and $T$ is the temperature in Kelvin. The activation energy only needs to fulfill the requirement that the reaction takes place under the given temperature conditions.
+Since the reaction needs to be nearly instantaneous as mentioned in \autoref{sec: reaction_eqn} the pre-exponential factor $k_{\infty}$ is set to a high value of $10^{15} \left[ \frac{\text{l}^2}{\text{mol} \cdot \text{s}} \right] $. The reaction takes place under isothermal conditions so the rate has a constant value. The variable $E_A$ is the reaction's activation energy with a value of $10^4 \left[ \frac{\text{J}}{\text{mol}} \right] $, $R$ is the gas constant with a value of 8.3145 $\left[ \frac{\text{J}}{\text{mol} \cdot \text{K}} \right] $ and $T$ is the temperature in Kelvin. The activation energy only needs to fulfill the requirement that the reaction takes place under the given temperature conditions.
 
 \subsection{dimensionless variables}
 
