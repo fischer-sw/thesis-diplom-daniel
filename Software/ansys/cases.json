@@ -395,6 +395,24 @@
         "post_wall_time": "36:00:00",
         "case": "h4_r3_8e-6.cas.gz"
     },
+    "h4r3_P205E3_S122E3": {
+        "export_times": "flow_time",
+        "total_time": 60.0,
+        "fixed_timesteps": 1,
+        "timestep_min": 0.002,
+        "data_export_interval": 0.5,
+        "input_vel": 0.00210432,
+        "inlet_xA": 0.00054,
+        "init_phiB": 0.003,
+        "viscosity": 1e-06,
+        "diffusion": 4.11e-10,
+        "iterations": 30,
+        "queue": "milan",
+        "tasks_p_node": 64,
+        "wall_time": "96:00:00",
+        "post_wall_time": "36:00:00",
+        "case": "h4_r3_8e-6.cas.gz"
+    },
     "h4r3_P205E3_S120E5": {
         "export_times": "flow_time",
         "total_time": 60.0,

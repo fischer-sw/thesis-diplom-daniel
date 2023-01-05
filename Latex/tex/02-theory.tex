@@ -291,14 +291,14 @@ Since the reaction needs to be nearly instantaneous as mentioned in \autoref{sec
 
 \subsection{dimensionless variables}
 
-To be able to compare simulations and experiments two dimensionless variables are used. These are the Schmidt number $Sc$ and the Peclet number $Pe$. The Peclet number is calculated using \autoref{eqn: Pe} and the Schmidt number is computed using \autoref{eqn: Sc}.
+To be able to compare simulations and experiments two dimensionless variables are used. These are the Schmidt number $Sc$ and the Peclet-Number $Pe$. The Peclet-Number is calculated using \autoref{eqn: Pe} and the Schmidt number is computed using \autoref{eqn: Sc}.
 
 \begin{equation}
 	\label{eqn: Pe}
 	Pe = \dfrac{l \cdot u}{D}
 \end{equation}
 
-The Peclet number is influenced by the characteristic length $l$ as known from the Reynolds number, the input velocity $u$ and the diffusion coefficient $D$. The characteristic length within this model is equal to the gap height. The diffusion coefficient is set to be the same one as calculated from the experiments for model validation. 
+The Peclet-Number is influenced by the characteristic length $l$ as known from the Reynolds number, the input velocity $u$ and the diffusion coefficient $D$. The characteristic length within this model is equal to the gap height. The diffusion coefficient is set to be the same one as calculated from the experiments for model validation. 
 
 \begin{equation}
 	\label{eqn: Sc}
@@ -306,5 +306,12 @@ The Peclet number is influenced by the characteristic length $l$ as known from t
 \end{equation}
 
 The Schmidt number is only influenced by species constants. The already mentioned diffusion constant $D$ and the viscosity $\nu$ affect this variable.
+
+In addition to the Schmidt-Number and the Peclet-Number the Courant-Number plays a role in the development process. This number is only used for mesh grid size determination. This number can be calculated using \autoref{eqn:cfl}. It is influenced by the velocity $u$, the time step $ \Delta t$ and the spacial discretization $\Delta x$.
+
+\begin{equation}
+	\label{eqn:cfl}
+	c = \dfrac{u \cdot \Delta t}{\Delta x}
+\end{equation}
 
 \end{document}

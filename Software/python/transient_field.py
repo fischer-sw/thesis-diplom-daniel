@@ -1219,7 +1219,7 @@ class flowfield:
                 title = f"{height} {Pe} {Sc}"
 
                 fig, axs = plt.subplots(len(plots), 1, sharex=True, sharey=True, figsize=(9.0, 2.0*len(plots)+2.5))
-                fig.suptitle(title, size=12)
+                # fig.suptitle(title, size=12)
                 # axs = fig.add_subplot(len(plots), 1, sharex=True, sharey=True, figsize=(6.5,2.4*len(plots)))
 
                 for idx, ele in enumerate(plots):
