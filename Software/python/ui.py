@@ -10,7 +10,7 @@ import numpy as np
 from dash import *
 from plotly.tools import mpl_to_plotly
 from ansys_utils import *
-from transient_field import flowfield
+from Software.python.transient_field import flowfield
 import dash_bootstrap_components as dbc
 
 # setup logging

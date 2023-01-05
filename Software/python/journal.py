@@ -3,7 +3,7 @@ import sys
 import json
 import logging
 
-from transient_field import *
+from Software.python.transient_field import *
 from ansys_utils import *
 
 """

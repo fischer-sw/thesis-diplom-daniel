@@ -701,7 +701,7 @@ class flowfield:
         plt.close(fig)
         logging.info(f"saved image {image_name}.")
 
-    def plot_prod(self, config, use_exp=True):
+    def plot_prod(self, config, use_exp=False):
         """
         Function that plots the total amount of product
         """
@@ -889,10 +889,8 @@ class flowfield:
                 
 
                 if type(exp_data[cas]) == type(pd.DataFrame({})):
-                    legend = ["sim_front_data", "sim_max_data", "exp_front_data", "exp_max_data"]
                     image_name = f"front_{str(self.front_threshhold).replace('.', ',')}" + "." + config["plot_file_type"]
                 else:
-                    legend = [f"front {height} {Pe} {Sc}", f"max {height} {Pe} {Sc}"]
                     image_name = f"front_{str(self.front_threshhold).replace('.', ',')}" + "." + config["plot_file_type"]
                 
                 
@@ -903,7 +901,7 @@ class flowfield:
 
                 title = "front_" + cas
 
-                fig.suptitle(title)
+                # fig.suptitle(title)
                 tmp_exp = exp_data[cas]
 
         
@@ -933,23 +931,25 @@ class flowfield:
                     max_exp_t = list(exp_data[cas]["t (s)"].round(0))
                     max_exp_r = list(exp_data[cas][" RC (mm)"])
 
-                    cax = axs.scatter(sim_matched["times [s]"], sim_matched["r_s [m]"]*1e3-0.5, color = cols[i], marker=".")
-                    cax = axs.scatter(max_matched["times [s]"], max_matched["r_s [m]"]*1e3-0.5, color = cols[i], marker="x")
+                    # cax = axs.scatter(sim_matched["times [s]"][::sim_step], sim_matched["r_s [m]"][::sim_step]*1e3-0.5, color = cols[i], marker=".", label="sim_front_data")
+                    cax = axs.scatter(max_matched["times [s]"][::sim_step], max_matched["r_s [m]"][::sim_step]*1e3-0.5, color = cols[i], marker="x", label="sim_max_data")
 
-                    cax = axs.scatter(tmp_exp_fr_dat["t (s)"], tmp_exp_fr_dat[" Rf (mm)"], color="green", marker=".")
-                    cax = axs.scatter(tmp_exp_mx_dat["t (s)"], tmp_exp_mx_dat[" RC (mm)"], color="green", marker="x")
+                    # cax = axs.scatter(tmp_exp_fr_dat["t (s)"][::mx_step], tmp_exp_fr_dat[" Rf (mm)"][::mx_step], color="green", marker=".", label="exp_front_data")
+                    cax = axs.scatter(tmp_exp_mx_dat["t (s)"][::mx_step], tmp_exp_mx_dat[" RC (mm)"][::mx_step], color="green", marker="x", label="exp_max_data")
+                    
                 else:
                     logging.info(f"sim_data {sim_data.keys()}, max_data {max_data.keys()}")
-                    cax = axs.scatter(sim_data["times [s]"][::sim_step], sim_data["r_s [m]"][::sim_step]*1e3, color = cols[i], marker=".")
+                    cax = axs.scatter(sim_data["times [s]"][::sim_step], sim_data["r_s [m]"][::sim_step]*1e3, color = cols[i], marker=".", label=f"front {height} {Pe} {Sc}")
                     legend.append(f"front {height} {Pe} {Sc}")
-                    cax = axs.scatter(mx_data["times [s]"][::mx_step], mx_data["r_s [m]"][::mx_step]*1e3, color = cols[i], marker="x")
+                    cax = axs.scatter(mx_data["times [s]"][::mx_step], mx_data["r_s [m]"][::mx_step]*1e3, color = cols[i], marker="x", label=f"max {height} {Pe} {Sc}")
                     legend.append(f"max {height} {Pe} {Sc}")
 
         image_path = os.path.join(folder_path, image_name)
         axs.set_xlabel("time [s]")
         axs.set_ylabel("radius [mm]")
         # axs.set_xlim(225, 380)
-        axs.legend(legend)
+        # axs.legend(legend)
+        cax = axs.legend()
 
         plt.savefig(image_path, dpi=600)
         plt.close(fig)
