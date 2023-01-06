@@ -9,7 +9,12 @@
     ],
     "c_bar": "c [mol/l]", 
     "cases": [
-        "h4r3_P931E2_S122E3"
+        "h6r3_P205E3_S243E3",
+        "h2r3_P205E3_S120E5"
+    ],
+    "cases_tmp": [
+        "h6r3_P205E3_S243E3",
+        "h2r3_P205E3_S120E5"
     ], 
     "cases_dir_path": [
         "\\\\gssnas", 
@@ -22,7 +27,7 @@
     "create_gif": false, 
     "create_image": true, 
     "create_new_files": true, 
-    "create_plot": true, 
+    "create_plot": false, 
     "create_plot_front": false, 
     "create_plot_prod": false, 
     "create_plot_width": false, 
@@ -33,9 +38,10 @@
         "Data"
     ], 
     "field_var": [
-        "cell-convective-courant-number" 
+        "concentration-fluid_c"
     ], 
     "field_var_tmp": [
+        
         "velocity-magnitude", 
         "concentration-fluid_a", 
         "concentration-fluid_b", 
@@ -138,6 +144,8 @@
         "concentration-fluid_c"
     ], 
     "plots": [
-        20
+        1,
+        30,
+        60
     ]
 }
