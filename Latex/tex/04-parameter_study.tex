@@ -15,48 +15,73 @@ Within the parametric study the three different reactor geometries are simulated
 
 \section{front positions}
 
-The front positions behave in a similar way for all 3 reactor geometries. So in \autoref{fig: front_pos_h2_SC12E4} and \autoref{fig: front_pos_h2_SC243E3} the positions for both Schmidt-Number are shown for the geometry containing a gap height of 0.2mm.
+The front positions behave in a similar way for all 3 reactor geometries. So in \autoref{fig: front_pos_h2_Sc12000} and \autoref{fig: front_pos_h2_Sc2430} the positions for both Schmidt-Number are shown for the geometry containing a gap height of 0.2mm.
 % two figures on same page
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[width=.9\linewidth]{front_pos_h2_SC12E4}
-	\caption{front positions for h 0.2mm Sc 12000\label{fig: front_pos_h2_SC12E4}}\bigskip
-	\includegraphics[width=.9\linewidth]{front_pos_h2_SC243E3}
-	\caption{front positions for h 0.2mm Sc 2430\label{fig: front_pos_h2_SC243E3}}
+	\includegraphics[width=.9\linewidth]{front_pos_h2_Sc12000}
+	\caption{front positions for h 0.2mm Sc 12000\label{fig: front_pos_h2_Sc12000}}\bigskip
+	\includegraphics[width=.9\linewidth]{front_pos_h2_Sc2430}
+	\caption{front positions for h 0.2mm Sc 2430\label{fig: front_pos_h2_Sc2430}}
 \end{figure}
 
 From these two graphs it can be seen that the front positions travel speed decays over time, following a behaviour close to a  square root function. The front and maximum travel faster for higher Peclet-Numbers, which can be explained by the different input velocities. The maxima positions show a similar behaviour to the front positions. 
-With decreasing input velocity the difference between the fronts front and maximum positions decreases. The decrease is more significant for cases with lower Peclet-Numbers. For these cases, due to their lower inlet velocity, the distance between the front and maximum is lower. An increase in distance can be seen when comparing plots for Pecelt-Numbers of 931 with 2430.
+With decreasing input velocity the difference between the fronts front and maximum positions decreases. The decrease is more significant for cases with lower Peclet-Numbers. For these cases, due to their lower inlet velocity, the distance between the front and maximum is lower. An increase in distance can be seen when comparing plots for Pecelt-Numbers of 931 with 2050.
 
 When comparing the plots for Schmidt-Number 2430 with the one for a Schmidt-Number of 12000 it can be observed that all fronts travel nearly double the distance within the same time of 60 seconds. This can be explained mainly by the lower diffusion coefficient for the higher Schmidt-Number case. The diffusion coefficient for the lower Schmidt-Number case is $4 \text{.}11 \cdot 10^{-10} \left[ \frac{\mathrm{m^2}}{\mathrm{s}} \right]$ and the one for the higher case is $1\text{.}0 \cdot 10^{-10} \left[ \frac{\mathrm{m^2}}{\mathrm{s}} \right]$.
 Since the velocity magnitude decreases very quickly for a axisymmetric reactor (see \autoref{fig: field_example}) diffusion plays a more and more significant role while the front travels through the reactor. So the diffusive fraction taking part in the front's forward travel is getting higher the further the front gets away from the inlet. The diffusion coefficient has an influence on the fronts width as well which will be look at within the following section.
 
 \section{front widths}
 
-The fronts widths behaviour is quite different for each reactor geometry so each one will be looked at starting with the smallest gap height of 0.2mm.  
+The fronts widths behaviour is quite different for each reactor geometry so each one will be looked at starting with the smallest gap height of 0.2mm. The front widths are shown in \autoref{fig: front_width_h2_Sc12000} and \autoref{fig: front_width_pos_h2_Sc2430} for each investigated Schmidt-Number.
 
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[width=.9\linewidth]{front_width_h2_SC12E4}
-	\caption{front widths for h 0.2mm Sc 12000\label{fig: front_width_h2_SC12E4}}\bigskip
-	\includegraphics[width=.9\linewidth]{front_width_h2_SC243E3}
-	\caption{front widths for h 0.2mm Sc 2430\label{fig: front_width_pos_h2_SC243E3}}
+	\includegraphics[width=.9\linewidth]{front_width_h2_Sc12000}
+	\caption{front widths for h 0.2mm Sc 12000\label{fig: front_width_h2_Sc12000}}\bigskip
+	\includegraphics[width=.9\linewidth]{front_width_h2_Sc2430}
+	\caption{front widths for h 0.2mm Sc 2430\label{fig: front_width_pos_h2_Sc2430}}
+\end{figure}
+
+Within these plots it can be seen that the width using the gap averaged product concentration data starts growing fast with in the fist 5 seconds. After that the width's growth comes to a stop so that the width reaches it's maximum value. When the maximum has been reached the width starts shrinking towards a final constant value.
+
+The width at the reactors middle height shows a different behaviour. It's growth starts within the first few seconds and then starts to follow a square root approach towards a final constant value. As already seen in the front positions the widths reach higher values for higher Peclet-Numbers. The reason for that is as already mentioned the higher input velocity for higher Peclet-Numbers. The long-term width using the FWHM approach and the one calculated at the reactors middle is expected to strive towards the same value as time goes on. For later timestamps the fronts shape evens out as visible in \autoref{fig: pos_h2_late}.
+\begin{figure}[htb]
+	\centering
+	\includegraphics[scale=0.5]{img_gif_h2r3_P500E2_S243E3_60,0 }
+	\caption{front shape for Pe500 Sc2430 at 60 seconds}
+	\label{fig: pos_h2_late}
+\end{figure}
+When the front reaches the shown shape the difference between the width using the FWHM method and the middle with decreases. The difference can only reach a value of 0 for a reactor with an infinite radius at an infinite timestamp. The effect is clearly visible even on small timescales of just 60 seconds if the Schmidt-Number is low enough.
+
+When comparing both Schmidt-Numbers with each over it can be observed that the final width value for both widths seems to be independent of the Schmidt-Number for the gap height of 0.2mm. The results from the 0.4mm case also support this thesis. To get clearer evidence if the claim is correct more Schmidt-Numbers need to be investigated and the simulations should be run for longer durations. Another observation that can be made is that the time the width reaches it's maximum value and the value itself is strongly influenced by the Schmidt-Number. For the lower Schmidt-Number of 2430 a clear peak is visible for all Peclet-Numbers looked at. This peak forming seems to be expected because as the diffusion coefficient for the case with the higher Schmidt-Number (12000) is lower than the one for the lower Schmidt-Number (2430). A lower diffusion coefficient prevents the front from spreading so the width reaches higher values.
+
+The results for the case with a gap height of 0.4mm shows a similar behaviour compared to the case with a gap height of 0.2mm. For this geometry the FWHM width also follows a square root like approach for a high Schmidt-Number and for the lower one a peak can be observed as well. The peak is not that sharp and only visible for a Peclet-Number of 2050. The other Peclet-Numbers seem to behave similar to the cases with a gap height of 0.2mm and a Schmidt-Number of 12000. For a gap height of 0.4mm the input velocity seems only to be high enough for the highest Peclet-Number to form a clearly visible peak within the widths plot. The width seems to reach it's highest value in this case when the initial two different peaks merge into one which can be seen in \autoref{fig: pos_h4_peaks}.
+\begin{figure}[htb]
+	\centering
+	\subfloat[\centering gap averaged concentrations]{{\includegraphics[angle=0, scale=0.41]{plot_h4r3_P205E3_S243E3_concentration-fluid_a_concentration-fluid_b_concentration-fluid_c} }}%
+	\qquad
+	\subfloat[\centering product concentration fields]{{\includegraphics[angle=0, scale=0.41]{field_h4r3_P205E3_S243E3_concentration-fluid_c} }}%
+	\caption{field and averaged concentration values for h0.4mm Pe2050 Sc2430}%
+	\label{fig: pos_h4_peaks}%
+\end{figure}
+
+At that time the front shape has reached it's maximum curvedness.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=.9\linewidth]{front_width_h4_Sc12000}
+	\caption{front widths for h 0.4mm Sc 12000\label{fig: front_width_h4_Sc12000}}\bigskip
+	\includegraphics[width=.9\linewidth]{front_width_h4_Sc2430}
+	\caption{front widths for h 0.4mm Sc 2430\label{fig: front_width_pos_h4_Sc2430}}
 \end{figure}
 
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[width=.9\linewidth]{front_width_h4_SC12E4}
-	\caption{front widths for h 0.4mm Sc 12000\label{fig: front_width_h4_SC12E4}}\bigskip
-	\includegraphics[width=.9\linewidth]{front_width_h4_SC243E3}
-	\caption{front widths for h 0.4mm Sc 2430\label{fig: front_width_pos_h4_SC243E3}}
-\end{figure}
-
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=.9\linewidth]{front_width_h6_SC12E4}
-	\caption{front widths for h 0.6mm Sc 12000\label{fig: front_width_h6_SC12E4}}\bigskip
-	\includegraphics[width=.9\linewidth]{front_width_h6_SC243E3}
-	\caption{front widths for h 0.6mm Sc 2430\label{fig: front_width_pos_h6_SC243E3}}
+	\includegraphics[width=.9\linewidth]{front_width_h6_Sc12000}
+	\caption{front widths for h 0.6mm Sc 12000\label{fig: front_width_h6_Sc12000}}\bigskip
+	\includegraphics[width=.9\linewidth]{front_width_h6_Sc2430}
+	\caption{front widths for h 0.6mm Sc 2430\label{fig: front_width_pos_h6_Sc2430}}
 \end{figure}
 
 \section{formed product}

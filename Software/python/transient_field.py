@@ -602,10 +602,10 @@ class flowfield:
 
         cols = ["red", "green", "blue", "yellow", "orange", "lawngreen", "cyan", "blueviolet", "navy"]
 
-        title = "front_width"
+        # title = "front_width"
         fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6.5,4.5))
 
-        fig.suptitle(title)
+        # fig.suptitle(title)
 
         for cas in config["cases"]:
 
@@ -624,7 +624,11 @@ class flowfield:
             if os.path.exists(folder_path) == False:
                 os.makedirs(folder_path)
 
-            image_name = f"front_width" + "." + config["plot_file_type"]
+            height = cas[:2]
+            Pe = "Pe" + str(int(float(cas[6]+"."+ cas[7:9])*10**int(cas[10])))
+            Sc = "Sc" + str(int(float(cas[13]+"."+ cas[14:16])*10**int(cas[17])))
+
+            image_name = f"front_width_{height}_{Sc}" + "." + config["plot_file_type"]
             image_path = os.path.join(folder_path, image_name)
 
             if len(config["cases"]) == 1:
@@ -637,11 +641,10 @@ class flowfield:
                     logging.info(f"Already created front_width image for case {cas}")
                     continue
                   
-                title = "front_width" 
+                # title = "front_width" 
                 fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6.5,4.5))
                 fig.suptitle(title)
-                Pe = "Pe" + str(int(float(cas[6]+"."+ cas[7:9])*10**int(cas[10])))
-                Sc = "Sc" + str(int(float(cas[13]+"."+ cas[14:16])*10**int(cas[17])))
+                
 
                 if use_exp:
                     image_name = f"front_width_sim_vs_SRL3" + "." + config["plot_file_type"]
@@ -653,9 +656,6 @@ class flowfield:
                 # plot FWHM
                 cax = axs.scatter(data["sim"][cas]["time [s]"][::dat_ele], data["sim"][cas]["FWHM [mm]"][::dat_ele], color=cols[i], marker="x")
                 # cax = axs.scatter(data["sim"][cas]["time [s]"][::dat_ele], data["sim"][cas]["FWHM [mm]"][::dat_ele], f"{cols[i+1]}x")
-
-                Pe = "Pe" + str(int(float(cas[6]+"."+ cas[7:9])*10**int(cas[10])))
-                Sc = "Sc" + str(int(float(cas[13]+"."+ cas[14:16])*10**int(cas[17])))
                 
                 legend.append(f"FWHM {height} {Pe} {Sc}")
                 cax = axs.scatter(data["sim"][cas]["time [s]"][::dat_ele], data["sim"][cas][data["sim"][cas].keys()[-1]][::dat_ele], color=cols[i], marker=".")
@@ -693,6 +693,7 @@ class flowfield:
                 
             i += 1
 
+        # axs.legend(legend, loc='upper right')
         axs.legend(legend)
         # axs.legend(legend, loc='center left', bbox_to_anchor=(1, 0.5))
         axs.set_xlabel("time [s]")
@@ -721,11 +722,15 @@ class flowfield:
         # cols = ["r", "g", "b", "y"]
         cols = ["red", "green", "blue", "yellow", "orange", "lawngreen", "cyan", "blueviolet", "navy"]
 
-        title = "total_product"
+        # title = "total_product"
         fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6.5,4.5))
-        fig.suptitle(title)
+        # fig.suptitle(title)
 
         for cas in config["cases"]:
+            
+            height = cas[:2]
+            Pe = "Pe" + str(int(float(cas[6]+"."+ cas[7:9])*10**int(cas[10])))
+            Sc = "Sc" + str(int(float(cas[13]+"."+ cas[14:16])*10**int(cas[17])))
 
             n_cases = len(get_cases(config, cas))
             dat_ele = math.ceil(n_cases/data_points)
@@ -740,16 +745,12 @@ class flowfield:
             if os.path.exists(folder_path) == False:
                 os.makedirs(folder_path)
 
-            image_name = f"total_product" + "." + config["plot_file_type"]
+            image_name = f"total_product_{height}_{Sc}" + "." + config["plot_file_type"]
             image_path = os.path.join(folder_path, image_name)
 
             if os.path.exists(image_path) and config["create_new_files"] == False:
                 logging.info(f"Already created total_product image for case {cas}")
                 continue
-
-            height = cas[:2]
-            Pe = "Pe" + str(int(float(cas[6]+"."+ cas[7:9])*10**int(cas[10])))
-            Sc = "Sc" + str(int(float(cas[13]+"."+ cas[14:16])*10**int(cas[17])))
             
             if len(config["cases"]) == 1:
                 logging.info(f"Creating total_product image for case {cas}")
@@ -871,16 +872,12 @@ class flowfield:
                 if os.path.exists(folder_path) == False:
                     os.makedirs(folder_path)
 
-                title = "front_positions"
-                fig.suptitle(title)
+                # title = "front_positions"
+                # fig.suptitle(title)
                 
-                
-
-                cax = axs.scatter(sim_data["times [s]"][::sim_step], sim_data["r_s [m]"][::sim_step]*1e3, color = cols[i], marker="x")
-                legend.append(f"front {height} {Pe} {Sc}")
-                cax = axs.scatter(mx_data["times [s]"][::mx_step], mx_data["r_s [m]"][::mx_step]*1e3, color = cols[i], marker=".")
-                legend.append(f"max {height} {Pe} {Sc}")
-                image_name = "front_pos" + "." + config["plot_file_type"]
+                cax = axs.scatter(sim_data["times [s]"][::sim_step], sim_data["r_s [m]"][::sim_step]*1e3, color = cols[i], marker="x", label=f"front {height} {Pe} {Sc}")              
+                cax = axs.scatter(mx_data["times [s]"][::mx_step], mx_data["r_s [m]"][::mx_step]*1e3, color = cols[i], marker=".", label=f"max {height} {Pe} {Sc}")
+                image_name = f"front_pos_{height}_{Sc}" + "." + config["plot_file_type"]
                 i += 1
 
 
@@ -899,7 +896,7 @@ class flowfield:
                     logging.info(f"Already created front image for case {cas}")
                     continue
 
-                title = "front_" + cas
+                # title = "front_" + cas
 
                 # fig.suptitle(title)
                 tmp_exp = exp_data[cas]
@@ -1023,11 +1020,11 @@ class flowfield:
             # data = read_transient_data(config, cas)
             if one_plot == False:
                 
-                title = f"{height} {Pe} {Sc}"
+                # title = f"{height} {Pe} {Sc}"
 
-                fig, axs = plt.subplots(len(plots), 1, sharex=True, sharey=True, figsize=(9.0,2.4*(len(plots)-1) + 4.5))
+                fig, axs = plt.subplots(len(plots), 1, sharex=True, sharey=True, figsize=(7.0, 2.0*len(plots)+2.5))
 
-                fig.suptitle(title)
+                # fig.suptitle(title)
 
                 legend = []
 
