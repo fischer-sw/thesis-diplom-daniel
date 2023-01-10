@@ -643,7 +643,7 @@ class flowfield:
                   
                 # title = "front_width" 
                 fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6.5,4.5))
-                fig.suptitle(title)
+                # fig.suptitle(title)
                 
 
                 if use_exp:
@@ -1064,6 +1064,7 @@ class flowfield:
                         if idx == len(plots)-1 :
                             axs[idx].set_xlabel("radius r [m]")
                         axs[idx].set_ylabel(config["plot_conf"]["y_label"])
+                        axs[idx].set_xlim(min(tmp_data["r [m]"]), max(tmp_data["r [m]"]))
                         axs[idx].legend(legend)
                         export_times = cases_cfg[cas]["export_times"]
                         if export_times != "flow_time":
@@ -1082,6 +1083,7 @@ class flowfield:
 
                         axs.set_xlabel("radius r [m]")
                         axs.set_ylabel(config["plot_conf"]["y_label"])
+                        axs.set_xlim(min(tmp_data["r [m]"]), tmp_data["r [m]"][-3])
                         axs.legend(legend)
                         if export_times != "flow_time":
                             axs.set_title("t = {}s".format(round(ele * cases_cfg["timestep"],1)))
