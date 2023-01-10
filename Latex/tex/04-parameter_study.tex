@@ -55,8 +55,17 @@ The width at the reactors middle height shows a different behaviour. It's growth
 When the front reaches the shown shape the difference between the width using the FWHM method and the middle with decreases. The difference can only reach a value of 0 for a reactor with an infinite radius at an infinite timestamp. The effect is clearly visible even on small timescales of just 60 seconds if the Schmidt-Number is low enough.
 
 When comparing both Schmidt-Numbers with each over it can be observed that the final width value for both widths seems to be independent of the Schmidt-Number for the gap height of 0.2mm. The results from the 0.4mm case also support this thesis. To get clearer evidence if the claim is correct more Schmidt-Numbers need to be investigated and the simulations should be run for longer durations. Another observation that can be made is that the time the width reaches it's maximum value and the value itself is strongly influenced by the Schmidt-Number. For the lower Schmidt-Number of 2430 a clear peak is visible for all Peclet-Numbers looked at. This peak forming seems to be expected because as the diffusion coefficient for the case with the higher Schmidt-Number (12000) is lower than the one for the lower Schmidt-Number (2430). A lower diffusion coefficient prevents the front from spreading so the width reaches higher values.
+\newline
 
-The results for the case with a gap height of 0.4mm shows a similar behaviour compared to the case with a gap height of 0.2mm. For this geometry the FWHM width also follows a square root like approach for a high Schmidt-Number and for the lower one a peak can be observed as well. The peak is not that sharp and only visible for a Peclet-Number of 2050. The other Peclet-Numbers seem to behave similar to the cases with a gap height of 0.2mm and a Schmidt-Number of 12000. For a gap height of 0.4mm the input velocity seems only to be high enough for the highest Peclet-Number to form a clearly visible peak within the widths plot. The width seems to reach it's highest value in this case when the initial two different peaks merge into one which can be seen in \autoref{fig: pos_h4_peaks}.
+The results for the case with a gap height of 0.4mm show a similar behaviour compared to the case with a gap height of 0.2mm. The results are shown in \autoref{fig: front_width_h4_Sc12000} and \autoref{fig: front_width_pos_h4_Sc2430}.
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=.9\linewidth]{front_width_h4_Sc12000}
+	\caption{front widths for h 0.4mm Sc 12000\label{fig: front_width_h4_Sc12000}}\bigskip
+	\includegraphics[width=.9\linewidth]{front_width_h4_Sc2430}
+	\caption{front widths for h 0.4mm Sc 2430\label{fig: front_width_pos_h4_Sc2430}}
+\end{figure}
+ For this geometry the FWHM width also follows a square root like approach for a high Schmidt-Number and for the lower one a peak can be observed. The peak is not that sharp as the one observed in the 0.2mm case and only visible for a Peclet-Number of 2050. The other Peclet-Numbers seem to behave similar to the cases with a gap height of 0.2mm and a Schmidt-Number of 12000. For a gap height of 0.4mm the input velocity seems to only be high enough for the highest Peclet-Number to form a clearly visible peak within the widths plot. The width seems to reach it's highest value in this case when the initial two different peaks visible within the concentration plots merge into one which can be seen in \autoref{fig: pos_h4_peaks}. Up to a time of around 18 seconds two peaks can be distinguished within the product concentration plots. 
 \begin{figure}[htb]
 	\centering
 	\subfloat[\centering gap averaged concentrations]{{\includegraphics[angle=0, scale=0.41]{plot_h4r3_P205E3_S243E3_concentration-fluid_a_concentration-fluid_b_concentration-fluid_c} }}%
@@ -65,16 +74,9 @@ The results for the case with a gap height of 0.4mm shows a similar behaviour co
 	\caption{field and averaged concentration values for h0.4mm Pe2050 Sc2430}%
 	\label{fig: pos_h4_peaks}%
 \end{figure}
+At that time the front shape has reached it's maximum curvedness. For the shown example that happens at around 18 seconds after the simulation has been started. Within the gap averaged plot it can be seen that there is a sharp increase at the fronts front and a slow decline at it's back. This decline lowers when comparing the plots for a time of 18 seconds with the one at 60 seconds. The decline can be explained by the curvedness of the front as visible in the product concentration fields plot.
 
-At that time the front shape has reached it's maximum curvedness.
 
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=.9\linewidth]{front_width_h4_Sc12000}
-	\caption{front widths for h 0.4mm Sc 12000\label{fig: front_width_h4_Sc12000}}\bigskip
-	\includegraphics[width=.9\linewidth]{front_width_h4_Sc2430}
-	\caption{front widths for h 0.4mm Sc 2430\label{fig: front_width_pos_h4_Sc2430}}
-\end{figure}
 
 \begin{figure}[htbp]
 	\centering

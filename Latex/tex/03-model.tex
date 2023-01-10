@@ -426,20 +426,16 @@ All values needed are accessible with these tables but for further analysis the 
 	\caption{example field representation (velocity field) of model results}
 	\label{fig: field_example}
 \end{figure}
-These can be created for all exported variables. Within the example shown the field is created for the velocity magnitude but the variable of most interest is the product concentration. A field example for this variable is shown in \autoref{fig: c_prod_examp} for 3 different time steps.
-\begin{figure}[htbp]
+These can be created for all exported variables. Within the example shown the field is created for the velocity magnitude but the variable of most interest is the product concentration. A field example for this variable is shown in \autoref{fig: c_plot_prod_example} for 3 different time steps.
+\begin{figure}[htb]
 	\centering
-	\includegraphics[width=\textwidth]{c_prod_example}
-	\caption{example product concentration fields}
-	\label{fig: c_prod_examp}
+	\subfloat[\centering gap averaged concentrations]{{\includegraphics[angle=0, scale=0.41]{plot_h4r3_P931E2_S120E4_concentration-fluid_a_concentration-fluid_b_concentration-fluid_c} }}%
+	\qquad
+	\subfloat[\centering product concentration fields]{{\includegraphics[angle=0, scale=0.41]{field_h4r3_P931E2_S120E4_concentration-fluid_c} }}%
+	\caption{field and averaged concentration example}%
+	\label{fig: c_plot_prod_example}%
 \end{figure}
-With these fields the product's concentration can be averaged over the hole gap height. This step is done to get a comparable post-processing step to the image processing done on the experimental data sets. The resulting plots from the previous example can be seen in \autoref{fig: c_plot_examp}.
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=\textwidth]{c_plot_example}
-	\caption{example gap averaged product concentration plots}
-	\label{fig: c_plot_examp}
-\end{figure}
+With these fields the product's concentration can be averaged over the hole gap height. This step is done to get a comparable post-processing step to the image processing done on the experimental data sets. The resulting plots from the previous example can be seen in the same figure as the field example.
 
 With the fields and the gap averaged concentration values computed the parameters of interest can be calculated which is explained within the following sections.
 
