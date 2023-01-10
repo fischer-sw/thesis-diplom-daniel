@@ -9,7 +9,7 @@
     ],
     "c_bar": "c [mol/l]", 
     "cases": [
-        "h4r3_P931E2_S120E4"
+        "h6r3_P205E3_S120E4"
     ],
     "cases_tmp": [
         "h6r3_P205E3_S243E3",
@@ -25,7 +25,7 @@
     ], 
     "create_avg_file": false, 
     "create_gif": false, 
-    "create_image": true, 
+    "create_image": false, 
     "create_new_files": true, 
     "create_plot": true, 
     "create_plot_front": false, 
@@ -144,8 +144,8 @@
         "concentration-fluid_c"
     ], 
     "plots": [
-       5.0,
-       20.0,
-       60.0
+        3,
+        7,
+        14
     ]
 }
