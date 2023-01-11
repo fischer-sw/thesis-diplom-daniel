@@ -54,8 +54,8 @@ The width at the reactors middle height shows a different behaviour. It's growth
 \end{figure}
 When the front reaches the shown shape the difference between the width using the FWHM method and the middle with decreases. The difference can only reach a value of 0 for a reactor with an infinite radius at an infinite timestamp. The effect is clearly visible even on small timescales of just 60 seconds if the Schmidt-Number is low enough.
 
-When comparing both Schmidt-Numbers with each over it can be observed that the final width value for both widths seems to be independent of the Schmidt-Number for the gap height of 0.2mm. The results from the 0.4mm case also support this thesis. To get clearer evidence if the claim is correct more Schmidt-Numbers need to be investigated and the simulations should be run for longer durations. Another observation that can be made is that the time the width reaches it's maximum value and the value itself is strongly influenced by the Schmidt-Number. For the lower Schmidt-Number of 2430 a clear peak is visible for all Peclet-Numbers looked at. This peak forming seems to be expected because as the diffusion coefficient for the case with the higher Schmidt-Number (12000) is lower than the one for the lower Schmidt-Number (2430). A lower diffusion coefficient prevents the front from spreading so the width reaches higher values.
-\newline
+When comparing both Schmidt-Numbers with each over it can be observed that the final width value for both widths seems to be independent of the Schmidt-Number for a gap height of 0.2mm. The results from the 0.4mm case also support this assumption. To get clearer evidence if the assumption is correct more Schmidt-Numbers need to be investigated and the simulations should be run for longer durations.
+Another observation that can be made is that the time the width reaches it's maximum value and the value itself is strongly influenced by the Schmidt-Number. For the lower Schmidt-Number of 2430 a clear peak is visible for all Peclet-Numbers. This forming peak seems to be expected because as the diffusion coefficient for the case with the higher Schmidt-Number (12000) is lower than the one for the lower Schmidt-Number (2430). A lower diffusion coefficient prevents the front from spreading so the width reaches higher values. In case of the $Sc = 2430$ the width's growth happens way faster then the decay. The growth happens that quickly because new educt is pushed from the inlet into the back of the front therefore deforming it as well be shown within the 0.4mm case. The decay happens slower because the front has travelled away from the inlet so the deforming due to advection has less and less influence. The influence of advection drops proportional to $r^2$ which can be seen in the velocity field shown in \autoref{fig: field_example}. 
 
 The results for the case with a gap height of 0.4mm show a similar behaviour compared to the case with a gap height of 0.2mm. The results are shown in \autoref{fig: front_width_h4_Sc12000} and \autoref{fig: front_width_pos_h4_Sc2430}.
 \begin{figure}[htbp]
@@ -75,9 +75,9 @@ The results for the case with a gap height of 0.4mm show a similar behaviour com
 	\label{fig: pos_h4_peaks}%
 \end{figure}
 At that time the front shape has reached it's maximum curvedness. For the shown example that happens at around 18 seconds after the simulation has been started. Within the gap averaged plot it can be seen that there is a sharp increase at the fronts front and a slow decline at it's back. This decline lowers when comparing the plots for a time of 18 seconds with the one at 60 seconds. The decline can be explained by the curvedness of the front as visible in the product concentration fields plot.
+\newline
 
-
-
+For the case with a gap height of 0.6mm the width's behaviour seems to change quite significantly compared to the 0.4mm case. For the Schmidt-Number of 12000 the general form of the FWHM curves seems to match the ones from the previous discussed cases. The only difference is that the width's growth seems to start delayed by about 3 to 5 seconds which is also visible within the 0.4mm case.
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=.9\linewidth]{front_width_h6_Sc12000}
