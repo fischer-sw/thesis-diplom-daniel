@@ -43,7 +43,7 @@ def prep_cases():
     cases = {}
     path = os.path.join(sys.path[0], "..", "..", "Notes", "simulationen.ods")
     cfg = pd.read_excel(path, engine="odf", header=3)
-    # cfg = cfg[cfg.success == "nein"]
+    cfg = cfg[cfg.success == "nein"]
     
     for idx in range(cfg.shape[0]):
         row = cfg.iloc[idx]

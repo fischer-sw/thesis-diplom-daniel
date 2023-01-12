@@ -48,7 +48,7 @@ Within these plots it can be seen that the width using the gap averaged product 
 The width at the reactors middle height shows a different behaviour. It's growth starts slow within the first few seconds and then starts to follow a square root like approach towards a final constant value. As already seen in the front positions the widths reach higher values for higher Peclet-Numbers. The reason for that is as already mentioned the higher input velocity for higher Peclet-Numbers. At later timestamps the width using the FWHM approach and the one calculated at the reactors middle are expected to strive towards the same value as time goes on. For these later timestamps the fronts shape evens out across the gap as visible in \autoref{fig: pos_h2_late}.
 \begin{figure}[htb]
 	\centering
-	\includegraphics[scale=0.5]{img_gif_h2r3_P500E2_S243E3_60,0 }
+	\includegraphics[width=\textwidth]{img_gif_h2r3_P500E2_S243E3_60,0 }
 	\caption{front shape for Pe500 Sc2430 at 60 seconds}
 	\label{fig: pos_h2_late}
 \end{figure}
@@ -82,7 +82,16 @@ The results for the case with a gap height of 0.4mm show a similar behaviour com
 At that time the front shape has reached it's maximum curvedness. For the shown example that happens at around 18 seconds after the simulation has been started. Within the gap averaged plot it can be seen that there is a sharp increase at the fronts front and a slow decline at it's back. This decline lowers when comparing the plots for a time of 18 seconds with the one at 60 seconds. The decline can be explained by the curvedness of the front as visible in the product concentration fields plot.
 \newline
 
-For the case with a gap height of 0.6mm the width's behaviour seems to change quite significantly compared to the 0.4mm case. For the Schmidt-Number of 12000 the general form of the FWHM curves seems to match the ones from the previous discussed cases. The only difference is that the width's growth seems to start delayed by about 3 to 5 seconds which is also visible within the 0.4mm case.
+For the case with a gap height of 0.6mm the width's behaviour seems to change quite significantly compared to the 0.4mm case. For the Schmidt-Number of 12000 the general form of the FWHM curves seems to match the ones from the previous discussed cases.
+\begin{figure}[htb]
+	\centering
+	\subfloat[\centering h0.6mm case]{{\includegraphics[angle=0, scale=0.41]{plot_h6r3_P931E2_S120E4_concentration-fluid_a_concentration-fluid_b_concentration-fluid_c} }}%
+	\qquad
+	\subfloat[\centering h0.4mm case]{{\includegraphics[angle=0, scale=0.41]{plot_h4r3_P931E2_S120E4_concentration-fluid_a_concentration-fluid_b_concentration-fluid_c copy} }}%
+	\caption{concentration plots for Pe931 Sc12000}%
+	\label{fig: plots_early}%
+\end{figure} 
+
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=.9\linewidth]{front_width_h6_Sc12000}
@@ -90,6 +99,9 @@ For the case with a gap height of 0.6mm the width's behaviour seems to change qu
 	\includegraphics[width=.9\linewidth]{front_width_h6_Sc2430}
 	\caption{front widths for h 0.6mm Sc 2430\label{fig: front_width_pos_h6_Sc2430}}
 \end{figure}
+The only difference is that the width's growth seems to start delayed by about 10 to 18 seconds which is also visible within the 0.4mm case. Within \autoref{fig: plots_early} the concentration plots are shown for the gap height of 0.4mm and 0.6mm for a Peclet-Number of 931 and a Schmidt-Number of 12000 close to the inlet. Within these two plots it can seen that the initial spike in the front start decaying over time. The moment the value of $0.5 \cdot c_{c,max}$ falls into the region above 0 and the value at the back of the front the fronts width suddenly jumps to a higher value.
+
+
 
 \section{formed product}
 

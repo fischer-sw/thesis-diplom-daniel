@@ -9,7 +9,7 @@
     ],
     "c_bar": "c [mol/l]", 
     "cases": [
-        "h6r3_P205E3_S120E4"
+        "h6r3_P931E2_S120E4"
     ],
     "cases_tmp": [
         "h6r3_P205E3_S243E3",
@@ -144,8 +144,8 @@
         "concentration-fluid_c"
     ], 
     "plots": [
-        3,
-        7,
-        14
+       4,
+       7,
+       14    
     ]
 }

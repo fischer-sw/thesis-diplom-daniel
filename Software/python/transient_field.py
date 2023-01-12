@@ -1036,22 +1036,6 @@ class flowfield:
 
                     # X, Y, res = self.convert2field(data[ele], plot_vars)
                     data_tmp = {}
-
-                    for var in plot_vars:
-                        
-                        # # mirror across diagonal
-                        # x_tmp = Y
-                        # y_tmp = X
-                        # Vals = res[var]
-                        # logging.debug("Size X = {}, Size Y = {}, Size Vals = {}".format(len(X), len(Y), Vals.shape))
-                        # Vals = np.rot90(np.fliplr(Vals))
-
-                        # tmp = np.array([])
-                        # for i in range(Vals.shape[1]):
-                        #     tmp = np.append(tmp, np.mean(Vals[:,i]))
-                        # data_tmp[var] = tmp
-                        legend.append(plot_cfg["legend"][var])
-
                     # plot n
 
                     if len(plots) != 1:
@@ -1059,32 +1043,32 @@ class flowfield:
                         for tmp_var in plot_vars:
                             col = plot_cfg["colors"][tmp_var]
                             tmp_data = input_data[tmp_var]
-                            cax = axs[idx].plot(tmp_data["r [m]"], tmp_data[f"t= {ele} [s]"], color=col)
-                            # add axis description
+                            cax = axs[idx].plot(tmp_data["r [m]"], tmp_data[f"t= {ele} [s]"], color=col, label=plot_cfg["legend"][var])
+                            # plot FWHM
+                            # if tmp_var == 'concentration-fluid_c': 
+                                # cax = axs[idx].plot(tmp_data["r [m]"], [max(tmp_data[f"t= {ele} [s]"])*0.5]*len(tmp_data["r [m]"]), color="orange", label="$0.5 \cdot _{C_{C,max}}$")
                         if idx == len(plots)-1 :
                             axs[idx].set_xlabel("radius r [m]")
                         axs[idx].set_ylabel(config["plot_conf"]["y_label"])
                         axs[idx].set_xlim(min(tmp_data["r [m]"]), max(tmp_data["r [m]"]))
-                        axs[idx].legend(legend)
+                        axs[idx].set_xlim(min(tmp_data["r [m]"]), 0.003)
+                        axs[idx].legend()
                         export_times = cases_cfg[cas]["export_times"]
                         if export_times != "flow_time":
                             axs[idx].set_title("t = {}s".format(round(ele * cases_cfg["timestep"],1)))
                         else:
                             axs[idx].set_title("t = {}s".format(ele))
-
-
                     else:
                         export_times = cases_cfg[cas]["export_times"]
                         for tmp_var in plot_vars:
                             col = plot_cfg["colors"][tmp_var]
                             tmp_data = input_data[tmp_var]   
-                            cax = axs.plot(tmp_data["r [m]"], tmp_data[f"t= {ele} [s]"], color=col)
-                            # add axis description
+                            cax = axs.plot(tmp_data["r [m]"], tmp_data[f"t= {ele} [s]"], color=col, label=plot_cfg["legend"][var])
 
                         axs.set_xlabel("radius r [m]")
                         axs.set_ylabel(config["plot_conf"]["y_label"])
                         axs.set_xlim(min(tmp_data["r [m]"]), tmp_data["r [m]"][-3])
-                        axs.legend(legend)
+                        axs.legend()
                         if export_times != "flow_time":
                             axs.set_title("t = {}s".format(round(ele * cases_cfg["timestep"],1)))
                         else:
@@ -1095,55 +1079,33 @@ class flowfield:
                 
                 l_conf = []
                 for idx, ele in enumerate(plots):
-
-                    # X, Y, res = self.convert2field(data[ele], plot_vars)
-                    # data_tmp = {}
-                    
-                    # for var in plot_vars:
-                        
-                    #     # mirror across diagonal
-                    #     x_tmp = Y
-                    #     y_tmp = X
-                    #     Vals = res[var]
-                    #     logging.debug("Size X = {}, Size Y = {}, Size Vals = {}".format(len(X), len(Y), Vals.shape))
-                    #     Vals = np.rot90(np.fliplr(Vals))
-
-                    #     tmp = np.array([])
-                    #     for i in range(Vals.shape[1]):
-                    #         tmp = np.append(tmp, np.mean(Vals[:,i]))
-                    #     data_tmp[var] = tmp 
-
-                    # plot n
                     
                     if len(plots) != 1:
                         
                         for tmp_var in plot_vars:
+                            if self.export_times != "flow_time":
+                                label_tmp = plot_cfg["legend"][tmp_var] + ", t={}s".format(round(ele * cases_cfg["timestep"],1))
+                            else:
+                                label_tmp = plot_cfg["legend"][tmp_var] + ", t={}s".format(ele)
                             col = plot_cfg["colors"][tmp_var]
                             tmp_data = input_data[tmp_var]
-                            cax = axs[idx].plot(tmp_data["r [m]"], tmp_data[f"t= {ele} [s]"], color=col)
-                            if self.export_times != "flow_time":
-                                l_conf.append(plot_cfg["legend"][tmp_var] + ", t={}s".format(round(ele * cases_cfg["timestep"],1)))
-                            else:
-                                l_conf.append(plot_cfg["legend"][tmp_var] + ", t={}s".format(ele))
-
+                            cax = axs[idx].plot(tmp_data["r [m]"], tmp_data[f"t= {ele} [s]"], color=col, label=label_tmp)
                             # add axis description
                         if idx == len(plots)-1 :
                             axs.set_xlabel("radius r [m]")
                         axs.set_ylabel(config["plot_conf"]["y_label"])
                         # axs.set_title("t = {}".format(ele))
-                        axs.legend(l_conf)
+                        axs.legend()
 
                     else:
                         for tmp_var in plot_vars:
                             col = plot_cfg["colors"][tmp_var]
                             tmp_data = input_data[tmp_var]
-                            cax = axs[idx].plot(tmp_data["r [m]"], tmp_data[f"t= {ele} [s]"], color=col)
-                            l_conf.append(plot_cfg["legend"][tmp_var])
-                            # add axis description
+                            cax = axs[idx].plot(tmp_data["r [m]"], tmp_data[f"t= {ele} [s]"], color=col, label=plot_cfg["legend"][tmp_var])
 
                         axs.set_xlabel("radius r [m]")
                         axs.set_ylabel(config["plot_conf"]["y_label"])
-                        axs.legend(l_conf)
+                        axs.legend()
                         # axs.set_title("t = {}".format(ele))
 
             plt.savefig(image_path, dpi=600)
