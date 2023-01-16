@@ -28,6 +28,7 @@
 *.jou
 plots/*
 Software/python/bla.py
+!Software/python/*.txt
 !Software/ansys/journals/gui_template.jou
 !Software/ansys/journals/cmd_template.jou
 !Software/ansys/journals/cmd_creation_template.jou
