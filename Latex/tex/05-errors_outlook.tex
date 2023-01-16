@@ -6,7 +6,7 @@
 
 Within this section the errors and limitations of the build model are looked at.
 
-\section{errors and limitations}
+\section{errors}
 
 The model solution is an iterative procedure as described in \autoref{sec:sol_method}. Within this process the solution obtained within one iterations is used as initial starting point for the next iteration. The procedure also involves a correction step as shown for the pressure and velocity field in \autoref{fig:PISO}. These correction can be tracked over the iterations done throughout the simulation run. The results also called \texttt{residuals} can be seen in \autoref{fig: residuals}.
 \begin{figure}[htbp]
@@ -19,18 +19,17 @@ To check that the model has converged for a solution step thresholds for the res
 
 The residuals give an indication on the model's errors and can be used as well to check if the model behaves correctly or which part has to be changed if the solution does not converge or other errors occur.
 
-\section{limitations}
-Throughout the model's development process some limitations can be determined which are described in this section.
+\section{limitations and improvements}
+Throughout the model's development process some limitations can be determined that are described in this section.
 
-In it's current state the model can not be run for Peclet-Numbers way higher than the highest investigated which has a value of $2050$. If the Peclet-Number is increased the input velocity goes up as well if the Schmidt-Number is not touched. A higher input velocity needs a lower time step and sometimes a finer mesh to resolve all necessary fluid phenomena happening. Both changes drive up the simulation time exponentially so the amount of computational resources needed for obtaining results in a reasonable amount of time goes way up.
+In it's current state the model can not be run for Peclet-Numbers way higher than the highest investigated which has a value of $2050$. If the Peclet-Number is increased the input velocity goes up as well if the Schmidt-Number is not touched. A higher input velocity needs a lower time step and sometimes a finer mesh to resolve all necessary fluid phenomena happening. Both changes drive up the simulation time exponentially so the amount of computational resources needed for obtaining results in a reasonable amount of time goes way up. Since computational resources are not unlimited it's a good practice to create a combination of mesh and solver settings that are coarse enough to show the things that need to be investigated. In addition to that the results should show a physically correct behaviour. The method shown in \autoref{sec: mesh_dep} is one way to get the final mesh but the approach could still be improved. Some finer element size reduction could be implemented to get as close to the best suited mesh as possible. 
 
-Another limitation is
+Another limitation is that the model only not miscible fluid components. In a real experiment all species taking part within the reaction are miscible in each other to a certain extend. To take that into account the model's species could be updated and improved or a mixture model could be needed dependent on how mixing is implemented in \texttt{ANSYS FLUENT}. 
 
 \chapter{Outlook and Conclusion}
 \label{chp:out_con}
 
-\section{Conclusion}
+Within this work a model describing the development of a reaction-diffusion-advection front within a radial reactor was created and successfully implemented in \texttt{ANSYS FLUENT}. The model validation was done using existing experimental data. After assuring that the model shows physically believable behaviour, a parameter study was done using the dimensionless variables $Pe$ and $Sc$. 
 
-\section{Outlook}
 
 \end{document}
