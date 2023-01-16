@@ -579,7 +579,7 @@ class flowfield:
             axs.set_xlabel("Iterations")
             axs.set_ylabel("value")
             axs.legend(plot_vars)
-            axs.set_title(f"Resiudals {cas}")
+            # axs.set_title(f"Resiudals {cas}")
 
             plt.savefig(image_path, dpi=600)
             plt.close(fig)
