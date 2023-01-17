@@ -3,8 +3,8 @@ import sys
 import json
 import logging
 
-from Software.python.transient_field import *
 from ansys_utils import *
+from transient_field import *
 
 """
 File that calls build journal function 
@@ -43,7 +43,9 @@ def prep_cases():
     cases = {}
     path = os.path.join(sys.path[0], "..", "..", "Notes", "simulationen.ods")
     cfg = pd.read_excel(path, engine="odf", header=3)
-    cfg = cfg[cfg.success == "nein"]
+
+    # only run cases that have not run successful
+    # cfg = cfg[cfg.success == "nein"]
     
     for idx in range(cfg.shape[0]):
         row = cfg.iloc[idx]
@@ -80,7 +82,9 @@ if __name__ == "__main__":
 
     prep_cases()
 
-    run_jour = True
+    # run journal and create ansys case files
+    run_jour = False
+    # update_exsisting -> update exsisting post production files
     create_journals(exit=True, mode=mode, update_exsisting=True)
     
     if run_jour:

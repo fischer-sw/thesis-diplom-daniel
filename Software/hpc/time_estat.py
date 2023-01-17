@@ -9,6 +9,10 @@ import math
 
 # setup logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(filename)s - %(funcName)s - %(message)s")
+"""
+This script calculates the remaining runtime of ANSYS Fluent jobs
+"""
+
 
 def calc_runtime(jobs):
 	for job in jobs:
@@ -23,9 +27,9 @@ def calc_runtime(jobs):
 		# logging.info(remain)
 		flow_time = jobs[job]["flow_time"]
 		if remain < 24:
-			logging.info("{} reamining time {}h current flow_time: {}s".format(job_name, round(remain, 2), flow_time))
+			logging.info("{} remaining time {}h current flow_time: {}s".format(job_name, round(remain, 2), flow_time))
 		else:
-			logging.info("{} reamining time {}h ->  {}d {}h current flow_time: {}s".format(job_name, round(remain, 2), math.floor(remain/24), round(remain%24, 2), flow_time))
+			logging.info("{} remaining time {}h ->  {}d {}h current flow_time: {}s".format(job_name, round(remain, 2), math.floor(remain/24), round(remain%24, 2), flow_time))
 
 		wall_time = float(jobs[job]["wall_time"].split(":")[0]) + float(jobs[job]["wall_time"].split(":")[1])/60.0
 		wall_time_remain = wall_time - run_time

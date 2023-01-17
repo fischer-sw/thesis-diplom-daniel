@@ -9,6 +9,10 @@ import json
 # setup logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(filename)s - %(funcName)s - %(message)s")
 
+"""
+This script adds the running jobs to post processing config file
+"""
+
 def store_jobs(jobs):
 	tmp_jobs = list(jobs.keys())
 	cfg_path = os.path.join("/net", "fileu", "user", "fische42", "Daniel", "thesis-diplom-daniel", "Software", "python", "conf.json")

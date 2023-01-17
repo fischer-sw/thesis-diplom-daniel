@@ -69,7 +69,7 @@ function do_post {
 function do_option {
 
 if  [ "$#" == 0 ]; then
-	echo "Options -c for running a specific case, -a for running all jobs that have not generated data so far and -p for postprocessing of a specific case"
+	echo "Options -c for running a specific case, -a for running all jobs that have not generated data so far and -p for postprocessing of a specific case and -prep to prepare all cases"
 fi
 
 while [ -n "$1" ]; do # while loop starts

@@ -4,7 +4,7 @@
   <settings ppi="96">
     <identity>
       <id>390948a1-83e5-4a42-a9d0-ff29322d1faf</id>
-      <revision>38</revision>
+      <revision>39</revision>
     </identity>
     <calculation>
       <precision>4</precision>
@@ -759,6 +759,86 @@
         </result>
       </math>
     </region>
+    <region left="252" top="1089" width="171" height="26" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">h</e>
+          <e type="operand">u</e>
+          <e type="operand">d</e>
+          <e type="function" args="3">Q</e>
+          <e type="operand">π</e>
+          <e type="operand">d</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand">h</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand">u</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="36" top="1098" width="166" height="42" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">u_tmp</e>
+          <e type="operand">4.21</e>
+          <e type="operand">10</e>
+          <e type="operand">3</e>
+          <e type="operator" args="1">-</e>
+          <e type="operator" args="2">^</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operand" style="unit">s</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="567" top="1098" width="166" height="51" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">c_A</e>
+          <e type="operand">0.03</e>
+          <e type="operand">10</e>
+          <e type="operand">3</e>
+          <e type="operator" args="1">-</e>
+          <e type="operator" args="2">^</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand" style="unit">mol</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operand">3</e>
+          <e type="operator" args="2">^</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="261" top="1134" width="323" height="50" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">h_min</e>
+          <e type="operand">u_tmp</e>
+          <e type="operand">d_cyl</e>
+          <e type="function" args="3">Q</e>
+        </input>
+        <result action="numeric">
+          <e type="operand">2.6452</e>
+          <e type="operand">10</e>
+          <e type="operand">9</e>
+          <e type="operator" args="1">-</e>
+          <e type="operator" args="2">^</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operand">3</e>
+          <e type="operator" args="2">^</e>
+          <e type="operand" style="unit">s</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">*</e>
+        </result>
+      </math>
+    </region>
     <region left="81" top="1170" width="110" height="24" color="#000000" fontSize="10">
       <math>
         <input>
@@ -781,6 +861,39 @@
           <e type="operand" style="unit">m</e>
           <e type="operand" style="unit">s</e>
           <e type="operator" args="2">/</e>
+          <e type="operator" args="2">*</e>
+        </result>
+      </math>
+    </region>
+    <region left="459" top="1206" width="245" height="26" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">Q_tmp</e>
+          <e type="operand">h_min</e>
+          <e type="operand">u_tmp</e>
+          <e type="operand">d_cyl</e>
+          <e type="function" args="3">Q</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="450" top="1242" width="238" height="42" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">Q_tmp</e>
+          <e type="operand">c_A</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand">1</e>
+          <e type="operator" args="2">/</e>
+        </input>
+        <result action="numeric">
+          <e type="operand">7.9357</e>
+          <e type="operand">10</e>
+          <e type="operand">14</e>
+          <e type="operator" args="1">-</e>
+          <e type="operator" args="2">^</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand" style="unit">kat</e>
           <e type="operator" args="2">*</e>
         </result>
       </math>
