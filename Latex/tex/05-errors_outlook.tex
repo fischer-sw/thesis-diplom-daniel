@@ -1,7 +1,7 @@
 \documentclass[../thesis.tex]{subfiles}
 \begin{document}
 
-\chapter{errors and limitations}
+\chapter{errors and limits}
 \label{chp:err_lims}
 
 Within this section the errors and limitations of the build model are looked at.
@@ -20,16 +20,20 @@ To check that the model has converged for a solution step thresholds for the res
 The residuals give an indication on the model's errors and can be used as well to check if the model behaves correctly or which part has to be changed if the solution does not converge or other errors occur.
 
 \section{limitations and improvements}
+\label{sec: lim_improv}
 Throughout the model's development process some limitations can be determined that are described in this section.
 
 In it's current state the model can not be run for Peclet-Numbers way higher than the highest investigated which has a value of $2050$. If the Peclet-Number is increased the input velocity goes up as well if the Schmidt-Number is not touched. A higher input velocity needs a lower time step and sometimes a finer mesh to resolve all necessary fluid phenomena happening. Both changes drive up the simulation time exponentially so the amount of computational resources needed for obtaining results in a reasonable amount of time goes way up. Since computational resources are not unlimited it's a good practice to create a combination of mesh and solver settings that are coarse enough to show the things that need to be investigated. In addition to that the results should show a physically correct behaviour. The method shown in \autoref{sec: mesh_dep} is one way to get the final mesh but the approach could still be improved. Some finer element size reduction could be implemented to get as close to the best suited mesh as possible. 
 
-Another limitation is that the model only not miscible fluid components. In a real experiment all species taking part within the reaction are miscible in each other to a certain extend. To take that into account the model's species could be updated and improved or a mixture model could be needed dependent on how mixing is implemented in \texttt{ANSYS FLUENT}. 
+Another limitation is that the model is only using not miscible fluid components. In a real experiment all species taking part within the reaction are miscible in each other to a certain extend. To take that into account the model's species could be updated and improved or a mixture model could be needed dependent on how mixing is implemented in \texttt{ANSYS FLUENT}. 
 
-\chapter{Outlook and Conclusion}
+\chapter{outlook and conclusion}
 \label{chp:out_con}
 
+In this work a numerical model simulating a reaction diffusion advection front within a radial reactor is created. The implementation is done using the software \texttt{ANSYS FLUENT}. The model validation is performed successfully using existing experimental data. A parametric study is done starting to investigate the influence of the reactor's geometry and other input variables on the front's behaviour. Besides the front positions and the front's width, the total product formed is described. The changes of these variables dependent on the input settings are discussed in detail and the errors and limitations of the model in it's current state or shown.
 
+All in all the model development and implementation was successful. The implementation and post processing is setup in a way that can easily be modified and applied to other models created in \texttt{ANSYS FLUENT}. The model delivers more insight into the phenomenon of reaction-diffusion-advection fronts and provides information otherwise not accessible to experimental setups. The possibility of running cases in parallel could help reduce the amount of experiments needed. The model could also be used for validating existing experimental runs. Since experiments under 0g conditions are monetary expensive and consume a lot of time for preparation and data processing the developed model provides a resource efficient alternative.
 
+The developed model sets a step in the direction to gain further understanding on what is happening at the front's building process at early time stages. A solid foundation is laid in this work that can be used for further research and investigations.     
 
 \end{document}
