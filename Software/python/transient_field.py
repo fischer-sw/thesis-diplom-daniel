@@ -538,7 +538,7 @@ class flowfield:
             image_path = os.path.join(folder_path, image_name)
             logging.debug(f"image path = {image_path}")
 
-            if os.path.exists(image_path):
+            if os.path.exists(image_path) and config["create_new_files"] == False:
                 logging.info(f"Residuals for case {cas} already created")
                 continue
         
@@ -570,7 +570,8 @@ class flowfield:
             fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6.5,4.5))
 
             l_style = "solid"
-
+            plot_vars.remove("energy")
+            plot_vars.reverse()
             for ele in plot_vars:
 
                 axs.plot(data['iter'], data[ele], linestyle=l_style)
