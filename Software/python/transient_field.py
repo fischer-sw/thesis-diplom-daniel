@@ -10,6 +10,7 @@ from PIL import Image
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from scipy.optimize import curve_fit
 from ansys_utils import *
 
 # setup logging
@@ -707,6 +708,9 @@ class flowfield:
         Function that plots the total amount of product
         """
 
+        def func(x, m, b):
+            return m*x+b
+
         data = read_prod_data(config)
 
         hpc_cases_dir = config["cases_dir_path"][1:]
@@ -728,6 +732,7 @@ class flowfield:
 
         for cas in config["cases"]:
             
+            fit_data_points = 10
             height = cas[:2]
             Pe = "Pe" + str(int(float(cas[6]+"."+ cas[7:9])*10**int(cas[10])))
             Sc = "Sc" + str(int(float(cas[13]+"."+ cas[14:16])*10**int(cas[17])))
@@ -758,9 +763,9 @@ class flowfield:
                     exps = ["ground", "PF"]
                 else:
                     exps = []          
-                title = "total_product"
+                # title = "total_product"
                 fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6.5,4.5))
-                fig.suptitle(title)
+                # fig.suptitle(title)
 
                 if use_exp:
                     image_name = f"total_product_sim_vs_{exps}" + "." + config["plot_file_type"]
@@ -770,10 +775,15 @@ class flowfield:
                         i +=1
                         
                         legend.append(f"exp_data {exp}")
-                cax = axs.scatter(data["sim"][cas]["time [s]"][::dat_ele], data["sim"][cas]["product [kmol]"][::dat_ele]*1e3*2*math.pi, color = cols[i], marker="x")
-                legend.append(f"prod {height} {Pe} {Sc}")
+                cax = axs.scatter(data["sim"][cas]["time [s]"][::dat_ele], data["sim"][cas]["product [kmol]"][::dat_ele]*1e3*2*math.pi, color = cols[i], marker="x", label=f"prod {height} {Pe} {Sc}")
+                # add curve fit
+                x_fit_data = np.array(data["sim"][cas]["time [s]"][::dat_ele].tail(fit_data_points))
+                y_fit_data = np.array(data["sim"][cas]["product [kmol]"][::dat_ele]*1e3*2*math.pi)
+                y_fit_data = y_fit_data[-fit_data_points:]
+                popt, pcov = curve_fit(func, x_fit_data, y_fit_data)
+                cax = axs.plot(x_fit_data, func(x_fit_data, *popt), color = cols[i], label=f"fit {height} {Pe} {Sc} m={popt[0]:.3e}[mol/s]")
                 # axs.set_xlim(0, 380)
-                axs.legend(legend)
+                axs.legend()
                 axs.set_xlabel("time [s]")
                 axs.set_ylabel("product [mol]")
                 plt.savefig(image_path, dpi=600)
@@ -797,17 +807,21 @@ class flowfield:
 
                 image_path = os.path.join(folder_path, image_name)
                 
-            cax = axs.scatter(data["sim"][cas]["time [s]"][::dat_ele], data["sim"][cas]["product [kmol]"][::dat_ele]*1e3*2*math.pi, color = cols[i], marker="x")
+            cax = axs.scatter(data["sim"][cas]["time [s]"][::dat_ele], data["sim"][cas]["product [kmol]"][::dat_ele]*1e3*2*math.pi, color = cols[i], marker="x", label=f"prod {height} {Pe} {Sc}")
+            # add curve fit
+            x_fit_data = np.array(data["sim"][cas]["time [s]"][::dat_ele].tail(fit_data_points))
+            y_fit_data = np.array(data["sim"][cas]["product [kmol]"][::dat_ele]*1e3*2*math.pi)
+            y_fit_data = y_fit_data[-fit_data_points:]
+            popt, pcov = curve_fit(func, x_fit_data, y_fit_data)
+            cax = axs.plot(x_fit_data, func(x_fit_data, *popt), color = cols[i], label=f"fit {height} {Pe} {Sc} m={popt[0]:.3e}[mol/s]")
             i += 1
-            
-            legend.append(f"prod {height} {Pe} {Sc}")
         
         if os.path.exists(image_path) and config["create_new_files"] == False:
             cases = config["cases"]
             logging.info(f"Already created total_product image for cases {cases}")
         else:    
             # axs.set_xlim(0, 380)
-            axs.legend(legend)
+            axs.legend()
             axs.set_xlabel("time [s]")
             axs.set_ylabel("product [mol]")
             plt.savefig(image_path, dpi=600)
