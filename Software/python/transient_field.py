@@ -661,7 +661,7 @@ class flowfield:
                 
                 legend.append(f"FWHM {height} {Pe} {Sc}")
                 cax = axs.scatter(data["sim"][cas]["time [s]"][::dat_ele], data["sim"][cas][data["sim"][cas].keys()[-1]][::dat_ele], color=cols[i], marker=".")
-                legend.append(f"middle width {height} {Pe} {Sc}")
+                legend.append(f"FWHGH {height} {Pe} {Sc}")
                 # axs.set_xlim(0, 380)
                 axs.legend(legend)
                 axs.set_xlabel("time [s]")
@@ -691,12 +691,12 @@ class flowfield:
             cax = axs.scatter(data["sim"][cas]["time [s]"].iloc[::dat_ele], data["sim"][cas]["FWHM [mm]"].iloc[::dat_ele], color = cols[i], marker=".")
             legend.append(f"FWHM {height} {Pe} {Sc}")
             cax = axs.scatter(data["sim"][cas]["time [s]"].iloc[::dat_ele], data["sim"][cas][data["sim"][cas].keys()[-1]].iloc[::dat_ele], color=cols[i], marker="x")
-            legend.append(f"middle width {height} {Pe} {Sc}")
+            legend.append(f"FWHGH {height} {Pe} {Sc}")
                 
             i += 1
 
-        # axs.legend(legend, loc='upper right')
-        axs.legend(legend)
+        axs.legend(legend, loc='upper right')
+        # axs.legend(legend)
         # axs.legend(legend, loc='center left', bbox_to_anchor=(1, 0.5))
         axs.set_xlabel("time [s]")
         axs.set_ylabel("width [mm]")

@@ -1,26 +1,23 @@
 \documentclass[../thesis.tex]{subfiles}
 \begin{document}
 
-\chapter{Simulation model}
+\chapter{Simulation Model}
 \label{chp:model}
 
-Within this part the creation process of the simulation model will be explained in greater detail. At first the three basic equations the software solves will be given followed by a brief overview of the steps taken to create the model. Then the model's results are explained and compared to already done experiments for validation.
+Within this part the creation process of the simulation model will be explained in greater detail. At first the geometry creation, meshing and solver setup will be explained. Following that are the mesh dependency study and the models validation.
 
-\section{model setup}
+\section{Model Setup}
 \label{sec:mod_setup}
-
 In this section the steps needed to create the model within \texttt{ANSYS FLUENT} are explained.
 
-\subsection{geometry creation}
-The first of the model creation in \texttt{ANSYS FLUENT} is the modeling of the system's geometry. This geometry can either be created using the tools \texttt{ANSYS FLUENT} provides it self or be imported from an already existing CAD model. Within this work the geometry is created using ANSYS DesignModeler. In \autoref{fig:ansys_geometry} the designed model is shown and the used dimensions are listed in \autoref{tab:ansys_design}.
-
+\subsection{Geometry Creation}
+The first step of the model creation in \texttt{ANSYS FLUENT} is the modelling of the systems geometry. This geometry can either be created using the tools \texttt{ANSYS FLUENT} provides it self or be imported from an already existing CAD model. Within this work the geometry is created using \texttt{ANSYS DesignModeler}. In \autoref{fig:ansys_geometry} the designed model is shown and the used dimensions are listed in \autoref{tab:ansys_design}.
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=\textwidth]{geometry}
 	\caption{model geometry}
 	\label{fig:ansys_geometry}
 \end{figure}
-
 \begin{table} [htb]
 	\centering
 	\caption{example model geometry dimensions}
@@ -35,10 +32,9 @@ The first of the model creation in \texttt{ANSYS FLUENT} is the modeling of the 
 	\end{tabular}
 \end{table}
 
-$h$ represents the height of the Hele-Shaw cell and $r$ is the radius of the cell. A value of 30mm is chosen here to reduce the amount of computational effort instead of modeling the hole cell with it's 50mm radius.
+$h$ represents the height of the Hele-Shaw cell and $r$ is the radius of the cell. A value of 30mm is chosen here to reduce the amount of computational effort instead of modelling the hole cell with it's 50mm radius. For the used settings the front does not travel the hole 50mm so this simplification does not effect the results as can be seen in later sections.
 
-\subsection{meshing}
-
+\subsection{Meshing}
 The next step in model design following the procedure shown in \autoref{fig:cdf_procedure} in \autoref{chp:theory} is meshing. An example of the generated mesh can be seen in \autoref{fig:ansys_meshing}.
 \begin{figure}[htb]
 	\centering
@@ -46,12 +42,12 @@ The next step in model design following the procedure shown in \autoref{fig:cdf_
 	\caption{Ansys Meshing example}
 	\label{fig:ansys_meshing}
 \end{figure}
-The figure shows the reactor's inlet section. The goal in meshing was to create rectangular grid out of squares or rectangles. Near the walls, that begin on the left and right side of the inlet, the mesh resolution is increased using two inflation layers. That is done to resolve the boundary layer of the flow near the walls. Having a mesh consisting mostly out of squares and rectangles is advantageous because the algorithm only stores the values at the cell's centre as mentioned in \autoref{sec:QUICK}. Having a mesh that can be seen as a 2 dimensional array makes post-processing a lot easier. How the results are extracted from the model's output will be explained in \autoref{sec: model res} in greater detail.
+The figure shows the reactor's inlet section. The goal in meshing this geometry is to create a rectangular grid out of squares or rectangles. Near the walls, that begin on the left and right side of the inlet, the mesh resolution is increased using two inflation layers. That is done to resolve the boundary layer of the flow near the walls. Having a mesh consisting mostly out of squares and rectangles is advantageous because the algorithm only stores the values at the cell's centre as mentioned in \autoref{sec:QUICK} and having a mesh that can be seen as a 2 dimensional array makes post-processing a lot easier. How the results are extracted from the model's output will be explained in \autoref{sec: model res} in greater detail.
 
-\subsection{solver settings}
+\subsection{Solver Settings}
 \label{sec: setup}
 
-To setup the model at first a few basic configuration steps need to done. The Settings that need to be applied are listed in \autoref{tab:ansys_setup_general}.
+To setup the model at first a few general configuration steps need to done. The Settings that need to be applied are listed in \autoref{tab:ansys_setup_general}.
 
 \begin{table} [htb]
 	\centering
@@ -68,7 +64,7 @@ To setup the model at first a few basic configuration steps need to done. The Se
 		\label{tab:ansys_setup_general}
 	\end{tabular}
 \end{table}
-The type of solver chosen is a Pressure-Based and is left as the default value. The velocity formulation is set to \texttt{Absolute} because the input velocity is set to an absolute value and all exported velocity values should be absolute as well. The \texttt{Time} setting is set to \texttt{Transient} because the flow modelled is not stationary and the interest is in results during the hole model simulation run. The \texttt{2D Space} settings has a value of \texttt{Axisymmetric} due to the axisymmetric nature of the model. 
+The type of solver chosen is a Pressure-Based that also is the default value. The velocity formulation is set to \texttt{Absolute} because the input velocity is set to an absolute value and all exported velocity values should be absolute as well. The \texttt{Time} setting is set to \texttt{Transient} because the flow modelled is not stationary and the interest is in results during the hole models simulation run. The \texttt{2D Space} settings has a value of \texttt{Axisymmetric} due to the axisymmetric nature of the geometry. 
 
 With these general settings done the used models need to be activated. The used models settings are given in \autoref{tab:ansys_setup_models}. The Viscous model is set to \texttt{Laminar} because laminar flow conditions are used for the simulation. Because a reaction is part of the model the energy variable needs to be set to \texttt{On}.
 
@@ -131,7 +127,7 @@ All other values, namely enthalpies and other thermodynamic properties are the s
 		\label{tab:ansys_setup_rection}
 	\end{tabular}
 \end{table}
-To achieve a nearly instant reaction when molecules of the two species A and B meet the rate constant which also known as Pre-Exponential Factor (see \autoref{eqn:reaction}) is set to a very high value. The Activation Energy is set to a value that the given temperature is high enough to let the reaction happen.
+To achieve a nearly instant reaction when molecules of the two species A and B meet the rate constant which is also known as Pre-Exponential Factor (see \autoref{eqn:reaction}) is set to a very high value. The Activation Energy is set to a value that the given temperature is high enough to let the reaction happen.
 
 After the reaction is setup correctly the boundary conditions are being set. Conditions need to be set for the inlet, outlet and the walls. All information needed to configure the boundary conditions are visible in \autoref{tab:ansys_setup_boundary}
 
@@ -192,16 +188,16 @@ There is a homogenous velocity profile set at the inlet normal to the boundary. 
 
 \begin{equation}
 	\label{eqn:molefrac}
-	x_{B} =\dfrac{\dot{n_{B}}}{\dot{n_{B}} + \dot{n_{W}}} = \dfrac{c_{B} \cdot Q}{c_{B} \cdot Q + c_{W} \cdot Q} = \dfrac{c_{B}}{c_{B} + c_{W}} \approx 0 \text{.}00054
+	x_{fluid\_b} =\dfrac{\dot{n_{fluid\_b}}}{\dot{n_{fluid\_b}} + \dot{n_{water}}} = \dfrac{c_{fluid\_b} \cdot Q}{c_{fluid\_b} \cdot Q + c_{water} \cdot Q} = \dfrac{c_{fluid\_b}}{c_{fluid\_b} + c_{water}} \approx 0 \text{.}00054
 \end{equation}
 Since the concentration for $fluid\_{a}$ within the internal domain has to be setup as mass fraction the needed value can be calculated using \autoref{eqn:massfrac}.
 
 \begin{equation}
 	\label{eqn:massfrac}
-	\varphi_{A} =\dfrac{n_{A} \cdot M_{A}}{n_{A} \cdot M_{A} + n_{W} \cdot M_{W}} = \dfrac{c_{A} \cdot M_{A}}{c_{A} \cdot M_{A} + c_{W} \cdot M_{W}} \approx \text{0.003}
+	\varphi_{fluid\_a} =\dfrac{n_{fluid\_a} \cdot M_{fluid\_a}}{n_{fluid\_a} \cdot M_{fluid\_a} + n_{water} \cdot M_{water}} = \dfrac{c_{fluid\_a} \cdot M_{fluid\_a}}{c_{fluid\_a} \cdot M_{fluid\_a} + c_{water} \cdot M_{water}} \approx \text{0.003}
 \end{equation}
 
-The temperature is set to 300 K at the inlet and within the hole internal domain. The outlet is configured to be a pressure outlet without reverse flow to get physical valid results. At the walls the usual conditions applied to walls are set with no slip and stationary.
+The temperature is set to 300 K at the inlet and within the hole internal domain. The outlet is configured to be a pressure outlet without reverse flow to get physically valid results. At the walls the usual conditions applied to walls are set with no slip and stationary.
 
 The next step performed is to setup the solution methods as shown in \autoref{tab:ansys_setup_sol_methods}. As the solving scheme the PISO algorithm is used, that is explained in \autoref{sec:sol_method}. For spatial discretization second order methods, as explained in \autoref{sec:QUICK}, are used. 
 \begin{table} [htb]
@@ -254,17 +250,16 @@ In addition to the model's time settings the interval the results are exported a
 	\end{tabular}
 \end{table}
 
-\section{model evolution}
+\section{Model Evolution}
 \label{sec: mod_evol}
 
 Here the steps taken to receive the final model for each case are explained.
 
-\subsection{mesh dependency}
+\subsection{Mesh Dependency}
 \label{sec: mesh_dep}
 
-To achieve good results from a CFD-model the solution obtain should be independent of the grid element size. 
+To achieve good results from a CFD-model the solution obtain should be not dependent of the grid element size. 
 Do do that for each case different meshes with different grid densities are created as shown in \autoref{tab: reactor meshes}.
-
 \begin{table} [htb]
 	\centering
 	\caption{case meshes}
@@ -284,8 +279,7 @@ Do do that for each case different meshes with different grid densities are crea
 		\label{tab: reactor meshes}
 	\end{tabular}
 \end{table}
-
-Each case is run for the coarsest mesh and the results are inspected. The first indication for grid independent results can be extracted from the Courant-Number field. An example of a right and wrong field is shown in \autoref{fig: good_courant}. If as within the example, the field shows values higher than 1 the next finer mesh is chosen and the simulation is run again. If that is not the case the grid is chosen and the run is called successful.
+Each case is run for the coarsest mesh and the results are inspected. The first indication for a fine enough mesh can be extracted from the Courant-Number field. An example of a right and wrong field is shown in \autoref{fig: good_courant}. If as within the example, the field shows values higher than 1 the next finer mesh is chosen and the simulation is run again. If that is not the case the grid is chosen for the case and the run is called successful.
 
 \begin{figure}[htb]
 	\centering
@@ -295,8 +289,7 @@ Each case is run for the coarsest mesh and the results are inspected. The first 
 	\caption{wrong and right example of Courant-Number field for mesh dependency study}
 	\label{fig: good_courant}
 \end{figure}
-
-With this method a fine enough mesh for each case is chosen so that the results can be trusted. It's not the optimal mesh grid size but the approach provides a mesh that produces believable results for a given case.
+With this method a fine enough mesh for each case is chosen so that the results can be trusted.
 
 \subsection{Cases Setup}
 
@@ -343,23 +336,22 @@ For the Peclet-Number 3 different values are chosen and for the Schmidt number 2
 	\end{table}
 \end{landscape}
 
-\section{validation}
+\section{Validation}
 \label{chp:validation}
-
 Within this chapter the model validation is explained and described. At first the experimental setup used in the performed experiments is shown and then the experimental and model results are explained. After that a comparison is done to show that the model is performing as expected.
 
-\subsection{experimental setup and results}
+\subsection{Experimental Setup and Results}
 
-The experiments used for validating the developed model where done using a sounding rocket as part of the \texttt{MORABA} (\textbf{Mo}bile \textbf{Ra}cketen \textbf{Ba}sis) \cite{stamminger2012moraba} setup. The mission's name was \texttt{TEXUS-57}. The experimental setup as shown in \cite{stergiou2022effects} is visible in \autoref{fig: experiment}.
+The experiments used for validating the developed model were done using a sounding rocket as part of the \texttt{MORABA} (\textbf{Mo}bile \textbf{Ra}cketen \textbf{Ba}sis) \cite{stamminger2012moraba} setup. The mission's name was \texttt{TEXUS-57}. The experimental setup as shown in \cite{stergiou2022effects} is visible in \autoref{fig: experiment}.
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[scale=0.4]{experimental_setup}
 	\caption{experimental setup for validation \cite{stergiou2022effects}}
 	\label{fig: experiment}
 \end{figure}
-The gap height $h$ used for the experiments was 0.2 mm. The experiment is observed by a camera from the top throughout the hole run. The gained images are further analysis by image processing.
+The gap height $h$ used for the experiments was 0.2mm. The experiment is observed by a camera from the top throughout the hole run. The gained images are further analysed by image processing.
 
-\subsection{experimental results}
+\subsection{Experimental Results}
 
 An image example as gained by the experiments is shown in \autoref{fig: exp_img}. The analysis on this images is done using image processing. The image is converted to a gray-scale image as a first step. Then the gained values are correlated to concentration values using the known values for the input's concentrations. Based on the gained product concentration values the reaction front's front and back positions are gained by a threshold operation. The position of the fronts maximum is computed by detecting the position of the maximum gray value within the image. The results are stored within \texttt{.csv} files. The file containing the fronts position has the form shown in \autoref{tab: front_csv}. 
 
@@ -398,7 +390,7 @@ In addition to the front's positions the total amount of product formed is calcu
 \end{table}
 
 
-\subsection{model results}
+\subsection{Model Results}
 \label{sec: model res}
 
 The results gained from the model are no images but tables with all exported values. These tables are created at each interval defined by the user as described in \autoref{sec: setup}. The tables do have a format similar to \autoref{tab: model_csv}. The values for each cell are stored in one of the tables rows. The cells are distinguishable by their x and y coordinate.
@@ -420,14 +412,14 @@ The results gained from the model are no images but tables with all exported val
 	\end{tabular}
 \end{table}
 
-All values needed are accessible with these tables but for further analysis the values need to be converted into a field similar two the created mesh during model setup. An example of such a resulting field is shown in \autoref{fig: field_example}.
+All values needed are accessible with these tables but for further analysis the values need to be converted into a field similar to the created mesh shown in \autoref{fig:ansys_meshing} during model setup. An example of such a resulting field is shown in \autoref{fig: field_example}.
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=\textwidth]{field_example}
 	\caption{example field representation (velocity field) of model results}
 	\label{fig: field_example}
 \end{figure}
-These can be created for all exported variables. Within the example shown the field is created for the velocity magnitude but the variable of most interest is the product concentration. A field example for this variable is shown in \autoref{fig: c_plot_prod_example} for 3 different time steps.
+These fields can be created for all exported variables. Within the example shown the field is created for the velocity magnitude but the variable of most interest is the product concentration. A field example for this variable is shown in \autoref{fig: c_plot_prod_example} for 3 different time steps.
 \begin{figure}[htb]
 	\centering
 	\subfloat[\centering gap averaged concentrations]{{\includegraphics[angle=0, scale=0.41]{plot_h4r3_P931E2_S120E4_concentration-fluid_a_concentration-fluid_b_concentration-fluid_c} }}%
@@ -436,11 +428,11 @@ These can be created for all exported variables. Within the example shown the fi
 	\caption{field and averaged concentration example}%
 	\label{fig: c_plot_prod_example}%
 \end{figure}
-With these fields the product's concentration can be averaged over the hole gap height. This step is done to get a comparable post-processing step to the image processing done on the experimental data sets. The resulting plots from the previous example can be seen in the same figure as the field example.
+With these fields the products concentration can be averaged over the hole gap height. This step is done to get a comparable post-processing step to the image processing done on the experimental data sets. The resulting plots from the previous example can also bee seen in \autoref{fig: c_plot_prod_example}.
 
-With the fields and the gap averaged concentration values computed the parameters of interest can be calculated which is explained within the following sections.
+With the fields and the gap averaged concentration values computed the parameters of interest can be calculated. How that is done is explained within the following sections.
 
-\subsubsection{front positions}
+\subsubsection{Front Positions}
 
 The front's maximum position is gained by storing the radial positions of the product's maxima within the concentration plots. The front's front position is calculated by using the the position furthest away from the center at half the maximums value. The positions gained are shown for one time step in \autoref{fig: pos_examp} as an example.
 
@@ -451,31 +443,30 @@ The front's maximum position is gained by storing the radial positions of the pr
 	\label{fig: pos_examp}
 \end{figure}
 
-\subsubsection{front width}
+\subsubsection{Front Width}
 
 For calculating the front widths the fronts front and back positions are needed. The front position is already gained and the back position is computed using the same approach. Instead of taking for furthest position away from the center the closest one to the inlet is taken to get the back position. The difference between these two radial positions is the front's width at the time. The width calculated is visualized in \autoref{fig: pos_examp}. The approach for calculating the width is also known as \textbf{F}ull \textbf{W}idth at \textbf{H}alf \textbf{M}aximum or FWHM in short.
 
-To gain some more insights a second width is computed. The second width is calculated at the middle of the gap height using the same procedure. Instead of taking the gap averaged values, the values used here are the field values themselves at half the gap height.
+To gain some more insights a second width is computed. The second width is calculated at the middle of the gap height using the same procedure. The width at half of the reactors gap height also described as \textbf{F}ull \textbf{W}idth at \textbf{H}alf \textbf{G}ap \textbf{H}eight is called FWHGH in short. Instead of taking the gap averaged values, the values used here are the field values themselves at half the gap height.
 
-\subsubsection{product formed}
+\subsubsection{Product Formed}
 
-Since the cell volume and the product concentration for each cell are exported the total amount of product formed can be calculated ba multiplying these two columns with each other. \texttt{ANSYS FLUENT} computes it's values for one radiant for a 2D case. To gain the amount of product within the hole reactor the values have to be multiplied by $2 \pi$. This procedure can be described by \autoref{eqn: tot_prod}. $ n_{C, total} $ is the total amount of product produced, $n_{cells}$ is the amount of cells in the mesh, $ V_i $ is the volume of one cell and $c_{i, C}$ the product's concentration within that cell $i$.
+Since the cell volume and the product concentration for each cell are accessible from the results exported, the total amount of product formed can be calculated by multiplying these two columns with each other. \texttt{ANSYS FLUENT} computes it's values for one radiant for a 2D axisymmetric case. To gain the amount of product within the hole reactor the values have to be multiplied by $2 \pi$. This procedure can be described by \autoref{eqn: tot_prod}. $ n_{C, total} $ is the total amount of product produced, $n_{cells}$ is the amount of cells in the mesh, $ V_i $ is the volume of one cell and $c_{i, C}$ the product's concentration within that cell $i$.
 
 \begin{equation}
 	n_{C, total} = 2 \pi \cdot \sum_{i=0}^{n_{cells}} \left[ V_i \cdot c_{i, C} \right]
 	\label{eqn: tot_prod} 
 \end{equation}
 
-\subsection{comparison}
+\subsection{Comparison}
 
-For comparison the position of the product's maximum is used. It can be seen that the model and experiment perform similar over hole time range with a small deviation at the early time steps. These difference might come from slightly different flow condition or some mixing due to gravitational influence. Further reasons and possible explanations for the differences within model and experimental results are discussed within \autoref{chp:err_lims}.
-
+For comparison the position of the product's maximum is used. It can be seen that the model and experiment perform similar over the hole time range with a small deviation at the early time steps. These differences might come from slightly different flow conditions or some mixing due to gravitational influences. All in all the model provides valid results as shown in the graph.
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=\textwidth]{front_exp}
 	\caption{comparison of the experimental and model maxima positions}
 	\label{fig: comp_maxis}
 \end{figure}
-    
+
 
 \end{document}

@@ -9,7 +9,9 @@
     ],
     "c_bar": "c [mol/l]", 
     "cases": [
-        "h2r3_P500E2_S120E4"
+        "h2r3_P500E2_S243E3",
+        "h2r3_P931E2_S243E3",
+        "h2r3_P205E3_S243E3"
     ],
     "cases_tmp": [
         "h2r3_P205E3_S243E3"
@@ -28,9 +30,9 @@
     "create_plot": false, 
     "create_plot_front": false, 
     "create_plot_prod": false, 
-    "create_plot_width": false, 
+    "create_plot_width": true, 
     "create_prod_file": false, 
-    "create_resi_plot": true, 
+    "create_resi_plot": false, 
     "create_widths_file": false, 
     "data_path": [
         "Data"
