@@ -9,9 +9,7 @@
     ],
     "c_bar": "c [mol/l]", 
     "cases": [
-        "h2r3_P500E2_S243E3",
-        "h2r3_P931E2_S243E3",
-        "h2r3_P205E3_S243E3"
+        "h4r3_P931E2_S120E4"
     ],
     "cases_tmp": [
         "h2r3_P205E3_S243E3"
@@ -25,12 +23,12 @@
     ], 
     "create_avg_file": false, 
     "create_gif": false, 
-    "create_image": false, 
+    "create_image": true, 
     "create_new_files": true, 
     "create_plot": false, 
     "create_plot_front": false, 
     "create_plot_prod": false, 
-    "create_plot_width": true, 
+    "create_plot_width": false, 
     "create_prod_file": false, 
     "create_resi_plot": false, 
     "create_widths_file": false, 
@@ -38,7 +36,8 @@
         "Data"
     ], 
     "field_var": [
-        "concentration-fluid_c"
+        "velocity-magnitude",
+        "cell-convective-courant-number"
     ], 
     "field_var_tmp": [
         
@@ -106,9 +105,9 @@
         }, 
         "velocity-magnitude": {
             "c_bar": "v [m/s]", 
-            "max": 0.03, 
+            "max": 1.0e-4, 
             "min": 0.0, 
-            "set_custom_range": false
+            "set_custom_range": true
         }
     }, 
     "image_file_type": "png", 
@@ -144,5 +143,6 @@
         "concentration-fluid_c"
     ], 
     "plots": [
+        10
     ]
 }

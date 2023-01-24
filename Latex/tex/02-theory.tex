@@ -51,24 +51,14 @@ To gain information about the velocity field the conservation equations for mass
 
 \begin{equation}
 \label{eqn:ansys_conti}
-\dfrac{\partial \rho}{\partial t} + \dfrac{\partial}{\partial x} (\rho u_x) + \dfrac{\partial }{\partial r} (\rho u_r)
+\dfrac{\partial}{\partial x} (\rho u_x) + \dfrac{\partial }{\partial r} (\rho u_r)
 + \dfrac{\rho u_r}{r} = 0
 \end{equation}
 
 This is the continuity equation for an in-compressible fluid where $r$ is the radial coordinate, $u_x$ is the axial velocity, $u_r$ is the radial velocity and $\rho$ is the density. In addition to the shown continuity equation the radial and axial momentum equations need to be solved.
 
-%\begin{equation}
-%	\dfrac{\partial}{\partial t}(\rho u_x) + \dfrac{1}{r} \dfrac{\partial}{\partial x}(r \rho u_x^2)
-%	+ \dfrac{1}{r} \dfrac{\partial}{\partial r}(r \rho u_r u_x) = 
-%	- \dfrac{\partial p}{\partial x} + \dfrac{1}{r} \dfrac{\partial }{\partial x} \left[ 
-%		r \mu \left( 2 \dfrac{\partial u_x}{\partial x} - \dfrac{2}{3}(\nabla \cdot \mathbf{u}) \right)
-%	\right] + \dfrac{1}{r} \dfrac{\partial }{\partial r} \left[ 
-%	r \mu \left( \dfrac{\partial u_x}{\partial r} - \dfrac{\partial u_r}{\partial x} \right)
-%	\right]
-%\end{equation}
-
 \begin{gather}
-	\dfrac{\partial}{\partial t}(\rho u_x) + \dfrac{1}{r} \dfrac{\partial}{\partial x}(r \rho u_x^2)
+	\dfrac{1}{r} \dfrac{\partial}{\partial x}(r \rho u_x^2)
 	+ \dfrac{1}{r} \dfrac{\partial}{\partial r}(r \rho u_r u_x) = 
 	- \dfrac{\partial p}{\partial x} + \dfrac{1}{r} \dfrac{\partial }{\partial x} \left[ 
 	r \mu \left( 2 \dfrac{\partial u_x}{\partial x} - \dfrac{2}{3}(\nabla \cdot \mathbf{u}) \right)
@@ -78,20 +68,8 @@ This is the continuity equation for an in-compressible fluid where $r$ is the ra
 	\right]	
 \end{gather}
 
-%\begin{equation}
-%	\dfrac{\partial}{\partial t}(\rho u_r) + \dfrac{1}{x} \dfrac{\partial}{\partial r}(r \rho u_x u_r)
-%	+ \dfrac{1}{r} \dfrac{\partial}{\partial x}(r \rho u_r^2) = 
-%	- \dfrac{\partial p}{\partial r} + \dfrac{1}{r} \dfrac{\partial }{\partial x} \left[ 
-%	r \mu \left( \dfrac{\partial u_r}{\partial x} - \dfrac{\partial u_x}{\partial r} \right)
-%	\right]
-%	+ \dfrac{1}{r} \dfrac{\partial }{\partial r} \left[ 
-%	r \mu \left( 2 \dfrac{\partial u_r}{\partial r} - \dfrac{2}{3}(\nabla \cdot \mathbf{u}) \right)
-%	\right] -
-%	2 \mu \dfrac{u_r}{r^2}+ \dfrac{2}{3} \dfrac{\mu}{r}(\nabla \cdot \mathbf{u}) + \rho \dfrac{u_z^2}{r} + %F_r
-%\end{equation}
-
 \begin{gather}
-	\dfrac{\partial}{\partial t}(\rho u_r) + \dfrac{1}{x} \dfrac{\partial}{\partial r}(r \rho u_x u_r)
+	 \dfrac{1}{x} \dfrac{\partial}{\partial r}(r \rho u_x u_r)
 	+ \dfrac{1}{r} \dfrac{\partial}{\partial x}(r \rho u_r^2) = 
 	- \dfrac{\partial p}{\partial r} + \dfrac{1}{r} \dfrac{\partial }{\partial x} \left[ 
 	r \mu \left( \dfrac{\partial u_r}{\partial x} - \dfrac{\partial u_x}{\partial r} \right)
@@ -309,7 +287,7 @@ To be able to compare simulations and experiments two dimensionless variables ar
 	Pe = \dfrac{l \cdot u}{D}
 \end{equation}
 
-The Peclet number is influenced by the characteristic length $l$ as known from the Reynolds number, the input velocity $u$ and the diffusion coefficient $D$. The characteristic length within this model is equal to the gap height. The diffusion coefficient is set to be the same one as calculated from the experiments for model validation but is also varied when doing the parametric study.
+The Peclet number is influenced by the characteristic length $l$, the inlet velocity $u$ and the diffusion coefficient $D$. The characteristic length within this model is equal to the gap height. The diffusion coefficient is set to be the same one as calculated from the experiments for model validation but is also varied when doing the parametric study. The inlet velocity $u$ is calculated using the volumetric flow rate $Q$ and the surface at a distance of 5mm from reactors centreline. 
 
 \begin{equation}
 	\label{eqn: Sc}

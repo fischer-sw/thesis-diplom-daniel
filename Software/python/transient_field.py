@@ -1057,10 +1057,10 @@ class flowfield:
                         for tmp_var in plot_vars:
                             col = plot_cfg["colors"][tmp_var]
                             tmp_data = input_data[tmp_var]
-                            cax = axs[idx].plot(tmp_data["r [m]"][1:-1], tmp_data[f"t= {ele} [s]"][1:-1], color=col, label=plot_cfg["legend"][var])
+                            cax = axs[idx].plot(tmp_data["r [m]"][1:-1], tmp_data[f"t= {ele} [s]"][1:-1], color=col, label=plot_cfg["legend"][tmp_var])
                             # plot FWHM
                             # if tmp_var == 'concentration-fluid_c': 
-                                # cax = axs[idx].plot(tmp_data["r [m]"][1:-1], [max(tmp_data[f"t= {ele} [s]"][1:-1])*0.5]*len(tmp_data["r [m]"][1:-1]), color="orange", label="$0.5 \cdot _{C_{C,max}}$")
+                            #     cax = axs[idx].plot(tmp_data["r [m]"][1:-1], [max(tmp_data[f"t= {ele} [s]"][1:-1])*0.5]*len(tmp_data["r [m]"][1:-1]), color="orange", label="$0.5 \cdot _{C_{C,max}}$")
                         if idx == len(plots)-1 :
                             axs[idx].set_xlabel("radius r [m]")
                         axs[idx].set_ylabel(config["plot_conf"]["y_label"])
@@ -1090,7 +1090,7 @@ class flowfield:
                             axs.set_title("t = {}s".format(ele))
 
             else:
-                fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6.5,2.4*len(plots)))
+                fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(7.0,2.0*len(plots)+2.5))
                 
                 l_conf = []
                 for idx, ele in enumerate(plots):
@@ -1229,7 +1229,7 @@ class flowfield:
 
                     else:
                         if image_conf[var]["set_custom_range"]:
-                            cax = axs.pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'), vmin=image_conf[var]["min"], vmax=image_conf[var]["max"])
+                            cax = axs.pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet', 10), vmin=image_conf[var]["min"], vmax=image_conf[var]["max"])
                         else:
                             cax = axs.pcolormesh(x_tmp, y_tmp, Vals, shading='nearest', cmap=plt.cm.get_cmap('jet'))
 

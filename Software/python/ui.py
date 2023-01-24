@@ -8,9 +8,8 @@ import plotly.graph_objects as go
 import numpy as np
 
 from dash import *
-from plotly.tools import mpl_to_plotly
 from ansys_utils import *
-from Software.python.transient_field import flowfield
+from transient_field import flowfield
 import dash_bootstrap_components as dbc
 
 # setup logging
@@ -120,7 +119,11 @@ plot_modal = html.Div(
                         [
                             dbc.Col(
                                 [
-                                
+                                    html.Div(id="time-list-container-plot", children=[dcc.Dropdown(options=[], value=None, id='dd-times-plot', placeholder="times", multi=True)]),
+
+                                    dcc.Dropdown(options=[
+                                        
+                                    ], value=None, id='var-dd-plot', placeholder="variable", multi=True),
                                 ],
                                 width=12,
                             )
@@ -308,7 +311,7 @@ def update_btn_hide(value, clicks):
 
 @app.callback(
     Output("dd-times", "options"),
-
+    Output("dd-times-plot", "options"),
     Input("dd-cases", "value",),
     prevent_initial_call=True
 )
@@ -338,11 +341,12 @@ def get_time_options(value):
         
         options.append(tmp)
 
-    return options
+    return [options]*2
 
 
 @app.callback(
     Output("var-dd", "options"),
+    Output("var-dd-plot", "options"),
 
     Input("dd-cases", "value",),
     prevent_initial_call=True
@@ -352,7 +356,7 @@ def update_vars(case):
     vars = get_case_vars(config, case)
 
     options = []
-
+    options_plot = []
     vars = vars[2:]
 
     for idx, ele in enumerate(vars):
@@ -361,10 +365,13 @@ def update_vars(case):
             "label" : f"{ele}",
             "value" : f"{ele}"
         }
+
+        if "concentration" in ele:
+            options_plot.append(tmp)    
         
         options.append(tmp)
     
-    return options
+    return [options, options_plot]
 
 @app.callback(
     Output("img", "src"),
@@ -386,7 +393,7 @@ def create_image(clicks, time_values, var):
     field = flowfield(config, cases_config)
 
     path = sys.path[0]
-    path = os.path.join(path, "assets", "fields", config["cases"][0])
+    path = os.path.join(path, "assets", config["cases"][0] ,"fields")
     sub_path = os.path.join(path, var)
     
     
