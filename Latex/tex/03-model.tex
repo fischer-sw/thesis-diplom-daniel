@@ -4,45 +4,45 @@
 \chapter{Simulation Model}
 \label{chp:model}
 
-Within this part the creation process of the simulation model will be explained in greater detail. At first the geometry creation, meshing and solver setup will be explained. Following that are the mesh dependency study and the models validation.
+Within this part the creation process of the simulation model will be explained in greater detail. At first the geometry modelling, meshing and solver setup will be explained. Later on, the mesh dependency study and the model validation are explained.
 
 \section{Model Setup}
 \label{sec:mod_setup}
 In this section the steps needed to create the model within \texttt{ANSYS FLUENT} are explained.
 
 \subsection{Geometry Creation}
-The first step of the model creation in \texttt{ANSYS FLUENT} is the modelling of the systems geometry. This geometry can either be created using the tools \texttt{ANSYS FLUENT} provides it self or be imported from an already existing CAD model. Within this work the geometry is created using \texttt{ANSYS DesignModeler}. In \autoref{fig:ansys_geometry} the designed model is shown and the used dimensions are listed in \autoref{tab:ansys_design}.
+The first step of the model creation in \texttt{ANSYS FLUENT} is the modelling of the system geometry. This geometry can either be created using the tools \texttt{ANSYS FLUENT} provides or be imported from an already existing CAD model. Within this work the geometry is created using \texttt{ANSYS DesignModeler}. In \autoref{fig:ansys_geometry} a sketch of the designed model is shown and the used dimensions are listed in \autoref{tab:ansys_design}.
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=\textwidth]{geometry}
-	\caption{model geometry}
+	\caption{Sketch of the model geometry including outer dimensions}
 	\label{fig:ansys_geometry}
 \end{figure}
 \begin{table} [htb]
 	\centering
-	\caption{example model geometry dimensions}
+	\caption{Used values for geometry dimensions}
 	\begin{tabular}{ ccc }
 		\hline
 		variable & value & unit \\
 		\hline
 		$r$ & 30.0 & mm \\
-		$h$ & 0.6 & mm \\
+		$h$ & 0.2...0.6 & mm \\
 		\hline
 		\label{tab:ansys_design}
 	\end{tabular}
 \end{table}
 
-$h$ represents the height of the Hele-Shaw cell and $r$ is the radius of the cell. A value of 30mm is chosen here to reduce the amount of computational effort instead of modelling the hole cell with it's 50mm radius. For the used settings the front does not travel the hole 50mm so this simplification does not effect the results as can be seen in later sections.
+$h$ represents the height of the Hele-Shaw cell and $r$ is the radius of the cell. A value of 30mm is chosen here. For the used settings the front does not travel the whole 50mm, so this simplification does not effect the results as can be seen in later sections.
 
 \subsection{Meshing}
-The next step in model design following the procedure shown in \autoref{fig:cdf_procedure} in \autoref{chp:theory} is meshing. An example of the generated mesh can be seen in \autoref{fig:ansys_meshing}.
+In this section the mesh creation process is explained in greater detail. An example of the generated mesh can be seen in \autoref{fig:ansys_meshing}.
 \begin{figure}[htb]
 	\centering
 	\includegraphics[scale=0.25]{Mesh}
 	\caption{Ansys Meshing example}
 	\label{fig:ansys_meshing}
 \end{figure}
-The figure shows the reactor's inlet section. The goal in meshing this geometry is to create a rectangular grid out of squares or rectangles. Near the walls, that begin on the left and right side of the inlet, the mesh resolution is increased using two inflation layers. That is done to resolve the boundary layer of the flow near the walls. Having a mesh consisting mostly out of squares and rectangles is advantageous because the algorithm only stores the values at the cell's centre as mentioned in \autoref{sec:QUICK} and having a mesh that can be seen as a 2 dimensional array makes post-processing a lot easier. How the results are extracted from the model's output will be explained in \autoref{sec: model res} in greater detail.
+The figure shows the reactor's inlet section. The goal in meshing this geometry is to create a rectangular grid out of squares or rectangles. Near the walls, that begin on the left and right side of the inlet, the mesh resolution is increased using two inflation layers. That is done to resolve the boundary layer of the flow near the walls. These finer resolutions near the wall are needed, because near the wall the flows velocity does show large gradients \cite{versteeg2007introduction}. Having a mesh consisting mostly out of squares and rectangles is advantageous because the algorithm only stores the values at the cell's centre as mentioned in \autoref{sec:QUICK} and having a mesh that can be seen as a 2 dimensional array helps with post-processing. The detailed results and their analysis are discussed in \autoref{sec: model res}.
 
 \subsection{Solver Settings}
 \label{sec: setup}
@@ -51,7 +51,7 @@ To setup the model at first a few general configuration steps need to done. The 
 
 \begin{table} [htb]
 	\centering
-	\caption{General settings}
+	\caption{General model settings}
 	\begin{tabular}{ ccc }
 		\hline
 		Section & Setting & value \\
@@ -64,29 +64,12 @@ To setup the model at first a few general configuration steps need to done. The 
 		\label{tab:ansys_setup_general}
 	\end{tabular}
 \end{table}
-The type of solver chosen is a Pressure-Based that also is the default value. The velocity formulation is set to \texttt{Absolute} because the input velocity is set to an absolute value and all exported velocity values should be absolute as well. The \texttt{Time} setting is set to \texttt{Transient} because the flow modelled is not stationary and the interest is in results during the hole models simulation run. The \texttt{2D Space} settings has a value of \texttt{Axisymmetric} due to the axisymmetric nature of the geometry. 
+The type of solver chosen is a Pressure-Based that also is the default value. The velocity formulation is set to \texttt{Absolute} because the input velocity is set to an absolute value. The \texttt{Time} setting is set to \texttt{Transient} because the flow modelled is not stationary and the interest is in results during the whole models simulation run. The \texttt{2D Space} settings has a value of \texttt{Axisymmetric} due to the axisymmetric nature of the geometry. The Viscous model is set to \texttt{Laminar} because laminar flow conditions are used. Due to a reaction being part of the model the energy variable needs to be set to \texttt{On}.
 
-With these general settings done the used models need to be activated. The used models settings are given in \autoref{tab:ansys_setup_models}. The Viscous model is set to \texttt{Laminar} because laminar flow conditions are used for the simulation. Because a reaction is part of the model the energy variable needs to be set to \texttt{On}.
-
+After the correct models are turned on and parametrized the species taking part within the model are defined. Within this case 4 fluids are needed. The example configuration of one of the fluids taking part within the reaction is shown in \autoref{tab:ansys_setup_materials}. The table shows the configuration of one of the reactants.
 \begin{table} [htb]
 	\centering
-	\caption{model settings}
-	\begin{tabular}{ cc }
-		\hline
-		variable & value \\
-		\hline
-		Energy & On \\
-		Viscous & Laminar \\
-		Species & (Species Transport, Reactions)  \\
-		\hline
-		\label{tab:ansys_setup_models}
-	\end{tabular}
-\end{table}
-
-After the correct models are turned on and parametrized the species taking part within the model are defined. Within this case 4 fluids are needed. The example configuration of one of the fluids taking part within the reaction is shown in \autoref{tab:ansys_setup_materials}. The table shows the configuration of one of the educts.
-\begin{table} [htb]
-	\centering
-	\caption{Example fluid settings}
+	\caption{Fluid mixture settings}
 	\begin{tabular}{ ccc }
 		\hline
 		variable & value & unit \\
@@ -94,17 +77,15 @@ After the correct models are turned on and parametrized the species taking part 
 		\\[-1em]
 		$\rho$ & 1000 & $\frac{\text{kg}}{\text{m³}}$ \\
 		\\[-1em]
-		$\nu$ & 0.001003 & $\frac{\text{m²}}{s}$ \\
+		$\nu$ & 1.0e-6...1.2e-6 & $\frac{\text{m²}}{s}$ \\
 		\\[-1em]
-		$M$ & 100 & $\frac{\text{g}}{\text{mol}}$ \\
-		\\[-1em]
-		$D$ & 8.22e-10 & $\frac{\text{m²}}{s}$\\
+		$D$ & 1.00e-10...8.22e-10 & $\frac{\text{m²}}{s}$\\
 		\\[-1em]
 		\hline
 		\label{tab:ansys_setup_materials}
 	\end{tabular}
 \end{table}
-All other values, namely enthalpies and other thermodynamic properties are the same for all the fluids and equal to the values of water. Since 3 fluids take part in the reaction and 4 fluids are needed to setup the model the yet missing fluid is water. It is needed to be able to set a molar concentration at the inlet that is lower than the maximum of 1. After this the values from the fluids should be carried over to the mixture configuration within the new existing Mixture tab. With the mixture settings the reaction parameters are set. The parameters set for the reaction are stated in \autoref{tab:ansys_setup_rection}.
+All other values, namely enthalpies and other thermodynamic properties are the same for all the fluids and equal to the values of water. Since 3 fluids take part in the reaction and 4 fluids are needed to setup the model the yet missing fluid is water. It is needed to be able to set a molar concentration at the inlet. With the mixture settings the reaction parameters are set. The parameters set for the reaction are stated in \autoref{tab:ansys_setup_rection}.
 \begin{table} [htb]
 	\centering
 	\caption{reaction settings}
@@ -119,7 +100,8 @@ All other values, namely enthalpies and other thermodynamic properties are the s
 		Rate Exponent fluid\_a & 1 & - \\
 		Rate Exponent fluid\_b & 1 & - \\
 		Rate Exponent fluid\_c & 0 & - \\
-		Pre-Exponential Factor & 1e15 & - \\
+		\\[-1em]
+		Pre-Exponential Factor & 1e15 & $\frac{\text{l}^2}{\text{s} \cdot \text{mol}}$ \\
 		\\[-1em]
 		Activation Energy & 1e4 & $\frac{\text{J}}{\text{mol}}$ \\
 		\\[-1em]
@@ -127,13 +109,13 @@ All other values, namely enthalpies and other thermodynamic properties are the s
 		\label{tab:ansys_setup_rection}
 	\end{tabular}
 \end{table}
-To achieve a nearly instant reaction when molecules of the two species A and B meet the rate constant which is also known as Pre-Exponential Factor (see \autoref{eqn:reaction}) is set to a very high value. The Activation Energy is set to a value that the given temperature is high enough to let the reaction happen.
+To achieve a nearly instant reaction when molecules of the two species A and B meet the rate constant which is also known as Pre-Exponential Factor (see \autoref{eqn:reaction}) is set to $1 \cdot 10^{15} \left[ \frac{\text{l}^2}{\text{s} \cdot \text{mol}} \right]$. The Activation Energy is set to a value of $ 1 \cdot 10^{4} \left[\frac{\text{J}}{\text{mol}}\right]$. With that value, the given temperature of $300 [\text{K}]$ is high enough to let the reaction happen.
 
-After the reaction is setup correctly the boundary conditions are being set. Conditions need to be set for the inlet, outlet and the walls. All information needed to configure the boundary conditions are visible in \autoref{tab:ansys_setup_boundary}
+After the reaction is setup correctly the boundary conditions are being set. Boundary conditions need to be set for the inlet, outlet and the walls. All information needed to configure the boundary conditions are visible in \autoref{tab:ansys_setup_boundary}. As part of the boundary conditions the flow domain has to be initialized with values to start the simulation from. To achieve the same conditions as within the experimental setup the reactor is filled with species $B$ with a concentration of $0.03 \left[\frac{\text{mol}}{\text{l}}\right]$. Mole fractions $x_i$ are required as inputs for the inlet, so they have to be calculated from the given concentration using \autoref{eqn:molefrac}. The initialization of the domain requires mass fractions $\varphi_i$ so they need to be calculated as well using \autoref{eqn:massfrac}. In addition to the mass fraction the internal domain is initialized with a pressure of $20$[Pa] and a temperature of $300$[K].
 
 \begin{table} [htb]
 	\centering
-	\caption{boundary conditions}
+	\caption{Models boundary conditions}
 	\begin{tabular}{ cccc }
 		\hline
 		place & variable & value & unit \\
@@ -141,21 +123,20 @@ After the reaction is setup correctly the boundary conditions are being set. Con
 		inlet & Type & velocity-inlet & - \\
 		inlet & Velocity Specification Method & Magnitude, Normal to Boundary & - \\
 		\\[-1em]
-		inlet & Velocity Magnitude & e.g. 4e-3 & $\frac{\text{m}}{\text{s}}$ \\
+		inlet & Velocity Magnitude & 8.33e-5...4.21e-3 & $\frac{\text{m}}{\text{s}}$ \\
 		\\[-1em]
 		inlet & Temperature & 300 & K \\
-		inlet & fluid\_a & 5.4e-4 & - \\
+		inlet & $x_{fluid\_a}$ & 5.4e-4 & - \\
 		outlet & Type & pressure-outlet & - \\
 		outlet & Gauge Pressure & 20 & Pa \\
 		outlet & Prevent Reverse Flow & yes & - \\
 		wall & Type & wall & - \\
-		wall & Wall Motion & Stationary Wall & - \\
 		wall & Shear Condition & No Slip & - \\
 		\hline
 		\label{tab:ansys_setup_boundary}
 	\end{tabular}
 \end{table}
-There is a homogenous velocity profile set at the inlet normal to the boundary. At the inlet the amount of $fluid\_a$ has to set as a mole fraction as well. To get matching conditions to the already performed experiments the mole fraction needs to be calculated from a given concentration. Assuming the values from \autoref{tab:ansys_setup_molefrac} are known the mole fraction can be calculated using \autoref{eqn:molefrac}.
+There is a homogenous velocity profile set at the inlet normal to the boundary.
 
 \begin{table} [htb]
 	\centering
@@ -177,10 +158,6 @@ There is a homogenous velocity profile set at the inlet normal to the boundary. 
 		\\[-1em]
 		$c_{fluid\_b}$ & Concentration $fluid\_b$ & 0.03 & $\frac{\mathrm{mol}}{\mathrm{l}}$ \\
 		\\[-1em]
-		$c_{water}$ & Concentration water & 55.55 & $\frac{\mathrm{mol}}{\mathrm{l}}$ \\
-		\\[-1em]
-		$Q$ & inlet flow rate &  e.g. 0.144 & $\frac{\mathrm{ml}}{\mathrm{min}}$ \\
-		\\[-1em]
 		\hline
 		\label{tab:ansys_setup_molefrac}
 	\end{tabular}
@@ -188,16 +165,23 @@ There is a homogenous velocity profile set at the inlet normal to the boundary. 
 
 \begin{equation}
 	\label{eqn:molefrac}
-	x_{fluid\_b} =\dfrac{\dot{n_{fluid\_b}}}{\dot{n_{fluid\_b}} + \dot{n_{water}}} = \dfrac{c_{fluid\_b} \cdot Q}{c_{fluid\_b} \cdot Q + c_{water} \cdot Q} = \dfrac{c_{fluid\_b}}{c_{fluid\_b} + c_{water}} \approx 0 \text{.}00054
+	\begin{split}
+		x_{fluid\_a} & =\dfrac{\dot{n_{fluid\_a}}}{\dot{n_{fluid\_a}} + \dot{n_{water}}} \\[1em]
+		& = \dfrac{c_{fluid\_a} \cdot Q}{c_{fluid\_a} \cdot Q + c_{water} \cdot Q} = \dfrac{c_{fluid\_a}}{c_{fluid\_a} + c_{water}} \\[1em] 
+		& \approx 0 \text{.}00054
+	\end{split}
 \end{equation}
-Since the concentration for $fluid\_{a}$ within the internal domain has to be setup as mass fraction the needed value can be calculated using \autoref{eqn:massfrac}.
-
+Since the concentration for $fluid\_{b}$ within the internal domain has to be setup as mass fraction the needed value can be calculated using \autoref{eqn:massfrac}.
 \begin{equation}
 	\label{eqn:massfrac}
-	\varphi_{fluid\_a} =\dfrac{n_{fluid\_a} \cdot M_{fluid\_a}}{n_{fluid\_a} \cdot M_{fluid\_a} + n_{water} \cdot M_{water}} = \dfrac{c_{fluid\_a} \cdot M_{fluid\_a}}{c_{fluid\_a} \cdot M_{fluid\_a} + c_{water} \cdot M_{water}} \approx \text{0.003}
+	\begin{split}
+		\varphi_{fluid\_b} & = \dfrac{n_{fluid\_b} \cdot M_{fluid\_b}}{n_{fluid\_b} \cdot M_{fluid\_b} + n_{water} \cdot M_{water}} \\[1em]
+		& = \dfrac{c_{fluid\_b} \cdot M_{fluid\_b}}{c_{fluid\_b} \cdot M_{fluid\_b} + c_{water} \cdot M_{water}} \\[1em]
+		&  \approx \text{0.003}
+	\end{split}
 \end{equation}
 
-The temperature is set to 300 K at the inlet and within the hole internal domain. The outlet is configured to be a pressure outlet without reverse flow to get physically valid results. At the walls the usual conditions applied to walls are set with no slip and stationary.
+The temperature is set to 300 K at the inlet and within the whole internal domain. The outlet is configured to be a pressure outlet without reverse flow to get physically valid results. At the walls the usual conditions applied to walls are set with no slip.
 
 The next step performed is to setup the solution methods as shown in \autoref{tab:ansys_setup_sol_methods}. As the solving scheme the PISO algorithm is used, that is explained in \autoref{sec:sol_method}. For spatial discretization second order methods, as explained in \autoref{sec:QUICK}, are used. 
 \begin{table} [htb]
@@ -349,7 +333,7 @@ The experiments used for validating the developed model were done using a soundi
 	\caption{experimental setup for validation \cite{stergiou2022effects}}
 	\label{fig: experiment}
 \end{figure}
-The gap height $h$ used for the experiments was 0.2mm. The experiment is observed by a camera from the top throughout the hole run. The gained images are further analysed by image processing.
+The gap height $h$ used for the experiments was 0.2mm. The experiment is observed by a camera from the top throughout the whole run. The gained images are further analysed by image processing.
 
 \subsection{Experimental Results}
 
@@ -371,7 +355,7 @@ An image example as gained by the experiments is shown in \autoref{fig: exp_img}
 	\end{tabular}
 \end{table}
 t describes the flow time during the experiment in seconds and WC is front's width. The width is calculated using the difference between the front's front and back positions. RC is the radial distance from the center of the front's maximum and Rf is the front's front position.
-In addition to the front's positions the total amount of product formed is calculated. This is done by integrating the concentration values over the hole domain and gap height. To make experiments more easily comparable with each other the formed product values (in mol) are non-dimensionalized. To achieve this the values are divided by $c_{max} \cdot V_{reactor}$. The variable $c_{max}$ is the maximum value of the product's concentration during one experimental run and $V_{reactor}$ is the reactor's volume. The product of these two values refers to the fully mixed case as it gives in indication of the maximum amount of product possible than can be created. The format of the results is shown in \autoref{tab: product_csv}. The volume injected is equivalent to the time elapsed in seconds. These two values can be converted using the flow rate. NC is the non-dimensional product formed for each time step.
+In addition to the front's positions the total amount of product formed is calculated. This is done by integrating the concentration values over the whole domain and gap height. To make experiments more easily comparable with each other the formed product values (in mol) are non-dimensionalized. To achieve this the values are divided by $c_{max} \cdot V_{reactor}$. The variable $c_{max}$ is the maximum value of the product's concentration during one experimental run and $V_{reactor}$ is the reactor's volume. The product of these two values refers to the fully mixed case as it gives in indication of the maximum amount of product possible than can be created. The format of the results is shown in \autoref{tab: product_csv}. The volume injected is equivalent to the time elapsed in seconds. These two values can be converted using the flow rate. NC is the non-dimensional product formed for each time step.
 
 \begin{table} [htb]
 	\centering
@@ -428,7 +412,7 @@ These fields can be created for all exported variables. Within the example shown
 	\caption{field and averaged concentration example}%
 	\label{fig: c_plot_prod_example}%
 \end{figure}
-With these fields the products concentration can be averaged over the hole gap height. This step is done to get a comparable post-processing step to the image processing done on the experimental data sets. The resulting plots from the previous example can also bee seen in \autoref{fig: c_plot_prod_example}.
+With these fields the products concentration can be averaged over the whole gap height. This step is done to get a comparable post-processing step to the image processing done on the experimental data sets. The resulting plots from the previous example can also bee seen in \autoref{fig: c_plot_prod_example}.
 
 With the fields and the gap averaged concentration values computed the parameters of interest can be calculated. How that is done is explained within the following sections.
 
@@ -451,7 +435,7 @@ To gain some more insights a second width is computed. The second width is calcu
 
 \subsubsection{Product Formed}
 
-Since the cell volume and the product concentration for each cell are accessible from the results exported, the total amount of product formed can be calculated by multiplying these two columns with each other. \texttt{ANSYS FLUENT} computes it's values for one radiant for a 2D axisymmetric case. To gain the amount of product within the hole reactor the values have to be multiplied by $2 \pi$. This procedure can be described by \autoref{eqn: tot_prod}. $ n_{C, total} $ is the total amount of product produced, $n_{cells}$ is the amount of cells in the mesh, $ V_i $ is the volume of one cell and $c_{i, C}$ the product's concentration within that cell $i$.
+Since the cell volume and the product concentration for each cell are accessible from the results exported, the total amount of product formed can be calculated by multiplying these two columns with each other. \texttt{ANSYS FLUENT} computes it's values for one radiant for a 2D axisymmetric case. To gain the amount of product within the whole reactor the values have to be multiplied by $2 \pi$. This procedure can be described by \autoref{eqn: tot_prod}. $ n_{C, total} $ is the total amount of product produced, $n_{cells}$ is the amount of cells in the mesh, $ V_i $ is the volume of one cell and $c_{i, C}$ the product's concentration within that cell $i$.
 
 \begin{equation}
 	n_{C, total} = 2 \pi \cdot \sum_{i=0}^{n_{cells}} \left[ V_i \cdot c_{i, C} \right]
@@ -460,7 +444,7 @@ Since the cell volume and the product concentration for each cell are accessible
 
 \subsection{Comparison}
 
-For comparison the position of the product's maximum is used. It can be seen that the model and experiment perform similar over the hole time range with a small deviation at the early time steps. These differences might come from slightly different flow conditions or some mixing due to gravitational influences. All in all the model provides valid results as shown in the graph.
+For comparison the position of the product's maximum is used. It can be seen that the model and experiment perform similar over the whole time range with a small deviation at the early time steps. These differences might come from slightly different flow conditions or some mixing due to gravitational influences. All in all the model provides valid results as shown in the graph.
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=\textwidth]{front_exp}

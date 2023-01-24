@@ -21,7 +21,7 @@ Computational fluid dynamics is the computer based solving of problems regarding
 
 The first step is to model the domains geometry. In case of \texttt{ANSYS FLUENT} this step can either be done within the CFD software itself, or an external CAD program. 
 
-The tool \texttt{ANSYS FLUENT} uses the Volume of Fluid (VOF) approach to solve fluid flow problems \cite{manual2009ansys}. The Theory behind this method is explained in Section \ref{sec: finite_volume}. This method is based around dividing the wwhole volume into small elements and solving the problem for each element at a time. That is why a mesh needs to be created to provide \texttt{ANSYS FLUENT} with the element sizes, shapes and positions in space. After the geometry is created or imported form an external source a mesh needs to be created as already mentioned. This mesh is the basis for the solver to solve the case and an important step. The way the mesh is set up has a significant influence on the models results and the computational resources needed. The finer the mesh the more computational power is needed for calculating the solution. By lowering the grid's element size the resources needed or simulation time increases exponentially because the amount of elements to solve growths and in addition to that, the time step to resolve all flow details might decrease as well. These two effects that might both need to be taken into account lead to the exponential growth in resources and/or time.
+The tool \texttt{ANSYS FLUENT} uses the Volume of Fluid (VOF) approach to solve fluid flow problems \cite{manual2009ansys}. The Theory behind this method is explained in Section \ref{sec: finite_volume}. This method is based around dividing the wwhole volume into small elements and solving the problem for each element at a time. That is why a mesh needs to be created to provide \texttt{ANSYS FLUENT} with the element sizes, shapes and positions in space. After the geometry is created or imported form an external source a mesh needs to be created. This mesh is the basis for the solver to solve the case and an important step. The way the mesh is set up has a significant influence on the models results and the computational resources needed. The finer the mesh the more computational power is needed for calculating the solution. By lowering the grid's element size the resources needed or simulation time increases exponentially because the amount of elements to solve growths and in addition to that, the time step to resolve all flow details might decrease as well. These two effects that might both need to be taken into account lead to the exponential growth in resources and/or time.
 
 When meshing is finished, the next step according to \autoref{fig:cdf_procedure} is the solver setup. Setting up the governing equations, simulation time and boundary conditions are tasks performed in this step. The setup is described in greater detail within \autoref{sec: setup}. After the solver is set up the case can be run by starting the solver. Depending on the resources needed or available this step needs some further configuration.
 
@@ -154,7 +154,7 @@ Since the Diffusion coefficients $D$ for all species have the same value there i
 
 \section{Finite Volume Method}
 \label{sec: finite_volume}
-With no analytical solution available for the governing equation PDE system numerical approaches need to be applied. As already mentioned \texttt{ANSYS FLUENT} which is a VOF solver is used to build the model. The method used to calculate the properties for each cell is called Finite Volume Method.
+With no analytical solution available for the governing equation PDE system numerical approaches need to be applied. \texttt{ANSYS FLUENT} which is a VOF solver is used to build the model. The method used to calculate the properties for each cell is called Finite Volume Method.
 The Finite Volume Method is a discretization method. It converts the set of partial differential equations into a system of linear algebraic equations \cite{darwish2021finite}. This is done in two steps. At first the partial differential equations are integrated and so transformed into balance equations \cite{darwish2021finite}. The discretization step is explained in the next section.
 
 \subsection{Semi-Discretization}
@@ -173,7 +173,7 @@ For an easier explanation of the maths behind the method the steady state form o
 	\nabla \cdot (\rho \bold{u} \Phi) = \nabla \cdot (\Gamma_\Phi \nabla \Phi) + S_\Phi
 \end{equation}
 
-As already stated this equation is integrated over the control volume shown in \autoref{fig:FVM_CV} witch leads to \autoref{eqn:FVM_volint}.
+This equation is integrated over the control volume shown in \autoref{fig:FVM_CV} witch leads to \autoref{eqn:FVM_volint}.
 
 \begin{equation}
 	\label{eqn:FVM_volint}
@@ -316,7 +316,7 @@ The Peclet number is influenced by the characteristic length $l$ as known from t
 	Sc = \dfrac{\nu}{D}
 \end{equation}
 
-The Schmidt number is only influenced by thermophysical constants. The already mentioned diffusion constant $D$ and the viscosity $\nu$ affect this variable. Both are adapted when changing $Sc$ during the parametric study.
+The Schmidt number is only influenced by thermophysical constants. The diffusion constant $D$ and the viscosity $\nu$ affect this variable. Both are adapted when changing $Sc$ during the parametric study.
 
 In addition to the Schmidt number and the Peclet number the Courant number plays a role in the development process. This number that is mainly of internal use within the numerical solution process is used here for mesh grid size determination as well. This number can be calculated using \autoref{eqn:cfl}. It is influenced by the velocity $u$, the time step $ \Delta t$ and the spacial discretization $\Delta x$.
 
