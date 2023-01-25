@@ -251,35 +251,21 @@ Here the steps taken to receive the final model for each case are explained.
 \subsection{Mesh Dependency}
 \label{sec: mesh_dep}
 
-To achieve trustworthy results from a CFD-model the solution obtain should be not dependent of the grid element size. 
-To do that for each case different meshes with different grid densities are created as shown in \autoref{tab: reactor meshes}.
-\begin{table} [htb]
-	\centering
-	\caption{case meshes}
-	\begin{tabular}{ ccc }
-		\hline
-		reactor height [mm] & element size [m] & mesh elements \\
-		\hline
-		0.2 & 6e-6 & 185000\\
-		0.2 & 4e-6 & 405000\\
-		0.2 & 2e-6 & 1560000\\
-		0.4 & 12e-6 & 92500\\
-		0.4 & 8e-6 & 202500\\
-		0.4 & 4e-6 & 780000\\
-		0.6 & 4e-6 & 1155154\\
-		0.6 & 2e-6 & 4560304\\
-		\hline		
-		\label{tab: reactor meshes}
-	\end{tabular}
-\end{table}
-Each case is run for the coarsest mesh and the results are inspected. The first indication for a fine enough mesh can be extracted from the Courant number field. An example of a right and wrong field is shown in \autoref{fig: good_courant}. If as within the example, the field shows values higher than 1 the next finer mesh is chosen and the simulation is run again. If that is not the case the grid is chosen for the case and the run is called successful.
-
+To achieve trustworthy results from a CFD-model the solution obtained should be not dependent of the grid element size. The mesh dependency study is shown here for the case with a gap height of 0.4mm. In \autoref{fig: mesh_dep_h4} the results of the average wall shear stress calculations for different grid element sizes are shown. In the shown case the average wall shear stress does increase for very coarse meshes. The mesh chosen, as marked with read, is gained by a linear interpolation. The final mesh used for this case has approximately 600.000 elements, which results in a good compromise between mesh density and computational effort needed for solving.
 \begin{figure}[htb]
+	\centering
+	\includegraphics[width=0.9\textwidth]{mesh_dep_h4}
+	\caption{Mesh dependency study for geometry with 0.4mm gap height}
+	\label{fig: mesh_dep_h4}
+\end{figure}
+
+The results of a false mesh in combination with false settings are exemplary shown in \autoref{fig: good_courant}.
+\begin{figure}[htbp]
 	\centering
 	\subfloat[\centering Wrong Courant number field for an example case]{{\includegraphics[scale=0.7]{bad_courant} }}
 	\qquad
 	\subfloat[\centering Right Courant number field for another example case]{{\includegraphics[scale=0.7]{good_courant} }}
-	\caption{wrong and right example of Courant number field for mesh dependency study}
+	\caption{Right and wrong example of Courant number field}
 	\label{fig: good_courant}
 \end{figure}
 With this method a fine enough mesh for each case is chosen so that the results can be trusted.
@@ -417,7 +403,9 @@ Since the cell volume and the product concentration for each cell are accessible
 
 \subsection{Comparison}
 
-For comparison the position of the product's maximum is used. From \autoref{fig: comp_maxis} it can be seen that the model and experiment perform similar over the whole time range with a small deviation at early time steps. These differences might come from slightly different flow conditions or some mixing due to gravitational influences. All in all the model provides valid results as shown in the graph.
+For comparison the position of the gap averaged product's maximum values are used. From \autoref{fig: comp_maxis} it can be seen that the model and experiment perform similar over the whole time range with a small deviation at early time steps. These differences might come from slightly different flow conditions, some premixing or other experimental uncertainties. Another reason the differences could come from is that the experiments where carried out in 3D, whereas the model represents just a 2D case. Some non uniformities might show up during the experiment since it can't be guaranteed that the flow conditions are the same for all positions with the same radius at the same height.
+
+All in all the model provides valid results as shown in the graph.
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=\textwidth]{front_exp}

@@ -1,0 +1,4 @@
+ele_size_[m],avg_wall_shear_stress_[Pa],mesh_elements
+0.0005,5.63E-07,400
+1.20E-05,1.06E-06,123358
+4.00E-06,1.16E-06,1040000

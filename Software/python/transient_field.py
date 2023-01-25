@@ -704,6 +704,69 @@ class flowfield:
         plt.close(fig)
         logging.info(f"saved image {image_name}.")
 
+    def create_mesh_dep_plots(self, config):
+        """
+        Functin that creates plots for mesh dependency study
+        """        
+        data = {}
+
+        hpc_cases_dir = config["cases_dir_path"][1:]
+        hpc_cases_dir[0] = "/" + hpc_cases_dir[0]
+
+        if config["hpc_calculation"]:
+                folder_path = os.path.join(*hpc_cases_dir, *config["hpc_results_path"], "plots")
+        else:
+            path = sys.path[0]
+            data_path = os.path.join(path,"..","..", "Mesh_data")
+            path = os.path.join(path, "assets", "plots")
+            folder_path = os.path.join(path)
+
+        if os.path.exists(folder_path) == False:
+            os.makedirs(folder_path)
+
+        # read data from files
+
+        files = glob.glob("*.csv", root_dir=data_path)
+
+        if files == []:
+            logging.warning(f"No mesh dependency data found at {data_path}")
+
+        for file in files:
+            tmp_data = pd.read_csv(os.path.join(data_path, file))
+            m = re.match('.*_(.*).csv', file)
+            if m:
+                height = m.group(1)
+            data[height] = tmp_data
+
+        for ele in data.keys():
+            
+            image_name = f"mesh_dep_{ele}" + "." + config["plot_file_type"]
+            image_path = os.path.join(folder_path, image_name)
+
+            if os.path.exists(image_path) and config["create_new_files"] == False:
+                logging.info(f"Already created mesh dependency plot for height {ele}")
+                pass
+
+            fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6.5,4.5))
+            h_data = data[ele]
+            
+
+            cax = axs.scatter(h_data["mesh_elements"], h_data["avg_wall_shear_stress_[Pa]"], color = "blue", marker=".", label="mesh study")            
+            
+            # calculate mesh point
+            cells = (h_data["mesh_elements"].tail(2).values[0] + h_data["mesh_elements"].tail(2).values[1])/2.0
+            shear_stress = (h_data["avg_wall_shear_stress_[Pa]"].tail(2).values[0] + h_data["avg_wall_shear_stress_[Pa]"].tail(2).values[1])/2.0
+            ele_size = (h_data["ele_size_[m]"].tail(2).values[0] + h_data["ele_size_[m]"].tail(2).values[1])/2.0
+            logging.info(f"Chosen ele size: h {ele},  {ele_size}")
+            cax = axs.scatter([cells], [shear_stress], color = "red", marker="x", label="chosen mesh")
+
+            axs.set_xlabel("number of cells")
+            axs.set_ylabel("average wall shear stress [Pa]")
+            axs.legend()
+            plt.savefig(image_path, dpi=600)
+            plt.close(fig)
+            logging.info(f"saved image {image_name} at {image_path}.")
+
     def plot_prod(self, config, use_exp=False):
         """
         Function that plots the total amount of product
@@ -889,8 +952,8 @@ class flowfield:
                 # title = "front_positions"
                 # fig.suptitle(title)
                 
-                cax = axs.scatter(sim_data["times [s]"][::sim_step], sim_data["r_s [m]"][::sim_step]*1e3, color = cols[i], marker="x", label=f"front {height} {Pe} {Sc}")              
-                cax = axs.scatter(mx_data["times [s]"][::mx_step], mx_data["r_s [m]"][::mx_step]*1e3, color = cols[i], marker=".", label=f"max {height} {Pe} {Sc}")
+                cax = axs.scatter(sim_data["times [s]"][::sim_step], sim_data["r_s [m]"][::sim_step]*1e3, color = cols[i], marker="x", label="$r_{\\mathrm{front}}$" + f" {height} {Pe} {Sc}")              
+                cax = axs.scatter(mx_data["times [s]"][::mx_step], mx_data["r_s [m]"][::mx_step]*1e3, color = cols[i], marker=".", label= "$r_{\\mathrm{max}}$" + f" {height} {Pe} {Sc}")
                 image_name = f"front_pos_{height}_{Sc}" + "." + config["plot_file_type"]
                 i += 1
 
@@ -950,9 +1013,9 @@ class flowfield:
                     
                 else:
                     logging.info(f"sim_data {sim_data.keys()}, max_data {max_data.keys()}")
-                    cax = axs.scatter(sim_data["times [s]"][::sim_step], sim_data["r_s [m]"][::sim_step]*1e3, color = cols[i], marker=".", label=f"front {height} {Pe} {Sc}")
+                    cax = axs.scatter(sim_data["times [s]"][::sim_step], sim_data["r_s [m]"][::sim_step]*1e3, color = cols[i], marker=".", label="$r_{\\mathrm{front}}$" + f" {height} {Pe} {Sc}")
                     legend.append(f"front {height} {Pe} {Sc}")
-                    cax = axs.scatter(mx_data["times [s]"][::mx_step], mx_data["r_s [m]"][::mx_step]*1e3, color = cols[i], marker="x", label=f"max {height} {Pe} {Sc}")
+                    cax = axs.scatter(mx_data["times [s]"][::mx_step], mx_data["r_s [m]"][::mx_step]*1e3, color = cols[i], marker="x", label="$r_{\\mathrm{max}}$" + f" {height} {Pe} {Sc}")
                     legend.append(f"max {height} {Pe} {Sc}")
 
         image_path = os.path.join(folder_path, image_name)
@@ -1093,22 +1156,31 @@ class flowfield:
                 fig, axs = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(7.0,2.0*len(plots)+2.5))
                 
                 l_conf = []
+                colors = ["red", "green", "blue"]
+                line_styles = ["solid", "dashed", "dotted"]
+                i=0
                 for idx, ele in enumerate(plots):
+
                     
                     if len(plots) != 1:
                         
                         for tmp_var in plot_vars:
-                            if self.export_times != "flow_time":
+                            if cases_cfg[cas]["export_times"] != "flow_time":
                                 label_tmp = plot_cfg["legend"][tmp_var] + ", t={}s".format(round(ele * cases_cfg["timestep"],1))
+                                time = f"t={round(ele * cases_cfg['timestep'],1)}s"
                             else:
                                 label_tmp = plot_cfg["legend"][tmp_var] + ", t={}s".format(ele)
+                                time = f"t={ele}s"
                             col = plot_cfg["colors"][tmp_var]
                             tmp_data = input_data[tmp_var]
-                            cax = axs[idx].plot(tmp_data["r [m]"], tmp_data[f"t= {ele} [s]"], color=col, label=label_tmp)
+                            cax = axs.plot(tmp_data["r [m]"], tmp_data[f"t= {ele} [s]"], color=colors[i], label=label_tmp, linestyle=line_styles[i])
+                            cax = axs.plot(tmp_data["r [m]"][1:-1], [max(tmp_data[f"t= {ele} [s]"][1:-1])*0.5]*len(tmp_data["r [m]"][1:-1]), color=colors[i], linestyle=line_styles[i] ,label="$0.5 \cdot _{C_{C,max}}$"+f" {time}")
+                            
                             # add axis description
                         if idx == len(plots)-1 :
                             axs.set_xlabel("radius r [m]")
                         axs.set_ylabel(config["plot_conf"]["y_label"])
+                        axs.set_xlim(0,0.005)
                         # axs.set_title("t = {}".format(ele))
                         axs.legend()
 
@@ -1116,13 +1188,13 @@ class flowfield:
                         for tmp_var in plot_vars:
                             col = plot_cfg["colors"][tmp_var]
                             tmp_data = input_data[tmp_var]
-                            cax = axs[idx].plot(tmp_data["r [m]"], tmp_data[f"t= {ele} [s]"], color=col, label=plot_cfg["legend"][tmp_var])
+                            cax = axs.plot(tmp_data["r [m]"], tmp_data[f"t= {ele} [s]"], color=col, label=plot_cfg["legend"][tmp_var])
 
                         axs.set_xlabel("radius r [m]")
                         axs.set_ylabel(config["plot_conf"]["y_label"])
                         axs.legend()
                         # axs.set_title("t = {}".format(ele))
-
+                    i += 1
             plt.savefig(image_path, dpi=600)
             plt.close(fig)
             logging.info(f"saved image {image_name}.")
@@ -1623,6 +1695,9 @@ def do_plots():
 
     if config["create_gif"]:
         field.create_gif(config, cases_cfg)
+
+    if config["create_mesh_dep_plots"]:
+        field.create_mesh_dep_plots(config)
     
 if __name__ == "__main__":
 

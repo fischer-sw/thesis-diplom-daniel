@@ -9,7 +9,7 @@
     ],
     "c_bar": "c [mol/l]", 
     "cases": [
-        "h4r3_P931E2_S120E4"
+        "h2r3_P205E3_S120E4"
     ],
     "cases_tmp": [
         "h2r3_P205E3_S243E3"
@@ -23,10 +23,11 @@
     ], 
     "create_avg_file": false, 
     "create_gif": false, 
-    "create_image": true, 
+    "create_image": false, 
     "create_new_files": true, 
-    "create_plot": false, 
-    "create_plot_front": false, 
+    "create_plot": true, 
+    "create_plot_front": false,
+    "create_mesh_dep_plots": false,
     "create_plot_prod": false, 
     "create_plot_width": false, 
     "create_prod_file": false, 
@@ -111,7 +112,7 @@
         }
     }, 
     "image_file_type": "png", 
-    "one_plot": false, 
+    "one_plot": true, 
     "plot_conf": {
         "colors": {
             "concentration-fluid_a": "b", 
@@ -134,15 +135,15 @@
             "t2": "dotted", 
             "t3": "dashed"
         }, 
-        "y_label": "c [mol/l]"
+        "y_label": "$c_C$ [mol/l]"
     }, 
     "plot_file_type": "png", 
     "plot_vars": [
-        "concentration-fluid_a", 
-        "concentration-fluid_b", 
         "concentration-fluid_c"
-    ], 
+    ],
     "plots": [
-        10
+        2,
+        5,
+        12
     ]
 }
