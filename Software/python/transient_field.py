@@ -1174,13 +1174,13 @@ class flowfield:
                             col = plot_cfg["colors"][tmp_var]
                             tmp_data = input_data[tmp_var]
                             cax = axs.plot(tmp_data["r [m]"], tmp_data[f"t= {ele} [s]"], color=colors[i], label=label_tmp, linestyle=line_styles[i])
-                            cax = axs.plot(tmp_data["r [m]"][1:-1], [max(tmp_data[f"t= {ele} [s]"][1:-1])*0.5]*len(tmp_data["r [m]"][1:-1]), color=colors[i], linestyle=line_styles[i] ,label="$0.5 \cdot _{C_{C,max}}$"+f" {time}")
+                            cax = axs.plot(tmp_data["r [m]"][1:-1], [max(tmp_data[f"t= {ele} [s]"][1:-1])*0.5]*len(tmp_data["r [m]"][1:-1]), color=colors[i], linestyle="dashdot" ,label="$0.5 \cdot _{C_{C,max}}$,"+f" {time}")
                             
                             # add axis description
                         if idx == len(plots)-1 :
                             axs.set_xlabel("radius r [m]")
                         axs.set_ylabel(config["plot_conf"]["y_label"])
-                        axs.set_xlim(0,0.005)
+                        axs.set_xlim(0,0.015)
                         # axs.set_title("t = {}".format(ele))
                         axs.legend()
 
