@@ -104,7 +104,7 @@ For the case with the higher Schmidt number of 12000 the FWHM follows a square r
 		\label{fig: front_width_pos_h4_Sc2430}}
 \end{figure}
 
-The cases with the lower Schmidt number does show comparable behaviour to the one for the height of 0.2mm, that do have the same Schmidt number. The FWHM curves show peaks as well but they are not that sharp and narrow compared against the ones in \autoref{fig: front_width_pos_h2_Sc2430}. The FWHMHGH behaves similar to the one with the same conditions at 0.2mm gap height, but the phase of growth is way longer and the constant value is reached near the end ot the 60 second simulation run time.
+The cases with the lower Schmidt number do show a comparable behaviour to the one for the height of 0.2mm, that do have the same Schmidt number. The FWHM curves show peaks as well but they are not that sharp and narrow compared against the ones in \autoref{fig: front_width_pos_h2_Sc2430}. The FWHMHGH behaves similar to the one with the same conditions at 0.2mm gap height, but the phase of growth is way longer and the constant value is reached near the end ot the 60 second simulation run time.
 
 For square root like behaviour of the higher Schmidt number case can be explained by the fact that front is still in the phase of growing. This is comparable to the 0.2mm gap height cases for a time range of up to 20 seconds. For later times the FWHM is expected to decay as well as can be seen in the 0.2mm cases. The sudden growth is even more clearly visible for the gap height of 0.6mm and therefore explained there. The low growth rate of the FWHMHGH is the result of the high local Peclet number during most of the part of the simulation. The diffusive part only starts affecting this width at later times where the advective part loses it's influence on the front.
 
@@ -126,7 +126,7 @@ For the cases with the Schmidt number of 2430 the FWHM seems to reach its highes
 At that time the front shape has reached it's maximum distortion. Within the gap averaged plot it can be seen that there is a sharp increase at the fronts front and a slow decline at its back. This decline lowers when comparing the plots for a time of 18 seconds with the one at 60 seconds in \autoref{fig: pos_h4_peak_fields}.
 
 The FWHMHGH behaviour can be explained using the local Peclet number. At early times the front is near the inlet where the values are high so the influence of diffusion, which is the main mechanism driving the front's growth is low. Diffusion along the radial direction is the main factor, because at half the gap height the flow does not experience any shear. Advection is mainly moving the front through the reactor. While leaving the advection influence zone the FWHMHGH starts growing more rapidly, since diffusion start more and more dominating the width's growth process. The width's growths then slows down an reaches a constant value due the fact that an equilibrium between diffusion and the reaction is reached. The differences in the FWHMHGH curves, when comparing different Schmidt numbers can be explained by different diffusion coefficients. The higher the diffusion coefficient the sooner the growth starts and the final constant value is reached.
-\newline
+\newpage
 
 For the case with a gap height of 0.6mm the width's behaviour seems to change quite significantly compared to the 0.4mm case. 
 \begin{figure}[htb]
@@ -142,9 +142,9 @@ For the Schmidt number of 12000 the width's results are shown in \autoref{fig: f
 	\caption{front widths for  h = 0.6mm Sc = 2430}
 	\label{fig: front_width_pos_h6_Sc2430}
 \end{figure}
-I am here now.
+For the lower Schmidt number, shown in \autoref{fig: front_width_pos_h6_Sc2430}, the peak within the FWHM plot widens even more compared to the previous cases and the maximum value is reached at later times. The FWHMHGH does not grow a lot for the first 20 seconds, but after that the widths growth rate starts increasing.
 
-A slight delay can also be seen within the 0.4mm case. Within \autoref{fig: plots_early} the concentration plots are shown for the gap height of 0.4mm and 0.6mm for a Peclet number of 931 and a Schmidt number of 12000 close to the inlet. Within these two plots it can seen that the initial spike in the front start decaying over time. The moment the value of $0.5 \cdot c_{c,max}$ falls into the region above 0 and below the value at the back of the front the front's width suddenly jumps to a higher value.
+The growth delay that can be seen for the Schmidt number of 12000 for the gap height of 0.4mm in \autoref{fig: front_width_h4_Sc12000} and for the same Schmidt number for a gap height of 0.6mm in \autoref{fig: front_width_h6_Sc12000} can be explained using the concentration plots. Within \autoref{fig: plots_early} the concentration plots are shown for the gap height of 0.4mm and 0.6mm for a Peclet number of 931 and a Schmidt number of 12000 close to the inlet. Within these two plots it can seen that the initial spike in the front start decaying over time. The moment the value of $0\text{.}5 \cdot c_{c,max}$ falls into the region above 0 and below the value at the back of the front the front's width suddenly jumps to a higher value.
 \begin{figure}[htb]
 	\centering
 	\subfloat[\centering  h = 0.6mm case]{{\includegraphics[angle=0, scale=0.41]{plot_h6r3_P931E2_S120E4_concentration-fluid_a_concentration-fluid_b_concentration-fluid_c} }}%
@@ -153,48 +153,57 @@ A slight delay can also be seen within the 0.4mm case. Within \autoref{fig: plot
 	\caption{concentration plots for  Pe = 931 Sc = 12000}%
 	\label{fig: plots_early}%
 \end{figure}
-The width at the middle of the reactor only reaches very low values and doesn't grow much within the 60 seconds runtime of the simulation. When looking at the behaviour of the FWHMHGH at the lower Schmid-Number the growth seems to start at around 20 seconds and the growth accelerates slowly until the end. The FWHM in comparison reaches its peak value at times around 30 to 40 seconds for the higher Schmidt number. The growth is delayed for the FWHM width as well but not by the amount to be seen within the plot for $Sc = 12000$. The reason is the same one as explained with \autoref{fig: plots_early}.
+The FWHMHGH only reaches very low values and doesn't grow much within the 60 seconds runtime of the simulation. The reason for that behaviour is the same as discussed for the 0.4mm case. The influence of diffusion starts dominating the front's spreading at later radial values, due to a higher local Peclet number near the inlet. In the case of the higher Schmidt number the diffusion process does not seem get starting within the 60 second timespan of the simulation, because the coefficient has a low value.
+\newline 
 
-All in all the front widths show different behaviour dependent on the conditions set for the cases. Changing the Schmidt number poses a significant change within the results as showed and discussed. The Peclet number seems to mostly influence the width's maximum peak value but doesn't change the general behaviour of the front.
+All in all the front widths show different behaviour dependent on the conditions set for the cases. Changing the Schmidt number poses a significant change within the results as showed and discussed. The main influence is the diffusion coefficient that has an effect on where and when to front's width growth starts to happen. The Peclet number seems to mostly influence the width's maximum peak value but doesn't change the general behaviour of the front. That is the case, because the Peclet number mostly influences the input velocity, which influences the distortion of the front.
 
 \section{Formed Product}
 
-Within this section the total product formed is investigated.
+Within this section the total product formed is investigated. 
 
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=.9\linewidth]{total_product_h2_Sc12000}
-	\caption{total product for  h = 0.2mm Sc = 12000\label{fig: total_prod_h2_Sc12000}}\bigskip
-	\includegraphics[width=.9\linewidth]{total_product_h2_Sc2430}
-	\caption{total product for  h = 0.2mm Sc = 2430\label{fig: total_prod_h2_Sc2430}}
-\end{figure}
-
-For the case with a gap height of 0.2mm the total product formed starts with a linear growth which then slowly decays for all cases with a Schmidt number of 12000. Concluding out of this behaviour the production rate initially has a constant value that then decays over time towards its final value. This is clearly visible for the case with a Peclet number of 2050 within the $Sc = 2430$ plot. The difference when lowering the Schmidt number is that the initial constant growth in product formed increases and the decay starts earlier.
 \begin{figure}[htb]
 	\centering
-	\includegraphics[width=0.7\textwidth]{field_h2r3_P205E3_S243E3_concentration-fluid_c}
-	\caption{front shape for Pe = 2050 Sc = 2430}
-	\label{fig: front_h2_late}
+	\includegraphics[width=.9\linewidth]{total_product_h2_Sc12000}
+	\caption{Total amount of product for h = 0.2mm Sc = 12000}
+	\label{fig: total_prod_h2_Sc12000}
 \end{figure}
-In \autoref{fig: front_h2_late} the product concentration fields are shown for a time of 5 seconds which is within the phase of initial constant production rate, a time of 10 seconds which marks the point of production rate decay and a time of 15 seconds which is in the final constant phase. From these fronts it can be seen that the production rate is constantly high until the front starts to experience a more and more growing influence of diffusion. This can be seen by looking at the width and overall product concentration in front of the front. At 5 seconds the width at half the gap height is small and nearly no product is visible in the space in front of the front. This can explain the initially higher production rate because the front is still developing its shape at that time. At 10 seconds that does change. The FWHMHGH has gained the same shape is the widths above and below it and a slight amount of product starts appearing at coordinates with higher radial values than the fronts front. When this point in time is reached the front is established within the hole gap so the production rate slows down. Apparently the described effect is not clearly visible within the widths plot of this case as shown in \autoref{fig: front_width_pos_h2_Sc2430} due to the way the FWHMHGH is calculated. From the widths plot it is visible that the middle width stops growing at the time of 10 seconds when the diffusive influence starts raising. That could be used as in indication as well that diffusion starts affecting the front.
+For the case with a gap height of 0.2mm the total product formed starts with a linear growth which then slowly decays for all cases with a Schmidt number of 12000.
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=.9\linewidth]{total_product_h2_Sc2430}
+	\caption{total product for  h = 0.2mm Sc = 2430}
+	\label{fig: total_prod_h2_Sc2430}
+\end{figure}
+The difference when lowering the Schmidt number is that the initial production rate is higher and the decay starts earlier. In addition to the plot of the product $C$ in mol against time in seconds a linear fit is done with the data of the last 10 seconds. The fit approach is shown in \autoref{eqn: prod_fit}.
+\begin{equation}
+	\label{eqn: prod_fit}
+	n_C \left[ \text{mol} \right] = m \left[\frac{\text{mol}}{\text{s}}\right] \cdot t \left[s\right] + b \left[mol\right]
+\end{equation}
+Since only the production rate $m$ is of interest, only it's values are included in the diagrams.
 
-\begin{figure}[htbp]
+The curve's shapes can be explained by looking at the influence of advection and diffusion. For the higher Schmidt number of 12000 the production rate only slightly lowers over the 60 seconds of simulation time. At the start of simulation the front the front's shape is very narrow. The reactants $A$ and $B$ need to travel via diffusion through the front to form the product $C$. Since the diffusion coefficient is low the reaction rate in the beginning is also quite low. With time passing the fronts width gets wider and the distance the reactants have to travel grows. That is why the production rate decreases. The final value it reaches is dependant on the equilibrium that is building between the diffusion and the reaction process. With higher Peclet numbers the fronts distortion gets higher so new surface area is generated for the reaction to take place. That is a reason why the reaction rate is higher for higher Peclet numbers.
+The same arguments can be used to explain why the initial production rate is high and then decreases for the cases with a Schmidt number of 2340. The higher diffusion coefficient in combination with the narrow front lead to this high production rate. The production rate at the end of the simulation is also affected by this showing nearly twice as high values for the lower Schmidt number cases of \autoref{fig: total_prod_h2_Sc12000} compared against the higher Schmidt number ones of \autoref{fig: total_prod_h2_Sc2430}.
+\newline
+
+The total amount of product behaves very similar for the gap height of 0.4mm and 0.6mm. For that reason only the 0.4mm cases are analysed here. 
+\begin{figure}[htb]
 	\centering
 	\includegraphics[width=.9\linewidth]{total_product_h4_Sc12000}
-	\caption{total product for  h = 0.4mm Sc = 12000\label{fig: total_prod_h4_Sc12000}}\bigskip
+	\caption{total product for  h = 0.4mm Sc = 12000}
+	\label{fig: total_prod_h4_Sc12000}
+\end{figure}
+For the higher Schmidt number case the total amount of product grows slowly in the first few seconds, but then increases linearly until the end for cases. The production rate reached at the end is higher for higher Peclet numbers. 
+\begin{figure}[htb]
+	\centering
 	\includegraphics[width=.9\linewidth]{total_product_h4_Sc2430}
-	\caption{total product for  h = 0.4mm Sc = 2430\label{fig: total_prod_h4_Sc2430}}
+	\caption{total product for  h = 0.4mm Sc = 2430}
+	\label{fig: total_prod_h4_Sc2430}
 \end{figure}
 
-The total product created seems to follow the same general behaviour for the cases with a gap height of 0.4mm compared to the 0.2mm ones. For the lower Schmidt number the graphs look very similar when comparing \autoref{fig: total_prod_h4_Sc2430} and \autoref{fig: total_prod_h2_Sc2430}. The values are higher for the 0.4mm case but that is a result of the higher gap height and therefore higher volumetric flow through the reactor. The amount of product created is highly influenced by the Peclet number. With approximately doubling the Peclet number between different cases for the same Schmidt number the total product produced at 60 seconds goes up by a bit more than a factor of 2. That can be seen when comparing the cases for all different gap heights. That results are directly linked to the different input velocities that can be taken from \autoref{tab: cases}. The production rate is driven towards a constant value at later time stages. This is because within a radial case the fronts surface area always grows when the front is travelling through the reactor. Therefore new educts are always touching the existing front so the reaction keeps on taking place. In Addition to the growing surface area the front widens so the new educt needs to diffuse through the existing front to reach it's reaction partner. The distance this diffusive process needs to bridge is dependent on the educts concentration values. From \autoref{fig: pos_h4_peaks}(a) it can be seen that the fronts products concentration values do not reach the maximum value possible of 0.03 $ \frac{\text{mol}}{\text{l}} $. As from the plot representing the $ c_A $ values it becomes clear that the distance the species $B$ needs to travel through the front to meet its reaction partner $A$ increases by time. That is another reason why the production rate decreases at later time stages.
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=.9\linewidth]{total_product_h6_Sc12000}
-	\caption{total product for  h = 0.6mm Sc = 12000\label{fig: total_prod_h6_Sc12000}}\bigskip
-	\includegraphics[width=.9\linewidth]{total_product_h6_Sc2430}
-	\caption{total product for  h = 0.6mm Sc = 2430\label{fig: total_prod_h6_Sc2430}}
-\end{figure}
-\newline
+For the lower Schmidt number the graphs look very similar when comparing \autoref{fig: total_prod_h4_Sc2430} and \autoref{fig: total_prod_h2_Sc2430}. The values are higher for the 0.4mm case but that is a result of the higher gap height and therefore higher volumetric flow through the reactor.
+
+The amount of product created is highly influenced by the Peclet number. With approximately doubling the Peclet number between different cases for the same Schmidt number the total product produced at 60 seconds goes up by a bit more than a factor of 2. That can be seen when comparing the cases for all different gap heights. That results are directly linked to the different input velocities that can be taken from \autoref{tab: cases}.
 
 The cases with a gap height of 0.6mm and a Schmidt number of 12000 are still in the phase of higher production rate throughout the hole simulation run. In \autoref{fig: h6_late_shapes} the front shapes are shown for a time of 60 seconds for both Schmidt numbers.
 \begin{figure}[htb]
@@ -202,18 +211,19 @@ The cases with a gap height of 0.6mm and a Schmidt number of 12000 are still in 
 	\subfloat[\centering Sc=2430]{{\includegraphics[angle=0, scale=0.41]{field_h6r3_P931E2_S243E3_concentration-fluid_c} }}%
 	\qquad
 	\subfloat[\centering Sc=12000]{{\includegraphics[angle=0, scale=0.41]{field_h6r3_P931E2_S120E4_concentration-fluid_c} }}%
-	\caption{product concentration fields at t=60s for  h = 0.6mm  Pe = 931}%
+	\caption{Product concentration fields at t = 60s for  h = 0.6mm  Pe = 931}%
 	\label{fig: h6_late_shapes}%
 \end{figure}
-From the image showing the higher Schmidt number cases it can be seen that the front is still building over the hole gap height, so the reaction rate would remain high until that is accomplished. Comparing that to the lower Schmidt number case were the front has nearly reached its final form, only a slight decay is visible towards the end of the simulation. To get clearer evidence on when the production rate has reached its final constant value the simulations need to be run for longer times.
+From the image showing the higher Schmidt number case it can be seen that the front is still building over the hole gap height, so the reaction rate would remain high until that is accomplished. A initial high production rate that after a while decreases can also be seen in the theoretical model developed by \cite{comolli2021dynamics}. Comparing to their work, the cases for the high Schmidt number and a gap height of 0.4mm and 0.6mm seem to be in the proposed early time regime \cite{comolli2021dynamics}.
+Comparing that to the lower Schmidt number case were the front has nearly reached its final form, only a slight decay is visible towards the end of the simulation. To get clearer evidence on when the production rate has reached its final constant value the simulations need to be run for longer times.
 
-Within \cite{brau2020influence} a linear behaviour of the total amount of product created was found for a radial case. Therefore a linear fit is done on the data of the last 10 seconds for each case. In \autoref{tab: prod_rates} all rates are united.
-\begin{table} [htbp]
+In \autoref{tab: prod_rates} all rates calculated by the linear fitting operation are shown.
+\begin{table} [htb]
 	\centering
-	\caption{production rates for all cases}
+	\caption{Production rates for all cases from linear fit}
 	\begin{tabular}{ cccc }
 		\hline
-		gap height [mm] & Pe & Sc & production rate [mol/s] \\
+		gap height [mm] & Pe & Sc & $m$ [mol/s] \\
 		\hline
 		0.2 & 500 & 12000 & 5.815e-10 \\
 		0.2 & 931 & 12000 & 1.064e-09 \\
@@ -237,10 +247,9 @@ Within \cite{brau2020influence} a linear behaviour of the total amount of produc
 		\label{tab: prod_rates}
 	\end{tabular}
 \end{table}
-It does not surprise that the highest values of the production rate can be seen within cases with the highest gap height and the higher Peclet numbers. Doubling the gap height from 0.2mm to 0.4mm seems to approximately double the production rate. That trend can be seen for both Schmidt numbers.
+The highest values of the production rate can be seen for cases with the highest gap height and the higher Peclet numbers. Doubling the gap height from 0.2mm to 0.4mm seems to approximately double the production rate if the Peclet numbers are kept the same. That trend can be seen for both Schmidt numbers.
 \newline
 
-The production rate behaves similar on a principle level within all geometries investigated but the stages the fronts go through within the 60 second time span of the simulation are different for the different gap heights. 
-
+The production rate shows a similar behaviour on a principle level within all investigated reactor geometries. The stages the fronts pass through in the 60 second time span of the simulation are different for the different gap heights.
 
 \end{document}

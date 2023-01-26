@@ -19,10 +19,10 @@
 %               for the inclusion of a pdf file
 % -----------------------------------------------------------------------------
 %one sided for reading and developing
-\documentclass[12pt,a4paper,toc=chapterentrywithdots]{scrreprt}
+%\documentclass[12pt,a4paper,toc=chapterentrywithdots]{scrreprt}
 
 %tow sided for printing
-%\documentclass[12pt,a4paper,twoside,toc=chapterentrywithdots]{scrreprt}
+\documentclass[12pt,a4paper,twoside,toc=chapterentrywithdots]{scrreprt}
 
 \usepackage{tex/style} % imports the style-file which loads all the packages
 \graphicspath{ {./figs/} }
@@ -35,7 +35,7 @@
 \subfile{tex/titlepage}
 \newpage
 
-\includepdf[pages=-]{pdfs/Aufgabenstellung_DA_Daniel_Fischer.pdf}
+\includepdf[pages=-]{pdfs/Aufgabenstellung_DA_Daniel_Fischer_sign.pdf}
 \newpage % this is needed for the page numbering to work properly. It is not
          % creating a blank page!
 % put something like an abstract or a summary of the task (f.e. in form of a pdf)

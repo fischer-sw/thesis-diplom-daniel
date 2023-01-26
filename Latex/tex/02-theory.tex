@@ -250,7 +250,15 @@ This simple example shows that the front, as marked in red within the image grow
 	\label{fig:taylor-disp}
 \end{figure}
 
-As shown in \autoref{fig:taylor-disp} the fronts concentration distribution changes along the flow direction $x$ within the time $t$. The peak lowers and the distribution widens as time passes. How quickly this effect takes place and which parameters have a significant influence is discussed within Chapter \ref{chp: para_stud}. Within this work the fronts width as well as the height averaged concentration distribution are the results looked at when checking this phenomenon.
+As shown in \autoref{fig:taylor-disp} the fronts concentration distribution changes along the flow direction $x$ within the time $t$. The peak lowers and the distribution widens as time passes. How quickly this effect takes place and which parameters have a significant influence is discussed within Chapter \ref{chp: para_stud}. From the velocity field displayed in \autoref{fig: taylor_disp_pipe} it can be seen that the front travels at different speeds dependent on the position along the tubes diameter. This results in a shear flow that can be described by an effective diffusion coefficient as shown in \autoref{eqn: D_eff} \cite{toth2020effects}.
+\begin{equation}
+	\label{eqn: D_eff}
+	D_{\text{eff}} = D \left[
+		1 + \dfrac{L^2 \cdot U^2}{\sigma \cdot D^2}
+	\right]
+\end{equation}
+In this equation $L$ is the characteristic length , $U$ is the gap averaged velocity and $\sigma$ is a geometric factor, that has a value of 210 for a radial case \cite{toth2020effects}.
+Within this work the fronts width as well as the height averaged concentration distribution are the results looked at checking for Taylor dispersion.
 
 \subsection{Reaction Details}
 \label{sec: reaction_details}

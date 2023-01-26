@@ -661,7 +661,7 @@ class flowfield:
                 
                 legend.append(f"FWHM {height} {Pe} {Sc}")
                 cax = axs.scatter(data["sim"][cas]["time [s]"][::dat_ele], data["sim"][cas][data["sim"][cas].keys()[-1]][::dat_ele], color=cols[i], marker=".")
-                legend.append(f"FWHGH {height} {Pe} {Sc}")
+                legend.append(f"FWHMHGH {height} {Pe} {Sc}")
                 # axs.set_xlim(0, 380)
                 axs.legend(legend)
                 axs.set_xlabel("time [s]")
@@ -691,7 +691,7 @@ class flowfield:
             cax = axs.scatter(data["sim"][cas]["time [s]"].iloc[::dat_ele], data["sim"][cas]["FWHM [mm]"].iloc[::dat_ele], color = cols[i], marker=".")
             legend.append(f"FWHM {height} {Pe} {Sc}")
             cax = axs.scatter(data["sim"][cas]["time [s]"].iloc[::dat_ele], data["sim"][cas][data["sim"][cas].keys()[-1]].iloc[::dat_ele], color=cols[i], marker="x")
-            legend.append(f"FWHGH {height} {Pe} {Sc}")
+            legend.append(f"FWHMHGH {height} {Pe} {Sc}")
                 
             i += 1
 

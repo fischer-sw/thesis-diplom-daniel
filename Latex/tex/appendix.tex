@@ -20,7 +20,7 @@ In \autoref{fig: mesh_dep_h2} and \autoref{fig: mesh_dep_h6} the mesh dependency
 	\label{fig: mesh_dep_h6}
 \end{figure}
 
-\section{Model Implementation}
+\section{Model implementation}
 
 In this part the model implementation and execution is explained.
 
@@ -30,7 +30,7 @@ In general the developed solution follows the guideline shown in \autoref{fig: s
 
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[scale=1.0]{software_proc}
+	\includegraphics[height=\textheight]{software_proc}
 	\caption{implementation guideline}
 	\label{fig: software_guideline}
 \end{figure}
@@ -77,24 +77,58 @@ t_{exec,remain} = \underbrace{\dfrac{t_{sim,total}}{t_{sim,current}} \cdot t_{ex
 \end{equation}
 These values can be easily compared with the set wall time.
 
-\section{Front Positions}
+\section{Front positions}
 
 Here you can see the front position plots for the cases with a gap height of 0.4mm in \autoref{fig: front_pos_h4_Sc2430} and \autoref{fig: front_pos_h4_Sc12000} and 0.6mm in \autoref{fig: front_pos_h6_Sc12000} and \autoref{fig: front_pos_h6_Sc2430}.
-
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=.9\linewidth]{front_pos_h4_Sc12000}
-	\caption{front positions for h0.4mm Sc12000\label{fig: front_pos_h4_Sc12000}}\bigskip
-	\includegraphics[width=.9\linewidth]{front_pos_h4_Sc2430}
-	\caption{front positions for h0.4mm Sc2430\label{fig: front_pos_h4_Sc2430}}
+	\caption{front positions for h = 0.4mm Sc = 12000
+	\label{fig: front_pos_h4_Sc12000}}
 \end{figure}
-
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[width=.9\linewidth]{front_pos_h6_Sc12000}
-	\caption{front positions for h0.6mm Sc12000\label{fig: front_pos_h6_Sc12000}}\bigskip
-	\includegraphics[width=.9\linewidth]{front_pos_h6_Sc2430}
-	\caption{front positions for h0.6mm Sc2430\label{fig: front_pos_h6_Sc2430}}
+	\includegraphics[width=.85\linewidth]{front_pos_h4_Sc2430}
+	\caption{front positions for h = 0.4mm Sc = 2430
+	\label{fig: front_pos_h4_Sc2430}}
 \end{figure}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=.85\linewidth]{front_pos_h6_Sc12000}
+	\caption{front positions for h = 0.6mm Sc = 12000
+	\label{fig: front_pos_h6_Sc12000}}
+\end{figure}
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=.9\linewidth]{front_pos_h6_Sc2430}
+	\caption{front positions for h = 0.6mm Sc = 2430
+	\label{fig: front_pos_h6_Sc2430}}
+\end{figure}
+\section{Production rate}
+Here the plots of the production rate for the cases with a gap height of 0.6mm are shown in \autoref{fig: total_prod_h6_Sc12000} for a Schmidt number of 12000 and in \autoref{fig: total_prod_h6_Sc2430} for a Schmidt number of 2430.
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=.85\linewidth]{total_product_h6_Sc12000}
+	\caption{total product for  h = 0.6mm Sc = 12000
+	\label{fig: total_prod_h6_Sc12000}}
+\end{figure}
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=.85\linewidth]{total_product_h6_Sc2430}
+	\caption{total product for  h = 0.6mm Sc = 2430
+	\label{fig: total_prod_h6_Sc2430}}
+\end{figure}
+\section{Errors}
+Here the errors are explained in greater detail.
+The models solution is an iterative procedure as described in \autoref{sec:sol_method}. Within this process the solution obtained within one iteration is used as initial starting point for the next one. The procedure also involves a correction step as shown for the pressure and velocity field in \autoref{fig:PISO}. These corrections can be tracked over the iterations done throughout the simulation run. The results also called \texttt{residuals} can be seen in \autoref{fig: residuals}.
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{residuals_h2r3_P500E2_S120E4}
+	\caption{example residuals plot}
+	\label{fig: residuals}
+\end{figure}
+To check that the model has converged for a solution step thresholds for the residuals are set. If the residual value for a variable is below the set threshold the solution has converged and the next step is performed. From the plot it can be seen that the residuals do have values of $10^{-5}$ and below so the model performs well for the given example. The values do jump up and down a bit for certain variables that is due to the moving flow and changing fluid composition resulting from the reaction. For the continuity and velocity variables the residuals are represented by a straight line because once the velocity field is established it does not change any more.
+
+The residuals give an indication on the model's errors and can be used as well to check if the model behaves correctly or which part has to be changed if the solution does not converge or other errors occur.
 
 \end{document}
