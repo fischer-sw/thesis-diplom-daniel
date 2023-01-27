@@ -34,8 +34,12 @@
 \pagenumbering{gobble}  % disables page numbering
 \subfile{tex/titlepage}
 \newpage
+\newpage\null\thispagestyle{empty}\newpage
 
-\includepdf[pages=-]{pdfs/Aufgabenstellung_DA_Daniel_Fischer_sign.pdf}
+\includepdf[pages=-]{pdfs/Aufgabenstellung_DA_Daniel_Fischer.pdf}
+
+\newpage\null\thispagestyle{empty}\newpage
+
 \newpage % this is needed for the page numbering to work properly. It is not
          % creating a blank page!
 % put something like an abstract or a summary of the task (f.e. in form of a pdf)
