@@ -4,7 +4,7 @@
 
 
 \section{Mesh dependency}
-
+\label{chp: app_meshdep}
 In \autoref{fig: mesh_dep_h2} and \autoref{fig: mesh_dep_h6} the mesh dependency studies for the cases with a gap height of 0.2mm and 0.6mm are shown.
 \begin{figure}[htb]
 	\centering
@@ -21,6 +21,7 @@ In \autoref{fig: mesh_dep_h2} and \autoref{fig: mesh_dep_h6} the mesh dependency
 \end{figure}
 
 \section{Model implementation}
+\label{sec: app_modimp}
 
 In this part the model implementation and execution is explained.
 
@@ -30,8 +31,8 @@ In general the developed solution follows the guideline shown in \autoref{fig: s
 
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[height=\textheight]{software_proc}
-	\caption{implementation guideline}
+	\includegraphics[height=0.8\textheight]{software_proc}
+	\caption{Implementation guideline}
 	\label{fig: software_guideline}
 \end{figure}
 
@@ -43,7 +44,7 @@ The next step is to create a journal that sets all the values for the input vari
 %\lstinputlisting[caption=journal example, label=lst: journal]{code/testjournal.jou}
 
 \definecolor{codehighlight}{rgb}{0.95,0.8,0.8}
-\lstinputlisting[caption=journal example, label=lst: journal, basicstyle=\fontsize{9}{10}\selectfont\ttfamily, linebackgroundcolor={%
+\lstinputlisting[caption=Journal example, label=lst: journal, basicstyle=\fontsize{9}{10}\selectfont\ttfamily, linebackgroundcolor={%
 	\ifnum\value{lstnumber}=3\color{yellow!40}\fi 
 	\ifnum\value{lstnumber}=7\color{yellow!40}\fi    
 	\ifnum\value{lstnumber}=8\color{yellow!40}\fi
@@ -78,44 +79,46 @@ t_{exec,remain} = \underbrace{\dfrac{t_{sim,total}}{t_{sim,current}} \cdot t_{ex
 These values can be easily compared with the set wall time.
 
 \section{Front positions}
+\label{chp: app_frontpos}
 
 Here you can see the front position plots for the cases with a gap height of 0.4mm in \autoref{fig: front_pos_h4_Sc2430} and \autoref{fig: front_pos_h4_Sc12000} and 0.6mm in \autoref{fig: front_pos_h6_Sc12000} and \autoref{fig: front_pos_h6_Sc2430}.
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=.9\linewidth]{front_pos_h4_Sc12000}
-	\caption{front positions for h = 0.4mm Sc = 12000
+	\caption{Front positions for h = 0.4mm Sc = 12000
 	\label{fig: front_pos_h4_Sc12000}}
 \end{figure}
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=.85\linewidth]{front_pos_h4_Sc2430}
-	\caption{front positions for h = 0.4mm Sc = 2430
+	\caption{Front positions for h = 0.4mm Sc = 2430
 	\label{fig: front_pos_h4_Sc2430}}
 \end{figure}
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=.85\linewidth]{front_pos_h6_Sc12000}
-	\caption{front positions for h = 0.6mm Sc = 12000
+	\caption{Front positions for h = 0.6mm Sc = 12000
 	\label{fig: front_pos_h6_Sc12000}}
 \end{figure}
 \begin{figure}[htb]
 	\centering
 	\includegraphics[width=.9\linewidth]{front_pos_h6_Sc2430}
-	\caption{front positions for h = 0.6mm Sc = 2430
+	\caption{Front positions for h = 0.6mm Sc = 2430
 	\label{fig: front_pos_h6_Sc2430}}
 \end{figure}
 \section{Production rate}
+\label{sec: app_prodrate}
 Here the plots of the production rate for the cases with a gap height of 0.6mm are shown in \autoref{fig: total_prod_h6_Sc12000} for a Schmidt number of 12000 and in \autoref{fig: total_prod_h6_Sc2430} for a Schmidt number of 2430.
 \begin{figure}[htb]
 	\centering
 	\includegraphics[width=.85\linewidth]{total_product_h6_Sc12000}
-	\caption{total product for  h = 0.6mm Sc = 12000
+	\caption{Total product for  h = 0.6mm Sc = 12000
 	\label{fig: total_prod_h6_Sc12000}}
 \end{figure}
 \begin{figure}[htb]
 	\centering
 	\includegraphics[width=.85\linewidth]{total_product_h6_Sc2430}
-	\caption{total product for  h = 0.6mm Sc = 2430
+	\caption{Total product for  h = 0.6mm Sc = 2430
 	\label{fig: total_prod_h6_Sc2430}}
 \end{figure}
 \section{Errors}
@@ -124,7 +127,7 @@ The models solution is an iterative procedure as described in \autoref{sec:sol_m
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=\textwidth]{residuals_h2r3_P500E2_S120E4}
-	\caption{example residuals plot}
+	\caption{Example residuals plot}
 	\label{fig: residuals}
 \end{figure}
 To check that the model has converged for a solution step thresholds for the residuals are set. If the residual value for a variable is below the set threshold the solution has converged and the next step is performed. From the plot it can be seen that the residuals do have values of $10^{-5}$ and below so the model performs well for the given example. The values do jump up and down a bit for certain variables that is due to the moving flow and changing fluid composition resulting from the reaction. For the continuity and velocity variables the residuals are represented by a straight line because once the velocity field is established it does not change any more.

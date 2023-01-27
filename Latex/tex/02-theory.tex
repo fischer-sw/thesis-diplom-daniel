@@ -4,9 +4,9 @@
 \chapter{Theory}
 \label{chp:theory}
 
-Within this chapter the theory and procedures needed to solve this numerical problem are shown. At first a broad overview is given and the generic equations are laid out. Followed that is the explanation of the solution algorithm used in this work.
+Within this chapter the theory and procedures needed to solve this numerical problem are shown. At first, a broad overview is given and the generic equations are laid out. Following that is the explanation of the solution method and algorithm used in this work. After that some generic observations are explained and more details are given for the reaction. At the end of this chapter the dimensionless variables, used for the parametric study, are introduced.
 
-Building a theoretical model describing the evolution of a reaction's species in time and space equations that are dependent of the special coordinates and time are needed. These equations should describe the flow field and species distribution in addition to other fluid flow related quantities. These equations have the characteristic of forming a partial differential equation (PDE) system for which no analytical solution can be computed. Solving these equations numerically has lead to the development of special approaches and solution techniques. All these methods are classified under the field of Computational Fluid Dynamics or CFD in short. The basic principles of this field are explained in Section \ref{sec: CFD}. 
+Building a theoretical model describing the evolution of a reaction's species in time and space, equations that are dependent of the special coordinates and time are needed. These equations should describe the flow field and species distribution in addition to other fluid flow related quantities. These equations have the characteristic of forming a partial differential equation (PDE) system for which no analytical solution can be computed. Solving these equations numerically has lead to the development of special approaches and solution techniques. All these methods are classified under the field of Computational Fluid Dynamics or CFD in short. The basic principles of this field are explained in Section \ref{sec: CFD}. 
  
 \section{Computational Fluid Dynamics}
 \label{sec: CFD}
@@ -14,20 +14,20 @@ Building a theoretical model describing the evolution of a reaction's species in
 Computational fluid dynamics is the computer based solving of problems regarding fluid flow, heat transfer, chemical reactions or other transport phenomena. The concept is used in a large variety of applications within the fields of engineering and science for at least 60 years \cite{versteeg2007introduction}. Within \autoref{fig:cdf_procedure} the general procedure of solving a CFD case is shown.
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[height=\textheight]{CFD_general}
+	\includegraphics[height=0.8\textheight]{CFD_general}
 	\caption{General procedure overview for solving a CFD case}
 	\label{fig:cdf_procedure}
 \end{figure}
 
 The first step is to model the domains geometry. In case of \texttt{ANSYS FLUENT} this step can either be done within the CFD software itself, or an external CAD program. 
 
-The tool \texttt{ANSYS FLUENT} uses the Volume of Fluid (VOF) approach to solve fluid flow problems \cite{manual2009ansys}. The Theory behind this method is explained in Section \ref{sec: finite_volume}. This method is based around dividing the wwhole volume into small elements and solving the problem for each element at a time. That is why a mesh needs to be created to provide \texttt{ANSYS FLUENT} with the element sizes, shapes and positions in space. After the geometry is created or imported form an external source a mesh needs to be created. This mesh is the basis for the solver to solve the case and an important step. The way the mesh is set up has a significant influence on the models results and the computational resources needed. The finer the mesh the more computational power is needed for calculating the solution. By lowering the grid's element size the resources needed or simulation time increases exponentially because the amount of elements to solve growths and in addition to that, the time step to resolve all flow details might decrease as well. These two effects that might both need to be taken into account lead to the exponential growth in resources and/or time.
+The tool \texttt{ANSYS FLUENT} uses the Volume of Fluid (VOF) approach to solve fluid flow problems \cite{manual2009ansys}. The theory behind this method is explained in Section \ref{sec: finite_volume}. This method is based around dividing the whole volume into small elements and solving the equations for each element at a time. That is why a mesh needs to be created, to provide \texttt{ANSYS FLUENT} with the element sizes, shapes and positions in space. After the geometry is created or imported form an external source, a mesh needs to be created. This mesh is the basis for the solver to solve the case and an important step. The way the mesh is set up has a significant influence on the model's results and the computational resources needed. The finer the mesh the more computational power is needed for calculating the solution. By lowering the grid's element size the resources needed or simulation time could increase exponentially, because the amount of elements to solve growths and in addition to that, the time step to resolve all flow details might decrease as well. These two effects, that might both need to be taken into account, lead to the potential exponential growth in resources and/or simulation run time.
 
-When meshing is finished, the next step according to \autoref{fig:cdf_procedure} is the solver setup. Setting up the governing equations, simulation time and boundary conditions are tasks performed in this step. The setup is described in greater detail within \autoref{sec: setup}. After the solver is set up the case can be run by starting the solver. Depending on the resources needed or available this step needs some further configuration.
+When meshing is finished, the next step is the solver setup. Setting up the governing equations, simulation time and boundary conditions are tasks performed in this step. The setup is described in greater detail within Section \ref{sec: setup}. After the solver is set up, the case can be run by starting the solver. Depending on the resources needed or available, this step needs some further configuration.
 
-When the solving process has finished, the obtained results can be inspected. How these steps are performed and what steps are taken to receive the final model are described in greater detail in Section \ref{sec: mod_evol}.
+When the solving process has finished, the obtained results can be inspected. How these steps are performed and what steps are taken to receive the final model, are described in greater detail in Section \ref{sec: mod_evol}.
 
-All in all, solving a CFD case is an iterative process that needs to be gone through multiple times. Validation against experimental data is important to prove that the model shows valid behaviour and results. Further details on how these steps are performed while developing this specific model are given in Chapter \ref{chp:model}.
+All in all, solving a CFD case is an iterative process, that needs to be gone through multiple times. Validation against experimental data is important, to prove that the model shows valid behaviour and results. Further details on how these steps are performed while developing this specific model are given in Chapter \ref{chp:model}.
 
 \section{Governing Equations}
 \label{sec:gov_eqn}
@@ -42,12 +42,12 @@ In \autoref{fig: koordinaten} the used coordinate system is shown.
 \begin{figure}[htb]
 	\centering
 	\includegraphics[width=0.9\textwidth]{Koordinaten}
-	\caption{schematic of the used coordinate system}
+	\caption{Schematic of the used coordinate system}
 	\label{fig: koordinaten}
 \end{figure}
 
 \subsection{Mass Conservation}
-To gain information about the velocity field the conservation equations for mass and momentum need to solved. For a 2D axisymmetric case as used here the equations look like this \cite{manual2009ansys}:
+To gain information about the velocity field the conservation equations for mass and momentum need to solved. For a 2D axisymmetric case, as used here, the equations look like this \cite{manual2009ansys}:
 
 \begin{equation}
 \label{eqn:ansys_conti}
@@ -55,9 +55,10 @@ To gain information about the velocity field the conservation equations for mass
 + \dfrac{\rho u_r}{r} = 0
 \end{equation}
 
-This is the continuity equation for an in-compressible fluid where $r$ is the radial coordinate, $u_x$ is the axial velocity, $u_r$ is the radial velocity and $\rho$ is the density. In addition to the shown continuity equation the radial and axial momentum equations need to be solved.
+This is the continuity equation for an in-compressible fluid where $r$ is the radial coordinate, $u_x$ is the axial velocity, $u_r$ is the radial velocity and $\rho$ is the density. In addition to the shown continuity equation the radial and axial momentum equations (\autoref{eqn: rad_mom} and \autoref{eqn: axi_mom}) need to be solved.
 
 \begin{gather}
+	\label{eqn: rad_mom}
 	\dfrac{1}{r} \dfrac{\partial}{\partial x}(r \rho u_x^2)
 	+ \dfrac{1}{r} \dfrac{\partial}{\partial r}(r \rho u_r u_x) = 
 	- \dfrac{\partial p}{\partial x} + \dfrac{1}{r} \dfrac{\partial }{\partial x} \left[ 
@@ -69,6 +70,7 @@ This is the continuity equation for an in-compressible fluid where $r$ is the ra
 \end{gather}
 
 \begin{gather}
+	\label{eqn: axi_mom}
 	 \dfrac{1}{x} \dfrac{\partial}{\partial r}(r \rho u_x u_r)
 	+ \dfrac{1}{r} \dfrac{\partial}{\partial x}(r \rho u_r^2) = 
 	- \dfrac{\partial p}{\partial r} + \dfrac{1}{r} \dfrac{\partial }{\partial x} \left[ 
@@ -79,12 +81,11 @@ This is the continuity equation for an in-compressible fluid where $r$ is the ra
 	\right] -
 	2 \mu \dfrac{u_r}{r^2}+ \dfrac{2}{3} \dfrac{\mu}{r}(\nabla \cdot \mathbf{u})
 \end{gather}
-The viscosity $\mu$ plays a role within the momentum equations in extend to the known variables from \autoref{eqn:ansys_conti}. 
+The viscosity $\mu$ plays a role within the momentum equations, in addition to the known variables from \autoref{eqn:ansys_conti}. 
 Within all previous stated equations the product of $\nabla$ and the velocity vector $\mathbf{u}$ can be written as:
 \begin{equation}
 \nabla \cdot \mathbf{u} \equiv \dfrac{\partial u_x}{\partial x} + \dfrac{\partial u_r}{\partial r}+ \dfrac{u_r}{r}
 \end{equation}
-
 
 \subsection{Energy Equation}
 
@@ -96,26 +97,26 @@ The energy equation mostly influences the temperature and internal energy of the
 
 In this equation $\alpha$ describes the non-dimensional Helmholtz-Energy, $h$ is the enthalpy, $u$ is the velocity, $\overline{\overline{\tau}}$ is the stress vector and $p$ is the pressure. Enthalpy is created by the reaction. The subscripts $q$ stand for all different species needed to be taken into account.
 
-This equation is solved under an isothermal condition so the temperature does not change during the solution process. 
+This equation is solved under an isothermal condition so the temperature does not change during the simulation. 
 
 \subsection{Reaction Equation}
 \label{sec: reaction_eqn}
 
-Since the reaction $ A + B \rightarrow C$ takes place where the two reactants $A$ and $B$ meet the amount of product formed needs to be calculated for the whole domain. The method applied here is to calculate the reaction rate, that is dependent of the temperature and species parameters. This rate is then used to calculate the formed product. Within this work the reaction takes place only in one direction so no backwards reaction rates are needed. The reaction rate can be calculated using this equation \cite{manual2009ansys}:
+Since the reaction $ A + B \rightarrow C$ takes place where the two reactants $A$ and $B$ meet, the amount of product formed needs to be calculated for the whole domain. The method applied here is to calculate the reaction rate, which is dependent of the temperature and species parameters. This rate is then used to calculate the formed product. Within this work the reaction takes place only in one direction, so no backwards reaction rates are needed. The reaction rate can be calculated using this equation \cite{manual2009ansys}:
 
 \begin{equation}
 \label{eqn:reaction}
 \hat{R}_{i,r} = {\Gamma} \left(\nu''_{i,r} - \nu'_{i,r} \right) \left(k_{f,r} \prod_{j=1}^{N} \left[C_{j,r} \right]^{(\eta'_{j,r} + \eta''_{j,r})} \right) 
 \end{equation}
 
-$\hat{R}_{i,r}$ is the reaction rate, $\nu''_{i,r}$ and $\nu'_{i,r}$ are the stoichiometric numbers of the product and educts, $k_{f,r}$ is the rate constant for the forward reaction, $C_{j,r}$ is the molar concentration of the species $j$ and $\eta'_{j,r} + \eta''_{j,r}$ are the rate exponents and define the reaction order. 
+$\hat{R}_{i,r}$ is the reaction rate, $\nu''_{i,r}$ and $\nu'_{i,r}$ are the stoichiometric numbers of the product and reactants, $k_{f,r}$ is the rate constant for the forward reaction, $C_{j,r}$ is the molar concentration of the species $j$ and $\eta'_{j,r} + \eta''_{j,r}$ are the rate exponents for the species $j$ and define the reaction order. 
 The index $r$ loops through all reactions, in case there is more than one present. The index $j$ is used to distinguish between different species taking part in the reaction.
 
-To model an instantaneous product building process the reaction constant needs to have a theoretical value of $\infty$. Since a discrete value needs to set for the model a large value is set to make the reaction as fast as possible. More general information about the reaction are given in \autoref{sec: reaction_details} and \autoref{tab:ansys_setup_rection} explains the reaction setup in \texttt{ANSYS FLUENT}. 
+To model an instantaneous product building process, the reaction constant needs to have a theoretical value of $\infty$. Since a discrete value needs to set for the model a large value is set to make the reaction as fast as possible. More general information about the reaction are given in Section \ref{sec: reaction_details} and \autoref{tab:ansys_setup_rection} explains the reaction setup in \texttt{ANSYS FLUENT}. 
 
 \subsection{Species Transfer Advection-Diffusion-Reaction Equations}
 
-In addition to the mentioned equations the coupled PDEs for all species must be solved. These equations as shown in \cite{comolli2021dynamics} can be written as:
+In addition to the mentioned equations the coupled PDEs for all species must be solved. These equations, as shown in \cite{comolli2021dynamics}, can be written as:
 
 \begin{equation}
 	\dfrac{\partial c_A}{\partial t} + \left( \dfrac{\partial u_x}{ \partial x} + \dfrac{\partial u_r}{ \partial r} + \dfrac{u_r}{r} \right) c_A = D \left( \dfrac{\partial^2 c_A} {\partial r^2} + \dfrac{\partial^2 c_A}{\partial x^2} \right)  - kc_A c_B
@@ -128,11 +129,11 @@ In addition to the mentioned equations the coupled PDEs for all species must be 
 \begin{equation}
 	\dfrac{\partial c_C}{\partial t} + \left( \dfrac{\partial u_x}{ \partial x} + \dfrac{\partial u_r}{ \partial r} + \dfrac{u_r}{r} \right) c_C =  D \left( \dfrac{\partial^2 c_C} {\partial r^2} + \dfrac{\partial^2 c_C}{\partial x^2} \right) + kc_A c_B
 \end{equation}
-Since the Diffusion coefficients $D$ for all species have the same value there is no index needed. $c_A, c_B$ and $c_C$ are the concentration of the species $A$, $B$ and $C$ and $k$ is the reaction constant. 
+Since the diffusion coefficients $D$ for all species do have the same values there is no index needed. $c_A, c_B$ and $c_C$ are the concentration of the species $A$, $B$ and $C$ and $k$ is the reaction constant. 
 
 \section{Finite Volume Method}
 \label{sec: finite_volume}
-With no analytical solution available for the governing equation PDE system numerical approaches need to be applied. \texttt{ANSYS FLUENT} which is a VOF solver is used to build the model. The method used to calculate the properties for each cell is called Finite Volume Method.
+With no analytical solution available for the governing equation PDE system, numerical approaches need to be applied. \texttt{ANSYS FLUENT} which is a VOF solver is used to build the model. The method used to calculate the properties for each cell is called Finite Volume Method.
 The Finite Volume Method is a discretization method. It converts the set of partial differential equations into a system of linear algebraic equations \cite{darwish2021finite}. This is done in two steps. At first the partial differential equations are integrated and so transformed into balance equations \cite{darwish2021finite}. The discretization step is explained in the next section.
 
 \subsection{Semi-Discretization}
@@ -151,7 +152,7 @@ For an easier explanation of the maths behind the method the steady state form o
 	\nabla \cdot (\rho \bold{u} \Phi) = \nabla \cdot (\Gamma_\Phi \nabla \Phi) + S_\Phi
 \end{equation}
 
-This equation is integrated over the control volume shown in \autoref{fig:FVM_CV} witch leads to \autoref{eqn:FVM_volint}.
+This equation is integrated over the control volume shown in \autoref{fig:FVM_CV}, which leads to \autoref{eqn:FVM_volint}.
 
 \begin{equation}
 	\label{eqn:FVM_volint}
@@ -169,13 +170,11 @@ The variable $ \bold{S}$ is the surface vector, the operator ($\cdot$) is the do
 
 \subsection{Surface Integration}
 
-As seen in \autoref{eqn:FVM_Aint} surface integrals are needed to calculate the value of the property $\Phi$ for the control volume. Theses surface integrals can be split into a summation over each cell surface. This step can be done for the convective term shown in \autoref{eqn:conv_sint} as well as for the diffusion term shown in \autoref{eqn:diffu_sint} \cite{darwish2021finite}.
-
+As seen in \autoref{eqn:FVM_Aint} surface integrals are needed, to calculate the value of the property $\Phi$ for the control volume. Theses surface integrals can be split into a summation over each cell surface. This step can be done for the convective term shown in \autoref{eqn:conv_sint} as well as for the diffusion term shown in \autoref{eqn:diffu_sint} \cite{darwish2021finite}.
 \begin{equation}
 	\label{eqn:conv_sint}
 	\oint_{\partial V_C} (\rho \bold{u} \Phi) d\bold{S} = \sum_{f_i}^{n_{\text{faces}}}\left( \int_{f} (\rho \bold{u} \Phi) d\bold{S} \right)
 \end{equation}
-
 \begin{equation}
 	\label{eqn:diffu_sint}
 	\oint_{\partial V_C} (\Gamma_\Phi \nabla \Phi) d\bold{S} =  \sum_{f_i}^{n_{\text{faces}}}\left( \int_{f} (\Gamma_\Phi \nabla \Phi) \right)
@@ -188,26 +187,26 @@ As seen in \autoref{eqn:FVM_Aint} surface integrals are needed to calculate the 
 	\label{fig:FVM_CV}
 \end{figure}
 
-From this point on it can be seen that the values of $\Phi$ at each cells surface are needed. The solution algorithm used calculates and stores the results only at the cells center. To obtain values at the cells surfaces the neighbouring cell's values are used as well. The method used here is called Quadratic upwind differencing scheme (QUICK) and is explained in greater detail within the following section.
+From this point on it can be seen that the values of $\Phi$ at each cells surface are needed. The solution algorithm used, calculates and stores the results only at the cell's center. To obtain values at the cells surfaces, the neighbouring cell's values are used as well. The method used here is called Quadratic upwind differencing scheme and is explained in greater detail within the following section.
 
 \subsection{Quadratic upwind differencing scheme}
 \label{sec:QUICK}
-The \textbf{q}uadratic \textbf{u}pstream \textbf{i}nterpolation for \textbf{c}onvective \textbf{k}inetics \cite{versteeg2007introduction} or QUICK as an abbreviation is used here because it provides a reliable way of calculating a cells properties by considering the neighbouring cells values and taking into account where the flow is coming from.
-As shown in \autoref{fig:FVM_CV} each cell in a 2D case has 4 neighbouring cells that are labelled N for north, S for south, E for east and W for West. The QUICK method uses the 2 neighbouring cells upward the flow direction. A schematic is shown in \autoref{fig:QUICK}. The cell westward to the W cell is called WW and using the same naming scheme the cell eastward to E is named EE.
+The \textbf{q}uadratic \textbf{u}pstream \textbf{i}nterpolation for \textbf{c}onvective \textbf{k}inetics \cite{versteeg2007introduction} or QUICK as an abbreviation is used here, because it provides a reliable way of calculating a cell's properties by considering the neighbouring cells values. In addition to that it takes into account where the flow is coming from.
+As shown in \autoref{fig:FVM_CV}, each cell in a 2D case has 4 neighbouring cells that are labelled N for north, S for south, E for east and W for West. The QUICK method uses the 2 neighbouring cells upward the flow direction. A schematic is shown in \autoref{fig:QUICK}. The cell westward to the W cell is called WW and using the same naming scheme the cell eastward to E is named EE.
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[scale=0.6]{QUICK}
 	\caption{QUICK method cell scheme}
 	\label{fig:QUICK}
 \end{figure}
-With a flow from west to east through the cell with the center C the cells surface values $\Phi_w$ for the west facing surface and $\Phi_e$ for the east facing surface are calculated as follows \cite{versteeg2007introduction}:
+With a flow from west to east through the cell with the center C, the cells surface values $\Phi_w$ for the west facing surface and $\Phi_e$ for the east facing surface are calculated as follows \cite{versteeg2007introduction}:
 \begin{equation}
 	\Phi_w = \dfrac{6}{8} \Phi_W + \dfrac{3}{8} \Phi_C - \dfrac{1}{8} \Phi_{WW}
 \end{equation}
 \begin{equation}
 	\Phi_e = \dfrac{6}{8} \Phi_C + \dfrac{3}{8} \Phi_E - \dfrac{1}{8} \Phi_{W}
 \end{equation}
-It can be seen that the method highly values the cells value upstream given the weight value of $\frac{6}{8}$ since it has the most influence on the surface value it faces. If the flow is reverse in direction the method stays the same but the cells the values are used from do change.
+It can be seen that the method highly values the cell's direct upstream neighbour's value given the weight value of $\frac{6}{8}$, since it has the most influence on the surface value it faces. If the flow is reverse in direction the method stays the same but the cells the values are used do change.
 \begin{equation}
 	\Phi_w = \dfrac{6}{8} \Phi_C + \dfrac{3}{8} \Phi_W - \dfrac{1}{8} \Phi_{E}
 \end{equation}
@@ -218,7 +217,7 @@ It can be seen that the method highly values the cells value upstream given the 
 \section{Solution Method}
 \label{sec:sol_method}
 
-The solution method used in this case is called PISO algorithm which stands for \textbf{P}ressure \textbf{I}mplicit with \textbf{S}plitting \textbf{O}peration algorithm. A general overview of the method's procedure can be seen in \autoref{fig:PISO} \cite{versteeg2007introduction}.
+The solution method used in this case is called PISO algorithm, which stands for \textbf{P}ressure \textbf{I}mplicit with \textbf{S}plitting \textbf{O}peration algorithm. A general overview of the method's procedure can be seen in \autoref{fig:PISO} \cite{versteeg2007introduction}.
 
 \begin{figure}[htbp]
 	\centering
@@ -227,7 +226,7 @@ The solution method used in this case is called PISO algorithm which stands for 
 	\label{fig:PISO}
 \end{figure}
 
-At first all fields have to be initialized with some values given by the user. With these initial values the method starts its calculation. The first step within the calculation is to get the results of the momentum equations for each cell within the mesh. The results gained are, a 2D case given, the velocity fields $v^*$ and $u^*$. After this step is finished the gained velocity fields are used to calculate the pressure correction $p'$. This is done by setting the pressure offset to a value that satisfies the continuity equation for the cell. With this offset $p'$ a new pressure field $p^{**}$ can be calculated that is then used to correct the velocity fields $u^*$ and $v^*$. This correction is done in a way similar to the already described method in \autoref{sec:QUICK} using the values of the neighbouring cells. After the new velocity fields $u^{**}$ and $v^{**}$ have been gained the PISO algorithm performs a second pressure correction. This yields the pressure field $p^{***}$. Now a second velocity field correction takes place in the same manner as the first one. After that is done all other transport equations are solved using the latest fields for the velocities $u^{***}$, $v^{***}$ and the pressure $p^{***}$. Finally a convergence check is performed and if successful the algorithm stops. The convergence is a criterion that does a comparison of the fields that are given as inputs and the ones yielded as outputs. If their difference is bellow a certain set threshold the solution has converged. The threshold as to be given by the user for each variable of interest or the default ones are used. If the resulting fields have not converged the latest output is used as new input and the solving and corrections steps take place again. This iterative approach is done as long as the convergence criterion is not fulfilled or the maximum amount of iterations is reached.
+At first all fields have to be initialized with some values given by the user. With these initial values the method starts its calculation. The first step within the calculation is to get the results of the momentum equations for each cell within the mesh. The results gained are, a 2D case given, the velocity fields $v^*$ and $u^*$. After this step is finished, the gained velocity fields are used to calculate the pressure correction $p'$. This is done by setting the pressure offset to a value that satisfies the continuity equation for the cell. With this offset $p'$ a new pressure field $p^{**}$ can be calculated that is then used to correct the velocity fields $u^*$ and $v^*$. This correction is done in a way, similar to the already described method in \autoref{sec:QUICK} using the values of the neighbouring cells. After the new velocity fields $u^{**}$ and $v^{**}$ have been gained, the PISO algorithm performs a second pressure correction. This yields the pressure field $p^{***}$. Now a second velocity field correction takes place, in the same manner as the first one. After that is done, all other transport equations are solved using the latest fields for the velocities $u^{***}$, $v^{***}$ and the pressure $p^{***}$. Finally a convergence check is performed and if successful the algorithm stops. The convergence is a criterion, that does a comparison of the fields that are given as inputs and the ones yielded as outputs. If their difference is bellow a certain set threshold, the solution has converged. The threshold as to be given by the user for each variable of interest, or the default ones are used. If the resulting fields have not converged, the latest output is used as new input and the solving and corrections steps take place again. This iterative approach is done as long as the convergence criterion is not fulfilled or the maximum amount of iterations is reached.
 
 \section{Flow Observations}
 
@@ -235,14 +234,14 @@ Within a developing reaction-diffusion-advection front some specific phenomena c
 
 \subsection{Taylor-Dispersion}
 
-One of the phenomena taking place within a reaction-diffusion-advection front is called Taylor-Dispersion. This was first discovered by G.I. Taylor\cite{aris1956dispersion} in 1956. The discovered phenomenon describes the spreading of a front over time as it can be seen within \autoref{fig: taylor_disp_pipe}. 
+One of the phenomena taking place within a reaction-diffusion-advection front is called Taylor-Dispersion. This was first discovered by G.I. Taylor\cite{aris1956dispersion} in 1956. The discovered phenomenon describes the spreading of a front over time, as it can be seen within \autoref{fig: taylor_disp_pipe}. 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[scale=0.9]{taylor_dispersion_pipe}
 	\caption{Taylor dispersion within a pipe reactor}
 	\label{fig: taylor_disp_pipe}
 \end{figure}
-This simple example shows that the front, as marked in red within the image grows in width over time and distance. This growth process takes place due to diffusion within the front itself. Within the case of a radial reactor, that is investigated here, only gap averaged concentration values are available from the experiments. Within these experiments the effect of Taylor-Dispersion is visible within the data. A schematic \cite{levenspiel1998chemical} of this effect showing within the concentration data is displayed in \autoref{fig:taylor-disp}.
+This simple example shows that the front, as marked in red within the image, grows in width over time and distance. This growth process takes place due to diffusion within the front itself. Within the case of a radial reactor, that is investigated here, only gap averaged concentration values are available from the experiments. Within these experiments the effect of Taylor-Dispersion is visible within the gap averaged data. A schematic \cite{levenspiel1998chemical} of this effect showing within example concentration data is displayed in \autoref{fig:taylor-disp}.
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[scale=0.9]{taylor-dispersion}
@@ -250,7 +249,7 @@ This simple example shows that the front, as marked in red within the image grow
 	\label{fig:taylor-disp}
 \end{figure}
 
-As shown in \autoref{fig:taylor-disp} the fronts concentration distribution changes along the flow direction $x$ within the time $t$. The peak lowers and the distribution widens as time passes. How quickly this effect takes place and which parameters have a significant influence is discussed within Chapter \ref{chp: para_stud}. From the velocity field displayed in \autoref{fig: taylor_disp_pipe} it can be seen that the front travels at different speeds dependent on the position along the tubes diameter. This results in a shear flow that can be described by an effective diffusion coefficient as shown in \autoref{eqn: D_eff} \cite{toth2020effects}.
+As shown in \autoref{fig:taylor-disp} the fronts concentration distribution changes along the flow direction $x$ within the time $t$. The peak lowers and the distribution widens as time passes. How quickly this effect takes place and which parameters do influence it is discussed within Chapter \ref{chp: para_stud}. From the velocity field displayed in \autoref{fig: taylor_disp_pipe} it can be seen that the front travels at different speeds dependent on the position at the tubes diameter. This results in a shear flow that can be described by an effective diffusion coefficient as shown in \autoref{eqn: D_eff} \cite{toth2020effects}.
 \begin{equation}
 	\label{eqn: D_eff}
 	D_{\text{eff}} = D \left[
@@ -258,7 +257,7 @@ As shown in \autoref{fig:taylor-disp} the fronts concentration distribution chan
 	\right]
 \end{equation}
 In this equation $L$ is the characteristic length , $U$ is the gap averaged velocity and $\sigma$ is a geometric factor, that has a value of 210 for a radial case \cite{toth2020effects}.
-Within this work the fronts width as well as the height averaged concentration distribution are the results looked at checking for Taylor dispersion.
+Within this work the fronts width, as well as the height averaged concentration distribution are the results looked at checking for Taylor dispersion.
 
 \subsection{Reaction Details}
 \label{sec: reaction_details}
@@ -284,18 +283,18 @@ The reaction velocity equation uses the rate constant $k$ which can be computed 
 	k = k_{\infty} \cdot e^{- \frac{E_A}{R \cdot T}}
 \end{equation}
 
-Since the reaction needs to be nearly instantaneous as mentioned in \autoref{sec: reaction_eqn} the pre-exponential factor $k_{\infty}$ is set to a high value of $10^{15} \left[ \frac{\text{l}^2}{\text{mol} \cdot \text{s}} \right] $. The reaction takes place under isothermal conditions so the rate has a constant value. The variable $E_A$ is the reaction's activation energy with a value of $10^4 \left[ \frac{\text{J}}{\text{mol}} \right] $, $R$ is the gas constant with a value of 8.3145 $\left[ \frac{\text{J}}{\text{mol} \cdot \text{K}} \right] $ and $T$ is the temperature in Kelvin. The activation energy only needs to fulfill the requirement that the reaction takes place under the given temperature conditions.
+Since the reaction needs to be nearly instantaneous as mentioned in Section \ref{sec: reaction_eqn} the pre-exponential factor $k_{\infty}$ is set to a high value of $10^{15} \left[ \frac{\text{l}^2}{\text{mol} \cdot \text{s}} \right] $. The reaction takes place under isothermal conditions so the rate has a constant value. The variable $E_A$ is the reaction's activation energy with a value of $10^4 \left[ \frac{\text{J}}{\text{mol}} \right] $, $R$ is the gas constant with a value of 8.3145 $\left[ \frac{\text{J}}{\text{mol} \cdot \text{K}} \right] $ and $T$ is the temperature in Kelvin. The activation energy only needs to fulfill the requirement, that the reaction takes place under the given temperature conditions. This is achieved, by lowering it's value to the point the reaction shows the desired behaviour.
 
 \subsection{Dimensionless Variables}
 
-To be able to compare simulations and experiments two dimensionless variables are used. These are the Schmidt number $Sc$ and the Peclet number $Pe$. The Peclet number is calculated using \autoref{eqn: Pe} and the Schmidt number is computed using \autoref{eqn: Sc}.
+To be able to compare simulations and experiments, two dimensionless variables are used. These are the Schmidt number $Sc$ and the Peclet number $Pe$. The Peclet number is calculated using \autoref{eqn: Pe} and the Schmidt number is computed using \autoref{eqn: Sc}.
 
 \begin{equation}
 	\label{eqn: Pe}
 	Pe = \dfrac{\text{advective transport rate}}{\text{diffusive transport rate}} =\dfrac{l \cdot u}{D}
 \end{equation}
 
-The Peclet number is influenced by the characteristic length $l$, the inlet velocity $u$ and the diffusion coefficient $D$. The characteristic length within this model is equal to the gap height. The diffusion coefficient is set to be the same one as calculated from the experiments for model validation but is also varied when doing the parametric study. The inlet velocity $u$ is calculated using the volumetric flow rate $Q$ and the surface at a distance of 5mm from reactors centreline. 
+The Peclet number is influenced by the characteristic length $l$, the inlet velocity $u$ and the diffusion coefficient $D$. The characteristic length within this model is equal to the gap height. The diffusion coefficient is set to be the same one as calculated from the experiments for model validation, but is also varied during the parametric study. The inlet velocity $u$ is calculated using the volumetric flow rate $Q$ and the inlet's surface area at a distance of 5mm from reactors centreline. 
 
 \begin{equation}
 	\label{eqn: Sc}
@@ -304,7 +303,7 @@ The Peclet number is influenced by the characteristic length $l$, the inlet velo
 
 The Schmidt number is only influenced by thermophysical constants. The diffusion constant $D$ and the viscosity $\nu$ affect this variable. Both are adapted when changing $Sc$ during the parametric study.
 
-In addition to the Schmidt number and the Peclet number the Courant number plays a role in the development process. This number that is mainly of internal use within the numerical solution process is used here for mesh grid size determination as well. This number can be calculated using \autoref{eqn:cfl}. It is influenced by the velocity $u$, the time step $ \Delta t$ and the spacial discretization $\Delta x$.
+In addition to the Schmidt number and the Peclet number, the Courant number plays a role in the development process. This number is mainly of internal use within the numerical solution process. This number can be calculated using \autoref{eqn:cfl}. It is influenced by the velocity $u$, the time step $ \Delta t$ and the spacial discretization $\Delta x$.
 
 \begin{equation}
 	\label{eqn:cfl}
