@@ -1,0 +1,86 @@
+\documentclass[../thesis.tex]{subfiles}
+\begin{document}
+
+Conti equation
+
+\begin{equation}
+	\label{eqn:ansys_conti}
+	\dfrac{\partial}{\partial x} (\rho u_x) + \dfrac{\partial }{\partial r} (\rho u_r)
+	+ \dfrac{\rho u_r}{r} = 0
+\end{equation}
+
+radial momentum equation
+\begin{gather}
+	\label{eqn: rad_mom}
+	\dfrac{1}{r} \dfrac{\partial}{\partial x}(r \rho u_x^2)
+	+ \dfrac{1}{r} \dfrac{\partial}{\partial r}(r \rho u_r u_x) = 
+	- \dfrac{\partial p}{\partial x} + \dfrac{1}{r} \dfrac{\partial }{\partial x} \left[ 
+	r \mu \left( 2 \dfrac{\partial u_x}{\partial x} - \dfrac{2}{3}(\nabla \cdot \mathbf{u}) \right)
+	\right] + \\ \nonumber
+	\dfrac{1}{r} \dfrac{\partial }{\partial r} \left[ 
+	r \mu \left( \dfrac{\partial u_x}{\partial r} - \dfrac{\partial u_r}{\partial x} \right)
+	\right]	
+\end{gather}
+
+axial momentum equation
+
+\begin{gather}
+	\label{eqn: axi_mom}
+	\dfrac{1}{x} \dfrac{\partial}{\partial r}(r \rho u_x u_r)
+	+ \dfrac{1}{r} \dfrac{\partial}{\partial x}(r \rho u_r^2) = 
+	- \dfrac{\partial p}{\partial r} + \dfrac{1}{r} \dfrac{\partial }{\partial x} \left[ 
+	r \mu \left( \dfrac{\partial u_r}{\partial x} - \dfrac{\partial u_x}{\partial r} \right)
+	\right] \\ \nonumber
+	+ \dfrac{1}{r} \dfrac{\partial }{\partial r} \left[ 
+	r \mu \left( 2 \dfrac{\partial u_r}{\partial r} - \dfrac{2}{3}(\nabla \cdot \mathbf{u}) \right)
+	\right] -
+	2 \mu \dfrac{u_r}{r^2}+ \dfrac{2}{3} \dfrac{\mu}{r}(\nabla \cdot \mathbf{u})
+\end{gather}
+
+species distribution equation
+
+\begin{equation}
+	\dfrac{\partial c_A}{\partial t} + \left( \dfrac{\partial u_x}{ \partial x} + \dfrac{\partial u_r}{ \partial r} + \dfrac{u_r}{r} \right) c_A = D \left( \dfrac{\partial^2 c_A} {\partial r^2} + \dfrac{\partial^2 c_A}{\partial x^2} \right)  - kc_A c_B
+\end{equation}
+
+\begin{equation}
+	\dfrac{\partial c_B}{\partial t} + \left( \dfrac{\partial u_x}{ \partial x} + \dfrac{\partial u_r}{ \partial r} + \dfrac{u_r}{r} \right) c_B =  D \left( \dfrac{\partial^2 c_B} {\partial r^2} + \dfrac{\partial^2 c_B}{\partial x^2} \right) - kc_A c_B
+\end{equation}
+
+\begin{equation}
+	\dfrac{\partial c_C}{\partial t} + \left( \dfrac{\partial u_x}{ \partial x} + \dfrac{\partial u_r}{ \partial r} + \dfrac{u_r}{r} \right) c_C =  D \left( \dfrac{\partial^2 c_C} {\partial r^2} + \dfrac{\partial^2 c_C}{\partial x^2} \right) + kc_A c_B
+\end{equation}
+
+energy equation
+\begin{equation} 
+	\frac{\partial}{\partial t} (\alpha_q \rho_q h_q ) + \nabla \cdot (\alpha_q \rho_q \vec u_q h_q )   = \alpha_q \frac{\partial p_q}{\partial t} + \overline{\overline{\tau}}_q : \nabla \vec u_q
+\end{equation}
+
+\begin{equation}
+	\label{eqn: reaction_detail}
+	A + B \xrightarrow{r} C
+\end{equation}
+
+The reaction rate $r$ can be calculated using \autoref{eqn: reaction_vel}. From this equation it can be seen that the reaction is of second order and is dependent of the species $A$ and $B$.
+
+\begin{equation}
+	\label{eqn: reaction_vel}
+	r = k \cdot c_A \cdot c_B
+\end{equation}
+
+The reaction velocity equation uses the rate constant $k$ which can be computed using the context of \autoref{eqn: reaction_rate_detail}.
+
+\begin{equation}
+	\label{eqn: reaction_rate_detail}
+	k = k_{\infty} \cdot e^{- \frac{E_A}{R \cdot T}}
+\end{equation}
+
+\begin{equation}
+	k_{\infty} = 1 \cdot 10^{15} \left[ \frac{\text{l}^2}{\text{mol} \cdot \text{s}} \right]
+\end{equation}
+
+\begin{equation}
+	E_A = 1 \cdot 10^4  \left[ \frac{\text{J}}{\text{mol}} \right]
+\end{equation}
+
+\end{document}S
