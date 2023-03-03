@@ -660,8 +660,12 @@ class flowfield:
                 # cax = axs.scatter(data["sim"][cas]["time [s]"][::dat_ele], data["sim"][cas]["FWHM [mm]"][::dat_ele], f"{cols[i+1]}x")
                 
                 legend.append(f"FWHM {height} {Pe} {Sc}")
+                # legend.append(f"FWHM {Pe}")
+
                 cax = axs.scatter(data["sim"][cas]["time [s]"][::dat_ele], data["sim"][cas][data["sim"][cas].keys()[-1]][::dat_ele], color=cols[i], marker=".")
                 legend.append(f"FWHMHGH {height} {Pe} {Sc}")
+                # legend.append(f"FWHMHGH {Pe}")
+
                 # axs.set_xlim(0, 380)
                 axs.legend(legend)
                 axs.set_xlabel("time [s]")
@@ -690,8 +694,11 @@ class flowfield:
                 image_path = os.path.join(folder_path, image_name)
             cax = axs.scatter(data["sim"][cas]["time [s]"].iloc[::dat_ele], data["sim"][cas]["FWHM [mm]"].iloc[::dat_ele], color = cols[i], marker=".")
             legend.append(f"FWHM {height} {Pe} {Sc}")
+            # legend.append(f"FWHM        {Pe}")
+
             cax = axs.scatter(data["sim"][cas]["time [s]"].iloc[::dat_ele], data["sim"][cas][data["sim"][cas].keys()[-1]].iloc[::dat_ele], color=cols[i], marker="x")
             legend.append(f"FWHMHGH {height} {Pe} {Sc}")
+            # legend.append(f"FWHMHGH {Pe}")
                 
             i += 1
 
@@ -840,6 +847,8 @@ class flowfield:
                         
                         legend.append(f"exp_data {exp}")
                 cax = axs.scatter(data["sim"][cas]["time [s]"][::dat_ele], data["sim"][cas]["product [kmol]"][::dat_ele]*1e3*2*math.pi, color = cols[i], marker="x", label=f"prod {height} {Pe} {Sc}")
+                # cax = axs.scatter(data["sim"][cas]["time [s]"][::dat_ele], data["sim"][cas]["product [kmol]"][::dat_ele]*1e3*2*math.pi, color = cols[i], marker="x", label=f"prod {Pe}")
+                
                 # add curve fit
                 x_fit_data = np.array(data["sim"][cas]["time [s]"][::dat_ele].tail(fit_data_points))
                 y_fit_data = np.array(data["sim"][cas]["product [kmol]"][::dat_ele]*1e3*2*math.pi)
@@ -872,12 +881,16 @@ class flowfield:
                 image_path = os.path.join(folder_path, image_name)
                 
             cax = axs.scatter(data["sim"][cas]["time [s]"][::dat_ele], data["sim"][cas]["product [kmol]"][::dat_ele]*1e3*2*math.pi, color = cols[i], marker="x", label=f"prod {height} {Pe} {Sc}")
+            # cax = axs.scatter(data["sim"][cas]["time [s]"][::dat_ele], data["sim"][cas]["product [kmol]"][::dat_ele]*1e3*2*math.pi, color = cols[i], marker="x", label=f"prod {Pe}")
+            
             # add curve fit
             x_fit_data = np.array(data["sim"][cas]["time [s]"][::dat_ele].tail(fit_data_points))
             y_fit_data = np.array(data["sim"][cas]["product [kmol]"][::dat_ele]*1e3*2*math.pi)
             y_fit_data = y_fit_data[-fit_data_points:]
             popt, pcov = curve_fit(func, x_fit_data, y_fit_data)
             cax = axs.plot(x_fit_data, func(x_fit_data, *popt), color = cols[i], label=f"fit {height} {Pe} {Sc} m={popt[0]:.3e}[mol/s]")
+            # cax = axs.plot(x_fit_data, func(x_fit_data, *popt), color = cols[i], label=f"fit {Pe} m={popt[0]:.3e}[mol/s]")
+            
             i += 1
         
         if os.path.exists(image_path) and config["create_new_files"] == False:
@@ -954,6 +967,10 @@ class flowfield:
                 
                 cax = axs.scatter(sim_data["times [s]"][::sim_step], sim_data["r_s [m]"][::sim_step]*1e3, color = cols[i], marker="x", label="$r_{\\mathrm{front}}$" + f" {height} {Pe} {Sc}")              
                 cax = axs.scatter(mx_data["times [s]"][::mx_step], mx_data["r_s [m]"][::mx_step]*1e3, color = cols[i], marker=".", label= "$r_{\\mathrm{max}}$" + f" {height} {Pe} {Sc}")
+                
+                # cax = axs.scatter(sim_data["times [s]"][::sim_step], sim_data["r_s [m]"][::sim_step]*1e3, color = cols[i], marker="x", label="$r_{\\mathrm{front}}$" + f" {Pe}")              
+                # cax = axs.scatter(mx_data["times [s]"][::mx_step], mx_data["r_s [m]"][::mx_step]*1e3, color = cols[i], marker=".", label= "$r_{\\mathrm{max}}$" + f" {Pe}")
+                
                 image_name = f"front_pos_{height}_{Sc}" + "." + config["plot_file_type"]
                 i += 1
 
